@@ -1,0 +1,21 @@
+{
+    "name": "ekino/drupal-debug",
+    "type": "library",
+    "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer Experience.",
+    "autoload": {
+        "psr-4": {
+            "Ekino\\Drupal\\Debug\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/config": "^3.4 || ^4.0",
+        "symfony/var-dumper": "^3.4 || ^4.0",
+        "symfony/debug": "^3.4 || ^4.0",
+        "symfony/event-dispatcher": "^3.4 || ^4.0",
+        "monolog/monolog": "^1.0",
+        "symfony/property-access": "^3.4 || ^4.0",
+        "symfony/http-foundation": "^3.4 || ^4.0",
+        "symfony/http-kernel": "^3.4 || ^4.0",
+        "symfony/dependency-injection": "^3.4 || ^4.0"
+    }
+}
