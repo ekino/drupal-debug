@@ -2,11 +2,7 @@
 
 namespace Ekino\Drupal\Debug\Action;
 
-use Drupal\Core\Extension\ModuleHandler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Parameter;
-use Symfony\Component\DependencyInjection\Reference;
 
 abstract class AbstractOverrideTwigConfigAction implements CompilerPassActionInterface
 {

@@ -3,20 +3,13 @@
 namespace Ekino\Drupal\Debug\Kernel;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Logger\LoggerChannel;
 use Ekino\Drupal\Debug\Action\ActionInterface;
-use Ekino\Drupal\Debug\Action\EnhanceClassLoaderAction;
-use Ekino\Drupal\Debug\Action\EnhanceContainerAction;
-use Ekino\Drupal\Debug\Action\EnhanceExceptionPageAction;
-use Ekino\Drupal\Debug\Action\RegisterExceptionHandlerAction;
-use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptionsAction;
-use Ekino\Drupal\Debug\Action\WatchHooksAction;
-use Ekino\Drupal\Debug\Event\ContainerEvent;
-use Ekino\Drupal\Debug\Event\DebugKernelEvents;
-use Ekino\Drupal\Debug\Manager\ActionManager;
+use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
+use Ekino\Drupal\Debug\Kernel\Event\AfterRequestPreHandleEvent;
+use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Log\Logger;
 
 class DebugKernel extends DrupalKernel
 {
@@ -34,8 +27,12 @@ class DebugKernel extends DrupalKernel
      * @param string $environment
      * @param object $class_loader
      * @param bool $allow_dumping
-     * @param sg|trinnull $app_root
+     * @param string|null $app_root
      * @param ActionInterface[] $actions
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @throws \ReflectionException
      */
     public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, array $actions = array())
     {
@@ -68,7 +65,7 @@ class DebugKernel extends DrupalKernel
     {
         parent::preHandle($request);
 
-        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_REQUEST_PRE_HANDLE, new ContainerEvent($this->container));
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_REQUEST_PRE_HANDLE, new AfterRequestPreHandleEvent($this->container));
     }
 
     /**
@@ -88,7 +85,7 @@ class DebugKernel extends DrupalKernel
     {
         $container = parent::initializeContainer();
 
-        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION, new ContainerEvent($container));
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION, new AfterContainerInitializationEvent($container));
 
         return $container;
     }

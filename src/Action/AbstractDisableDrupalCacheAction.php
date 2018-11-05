@@ -3,8 +3,8 @@
 namespace Ekino\Drupal\Debug\Action;
 
 use Drupal\Core\Cache\NullBackendFactory;
-use Ekino\Drupal\Debug\Event\ContainerEvent;
-use Ekino\Drupal\Debug\Event\DebugKernelEvents;
+use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
+use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Ekino\Drupal\Debug\Helper\SettingsHelper;
 
 abstract class AbstractDisableDrupalCacheAction implements EventSubscriberActionInterface
@@ -36,9 +36,9 @@ abstract class AbstractDisableDrupalCacheAction implements EventSubscriberAction
     }
 
     /**
-     * @param ContainerEvent $event
+     * @param AfterContainerInitializationEvent $event
      */
-    public function setNullBackend(ContainerEvent $event)
+    public function setNullBackend(AfterContainerInitializationEvent $event)
     {
         if (!$this->nullBackendFactory instanceof NullBackendFactory) {
             $this->nullBackendFactory = new NullBackendFactory();

@@ -8,6 +8,7 @@
         }
     },
     "require": {
+        "drupal/core": "^8.6",
         "symfony/config": "^3.4 || ^4.0",
         "symfony/var-dumper": "^3.4 || ^4.0",
         "symfony/debug": "^3.4 || ^4.0",

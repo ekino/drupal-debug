@@ -2,8 +2,6 @@
 
 namespace Ekino\Drupal\Debug\Logger;
 
-use Drupal\Core\Action\ActionInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -32,6 +30,8 @@ class DefaultLogger
      * @param string $appRoot
      *
      * @return LoggerInterface
+     *
+     * @throws \Exception
      */
     public static function get($appRoot)
     {

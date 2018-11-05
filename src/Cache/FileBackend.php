@@ -4,24 +4,31 @@ namespace Ekino\Drupal\Debug\Cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Ekino\Drupal\Debug\Helper\ConfigCacheHelper;
-use Ekino\Drupal\Debug\NotImplementedException;
-use Ekino\Drupal\Debug\NotSupportedException;
+use Ekino\Drupal\Debug\Cache\Event\CacheNotFreshEvent;
+use Ekino\Drupal\Debug\Cache\Event\FileBackendEvents;
+use Ekino\Drupal\Debug\Exception\NotImplementedException;
+use Ekino\Drupal\Debug\Exception\NotSupportedException;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FileBackend implements CacheBackendInterface
 {
     /**
-     * @var ConfigCacheHelper
+     * @var FileCache
      */
-    private $configCacheHelper;
+    private $fileCache;
 
     /**
-     * @param string $cacheFilePath
-     * @param ResourceInterface[] $resources
+     * @var EventDispatcherInterface|null
      */
-    public function __construct($cacheFilePath, array $resources)
+    private $eventDispatcher;
+
+    /**
+     * @param FileCache $fileCache
+     */
+    public function __construct(FileCache $fileCache)
     {
-        $this->configCacheHelper = new ConfigCacheHelper($cacheFilePath, $resources);
+        $this->fileCache = $fileCache;
     }
 
     /**
@@ -29,23 +36,27 @@ class FileBackend implements CacheBackendInterface
      */
     public function get($cid, $allow_invalid = false)
     {
-        if (!$this->configCacheHelper->isFresh()) {
+        if (!$this->fileCache->isFresh()) {
+            $this->dispatch(FileBackendEvents::ON_CACHE_NOT_FRESH, new CacheNotFreshEvent($this->fileCache));
+
             return false;
         }
 
-        $data = $this->configCacheHelper->get();
+        $data = $this->fileCache->get();
         if (!is_array($data) || !array_key_exists($cid, $data['data'])) {
             return false;
         }
 
-        $o = new \stdClass();
-        $o->data = $data['data'][$cid];
+        $object = new \stdClass();
+        $object->data = $data['data'][$cid];
 
-        return $o;
+        return $object;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function getMultiple(&$cids, $allow_invalid = false)
     {
@@ -54,6 +65,8 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotSupportedException
      */
     public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = [])
     {
@@ -65,13 +78,15 @@ class FileBackend implements CacheBackendInterface
             throw new NotSupportedException();
         }
 
-        $this->configCacheHelper->write(array(
+        $this->fileCache->write(array(
             $cid => $data
         ));
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function setMultiple(array $items)
     {
@@ -83,18 +98,17 @@ class FileBackend implements CacheBackendInterface
      */
     public function delete($cid)
     {
-        $data = $this->configCacheHelper->get();
-        if (!is_array($data)) {
-            return;
-        }
+        $data = $this->fileCache->get();
 
         unset($data['data'][$cid]);
 
-        $this->configCacheHelper->write($data['data']);
+        $this->fileCache->write($data['data']);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function deleteMultiple(array $cids)
     {
@@ -106,11 +120,13 @@ class FileBackend implements CacheBackendInterface
      */
     public function deleteAll()
     {
-        $this->configCacheHelper->invalidate();
+        $this->fileCache->invalidate();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function invalidate($cid)
     {
@@ -119,6 +135,8 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function invalidateMultiple(array $cids)
     {
@@ -127,6 +145,8 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function invalidateAll()
     {
@@ -135,6 +155,8 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function garbageCollection()
     {
@@ -143,9 +165,30 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws NotImplementedException
      */
     public function removeBin()
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param string $eventName
+     * @param Event|null $event
+     */
+    private function dispatch($eventName, Event $event = null)
+    {
+        if ($this->eventDispatcher instanceof EventDispatcherInterface) {
+            $this->eventDispatcher->dispatch($eventName, $event);
+        }
     }
 }
