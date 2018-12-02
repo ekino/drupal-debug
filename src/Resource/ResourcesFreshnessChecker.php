@@ -14,41 +14,50 @@ class ResourcesFreshnessChecker
     private $filePath;
 
     /**
-     * @var SelfCheckingResourceInterface[]
+     * @var ResourcesCollection
      */
-    private $resources;
+    private $resourcesCollection;
 
     /**
-     * Lazy loaded current resources.
+     * Lazy loaded current resources collection.
      *
-     * Do not use directly, call getCurrentResources() instead.
+     * Do not use directly, call getCurrentResourcesCollection() method instead.
      *
-     * @var SelfCheckingResourceInterface[]|null
+     * @var null|ResourcesCollection
      */
-    private $currentResources;
+    private $currentResourcesCollection;
 
     /**
-     * @param string $filePath
-     * @param SelfCheckingResourceInterface[] $resources
+     * @param string              $filePath
+     * @param ResourcesCollection $resourcesCollection
      */
-    public function __construct($filePath, array $resources)
+    public function __construct($filePath, ResourcesCollection $resourcesCollection)
     {
         $this->filePath = $filePath;
-        $this->resources = $resources;
+        $this->resourcesCollection = $resourcesCollection;
 
-        $this->currentResources = null;
+        $this->currentResourcesCollection = null;
     }
 
     /**
-     * @return SelfCheckingResourceInterface[]
+     * @return ResourcesCollection
      */
-    public function getCurrentResources()
+    public function getCurrentResourcesCollection()
     {
-        if (null === $this->currentResources) {
-            $this->currentResources = is_file($this->filePath) ? unserialize(file_get_contents($this->filePath)) : array();
+        if (!$this->currentResourcesCollection instanceof ResourcesCollection) {
+            if (is_file($this->filePath)) {
+                $currentResourcesSerializedContent = file_get_contents($this->filePath);
+                if (false === $currentResourcesSerializedContent) {
+                    throw new \RuntimeException('The current resources serialized content could not be read.');
+                }
+
+                $this->currentResourcesCollection = unserialize($currentResourcesSerializedContent);
+            } else {
+                $this->currentResourcesCollection = new ResourcesCollection();
+            }
         }
 
-        return $this->currentResources;
+        return $this->currentResourcesCollection;
     }
 
     /**
@@ -56,13 +65,21 @@ class ResourcesFreshnessChecker
      */
     public function isFresh()
     {
+        if (!\is_file($this->filePath)) {
+            return false;
+        }
+
         if ($this->didTheResourcesChanged()) {
             return false;
         }
 
-        $time = filemtime($this->filePath);
+        $time = \filemtime($this->filePath);
+        if (false === $time) {
+            return false;
+        }
+
         /** @var SelfCheckingResourceInterface $currentResource */
-        foreach ($this->getCurrentResources() as $currentResource) {
+        foreach ($this->getCurrentResourcesCollection()->all() as $currentResource) {
             if (!$currentResource->isFresh($time)) {
                 return false;
             }
@@ -73,10 +90,10 @@ class ResourcesFreshnessChecker
 
     public function commit()
     {
-        $umask = umask();
+        $umask = \umask();
         $filesystem = new Filesystem();
 
-        $filesystem->dumpFile($this->filePath, serialize($this->resources));
+        $filesystem->dumpFile($this->filePath, \serialize($this->resourcesCollection));
 
         try {
             $filesystem->chmod($this->filePath, 0666, $umask);
@@ -84,8 +101,8 @@ class ResourcesFreshnessChecker
             // discard chmod failure (some filesystem may not support it)
         }
 
-        if (function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
-            @opcache_invalidate($this->filePath, true);
+        if (\function_exists('opcache_invalidate') && \filter_var(\ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
+            @\opcache_invalidate($this->filePath, true);
         }
     }
 
@@ -94,30 +111,30 @@ class ResourcesFreshnessChecker
      */
     private function didTheResourcesChanged()
     {
-        $currentResources = $this->getCurrentResources();
+        $currentResourcesCollection = $this->getCurrentResourcesCollection();
 
-        if (count($currentResources) !== count($this->resources)) {
+        if ($currentResourcesCollection->count() !== $this->resourcesCollection->count()) {
             return true;
         }
 
-        $currentResourcesUniqueRepresentation = $this->getResourcesUniqueRepresentation($currentResources);
-        $resourcesUniqueRepresentation = $this->getResourcesUniqueRepresentation($this->resources);
+        $currentResourcesUniqueRepresentation = $this->getResourcesUniqueRepresentation($currentResourcesCollection);
+        $resourcesUniqueRepresentation = $this->getResourcesUniqueRepresentation($this->resourcesCollection);
 
-        sort($currentResourcesUniqueRepresentation);
-        sort($resourcesUniqueRepresentation);
+        \sort($currentResourcesUniqueRepresentation);
+        \sort($resourcesUniqueRepresentation);
 
         return $currentResourcesUniqueRepresentation !== $resourcesUniqueRepresentation;
     }
 
     /**
-     * @param SelfCheckingResourceInterface[] $resources
+     * @param ResourcesCollection $resourcesCollection
      *
      * @return string[]
      */
-    private function getResourcesUniqueRepresentation(array $resources)
+    private function getResourcesUniqueRepresentation(ResourcesCollection $resourcesCollection)
     {
-        return array_map(function (SelfCheckingResourceInterface $resource) {
-            return sprintf('%s:%s', get_class($resource), $resource->__toString());
-        }, $resources);
+        return \array_map(function (SelfCheckingResourceInterface $resource) {
+            return \sprintf('%s:%s', \get_class($resource), $resource->__toString());
+        }, $resourcesCollection->all());
     }
 }

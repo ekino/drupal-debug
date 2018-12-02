@@ -1,11 +1,15 @@
 {
     "name": "ekino/drupal-debug",
-    "type": "library",
-    "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer Experience.",
+    "type": "composer-plugin",
+    "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer eXperience.",
     "autoload": {
         "psr-4": {
-            "Ekino\\Drupal\\Debug\\": "src/"
-        }
+            "Ekino\\Drupal\\Debug\\": "src/",
+            "Ekino\\Drupal\\Debug\\Tests\\": "tests/"
+        },
+        "files": [
+            "src/initialize.php"
+        ]
     },
     "require": {
         "drupal/core": "^8.6",
@@ -14,9 +18,27 @@
         "symfony/debug": "^3.4 || ^4.0",
         "symfony/event-dispatcher": "^3.4 || ^4.0",
         "monolog/monolog": "^1.0",
+        "symfony/polyfill-php70": "^1.0",
         "symfony/property-access": "^3.4 || ^4.0",
         "symfony/http-foundation": "^3.4 || ^4.0",
         "symfony/http-kernel": "^3.4 || ^4.0",
-        "symfony/dependency-injection": "^3.4 || ^4.0"
+        "symfony/dependency-injection": "^3.4 || ^4.0",
+        "nesbot/carbon": "^1.34",
+        "composer-plugin-api": "^1.1"
+    },
+    "require-dev": {
+        "drupal-composer/drupal-scaffold": "^2.5",
+        "fabpot/goutte": "^3.2",
+        "phpunit/phpunit": "^6.5",
+        "symfony/panther": "^0.2.0",
+        "composer/composer": "^1.7",
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "phpstan/phpstan": "^0.10.5"
+    },
+    "extra": {
+        "class": [
+            "Ekino\\Drupal\\Debug\\Composer\\Plugin\\ManageConfigurationPlugin",
+            "Ekino\\Drupal\\Debug\\Composer\\Plugin\\RegisterCommandsPlugin"
+        ]
     }
 }

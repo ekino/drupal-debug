@@ -23,17 +23,7 @@ class DisableCSSAggregationAction extends AbstractOverrideConfigAction
     protected function getOverrides()
     {
         return array(
-            '[system.performance][css][preprocess]' => false
+            '[system.performance][css][preprocess]' => false,
         );
-    }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableCSSAggregationAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
     }
 }

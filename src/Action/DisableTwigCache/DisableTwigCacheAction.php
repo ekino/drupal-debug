@@ -12,17 +12,7 @@ class DisableTwigCacheAction extends AbstractOverrideTwigConfigAction
     protected function getOverride()
     {
         return array(
-            'cache' => false
+            'cache' => false,
         );
-    }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableTwigCacheAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
     }
 }

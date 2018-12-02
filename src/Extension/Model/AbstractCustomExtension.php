@@ -45,7 +45,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
      */
     public function serialize()
     {
-        return serialize(array(
+        return \serialize(array(
             $this->rootPath,
             $this->machineName,
         ));
@@ -56,6 +56,6 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
      */
     public function unserialize($serialized)
     {
-        list($this->rootPath, $this->machineName) = unserialize($serialized);
+        list($this->rootPath, $this->machineName) = \unserialize($serialized);
     }
 }

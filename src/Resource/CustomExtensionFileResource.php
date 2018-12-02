@@ -23,7 +23,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     private $existed;
 
     /**
-     * @param string $filePath
+     * @param string                   $filePath
      * @param CustomExtensionInterface $customExtension
      */
     public function __construct($filePath, CustomExtensionInterface $customExtension)
@@ -31,7 +31,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
         $this->filePath = $filePath;
         $this->customExtension = $customExtension;
 
-        $this->existed = file_exists($filePath);
+        $this->existed = \is_file($filePath);
     }
 
     /**
@@ -63,13 +63,13 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      */
     public function isFresh($timestamp)
     {
-        if (!file_exists($this->filePath)) {
+        if (!\is_file($this->filePath)) {
             return !$this->existed;
         } elseif (!$this->existed) {
             return false;
         }
 
-        return false !== ($filemtime = @filemtime($this->filePath)) && $filemtime <= $timestamp;
+        return false !== ($filemtime = @\filemtime($this->filePath)) && $filemtime <= $timestamp;
     }
 
     /**
@@ -77,7 +77,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      */
     public function isNew()
     {
-        return false == $this->existed && file_exists($this->filePath);
+        return false == $this->existed && \is_file($this->filePath);
     }
 
     /**
@@ -85,7 +85,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      */
     public function serialize()
     {
-        return serialize(array(
+        return \serialize(array(
             $this->filePath,
             $this->customExtension,
             $this->existed,
@@ -97,6 +97,6 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      */
     public function unserialize($serialized)
     {
-        list($this->filePath, $this->customExtension, $this->existed) = unserialize($serialized);
+        list($this->filePath, $this->customExtension, $this->existed) = \unserialize($serialized);
     }
 }

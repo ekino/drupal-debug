@@ -2,23 +2,18 @@
 
 namespace Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions;
 
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
-use Ekino\Drupal\Debug\Logger\DefaultLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Debug\ErrorHandler;
 
-class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface
+class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface, ActionWithOptionsInterface
 {
     /**
-     * @var int
+     * @var ThrowErrorsAsExceptionsOptions
      */
-    private $levels;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private $options;
 
     /**
      * {@inheritdoc}
@@ -26,39 +21,36 @@ class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface
     public static function getSubscribedEvents()
     {
         return array(
-            DebugKernelEvents::AFTER_ENVIRONMENT_BOOT => 'process'
+            DebugKernelEvents::AFTER_ENVIRONMENT_BOOT => 'process',
         );
     }
 
     /**
-     * @param int $levels
-     * @param LoggerInterface|null $logger
+     * @param ThrowErrorsAsExceptionsOptions $options
      */
-    public function __construct($levels, LoggerInterface $logger = null)
+    public function __construct(ThrowErrorsAsExceptionsOptions $options)
     {
-        $this->levels = $levels;
-        $this->logger = $logger;
+        $this->options = $options;
     }
 
     public function process()
     {
         $errorHandler = ErrorHandler::register();
-        $errorHandler->throwAt($this->levels, true);
 
-        if ($this->logger instanceof LoggerInterface) {
-            $errorHandler->setDefaultLogger($this->logger, $this->levels, true);
+        $levels = $this->options->getLevels();
+        $errorHandler->throwAt($levels, true);
+
+        $logger = $this->options->getLogger();
+        if ($logger instanceof LoggerInterface) {
+            $errorHandler->setDefaultLogger($logger, $levels, true);
         }
     }
 
     /**
-     * @param string $appRoot
-     *
-     * @return ThrowErrorsAsExceptionsAction
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public static function getDefaultAction($appRoot)
+    public static function getOptionsClass()
     {
-        return new self(E_ALL, DefaultLogger::get($appRoot));
+        return ThrowErrorsAsExceptionsOptions::class;
     }
 }

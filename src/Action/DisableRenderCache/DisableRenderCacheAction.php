@@ -13,14 +13,4 @@ class DisableRenderCacheAction extends AbstractDisableDrupalCacheAction
     {
         return 'render';
     }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableRenderCacheAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
-    }
 }

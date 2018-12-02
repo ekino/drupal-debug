@@ -2,16 +2,19 @@
 
 namespace Ekino\Drupal\Debug\Kernel;
 
-use Drupal\Core\DrupalKernel;
-use Ekino\Drupal\Debug\Action\ActionInterface;
+use Drupal\Core\OriginalDrupalKernel;
 use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
 use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
 use Ekino\Drupal\Debug\Kernel\Event\AfterRequestPreHandleEvent;
+use Ekino\Drupal\Debug\Kernel\Event\AfterSettingsInitializationEvent;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
+use Ekino\Drupal\Debug\Option\OptionsStack;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
-class DebugKernel extends DrupalKernel
+class DebugKernel extends OriginalDrupalKernel
 {
     /**
      * @var EventDispatcher
@@ -24,28 +27,37 @@ class DebugKernel extends DrupalKernel
     private $actionManager;
 
     /**
-     * @param string $environment
-     * @param object $class_loader
-     * @param bool $allow_dumping
-     * @param string|null $app_root
-     * @param ActionInterface[] $actions
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @throws \ReflectionException
+     * @var array
      */
-    public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, array $actions = array())
+    private $enabledModules;
+
+    /**
+     * @var array
+     */
+    private $enabledThemes;
+
+    /**
+     * @var bool
+     */
+    private $settingsWereInitializedWithTheDedicatedDrupalKernelMethod;
+
+    /**
+     * @param string            $environment
+     * @param object            $class_loader
+     * @param bool              $allow_dumping
+     * @param null|string       $app_root
+     * @param null|OptionsStack $optionsStack
+     */
+    public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, OptionsStack $optionsStack = null)
     {
         $this->eventDispatcher = new EventDispatcher();
 
         $appRoot = $app_root;
-        if (!is_string($appRoot)) {
+        if (!\is_string($appRoot)) {
             $appRoot = static::guessApplicationRoot();
         }
 
-        $this->actionManager = new ActionManager($appRoot);
-
-        $this->actionManager->process($actions);
+        $this->actionManager = new ActionManager($appRoot, $optionsStack instanceof OptionsStack ? $optionsStack : OptionsStack::create());
 
         $this->actionManager->addEventSubscriberActionsToEventDispatcher($this->eventDispatcher);
 
@@ -55,7 +67,33 @@ class DebugKernel extends DrupalKernel
 
         $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_ENVIRONMENT_BOOT);
 
+        $this->enabledModules = array();
+        $this->enabledThemes = array();
+        $this->settingsWereInitializedWithTheDedicatedDrupalKernelMethod = false;
+
         parent::__construct($environment, $class_loader, $allow_dumping, $appRoot);
+    }
+
+    /**
+     * @return DebugKernel
+     */
+    public function boot()
+    {
+        // The kernel cannot be booted without settings.
+        //
+        // If the kernel is going to be booted, but that the
+        // initializeSettings() method was never called, it means that the
+        // settings were initialized in another way. If it is not the case, the
+        // booting is going to fail anyway.
+        //
+        // Whatever... Since the settings were not initialized in the traditional
+        // way, the things we want to do after the settings initialization
+        // were not done. So we do them now.
+        if (!$this->settingsWereInitializedWithTheDedicatedDrupalKernelMethod) {
+            $this->afterSettingsInitialization();
+        }
+
+        return parent::boot();
     }
 
     /**
@@ -65,7 +103,7 @@ class DebugKernel extends DrupalKernel
     {
         parent::preHandle($request);
 
-        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_REQUEST_PRE_HANDLE, new AfterRequestPreHandleEvent($this->container));
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_REQUEST_PRE_HANDLE, new AfterRequestPreHandleEvent($this->container, $this->enabledModules, $this->enabledThemes));
     }
 
     /**
@@ -73,8 +111,8 @@ class DebugKernel extends DrupalKernel
      */
     protected function getKernelParameters()
     {
-        return array_merge(parent::getKernelParameters(), array(
-            'kernel.debug' => true
+        return \array_merge(parent::getKernelParameters(), array(
+            'kernel.debug' => true,
         ));
     }
 
@@ -85,7 +123,7 @@ class DebugKernel extends DrupalKernel
     {
         $container = parent::initializeContainer();
 
-        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION, new AfterContainerInitializationEvent($container));
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION, new AfterContainerInitializationEvent($container, $this->enabledModules, $this->enabledThemes));
 
         return $container;
     }
@@ -97,7 +135,21 @@ class DebugKernel extends DrupalKernel
     {
         parent::initializeSettings($request);
 
-        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION);
+        $this->settingsWereInitializedWithTheDedicatedDrupalKernelMethod = true;
+
+        $this->afterSettingsInitialization();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function attachSynthetic(ContainerInterface $container)
+    {
+        $container = parent::attachSynthetic($container);
+
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_ATTACH_SYNTHETIC, new AfterAttachSyntheticEvent($container, $this->enabledModules, $this->enabledThemes));
+
+        return $container;
     }
 
     /**
@@ -110,5 +162,19 @@ class DebugKernel extends DrupalKernel
         $this->actionManager->addCompilerPassActionsToContainerBuilder($containerBuilder);
 
         return $containerBuilder;
+    }
+
+    private function afterSettingsInitialization()
+    {
+        $coreExtensionConfig = $this->getConfigStorage()->read('core.extension');
+        if (isset($coreExtensionConfig['module'])) {
+            $this->enabledModules = \array_keys($coreExtensionConfig['module']);
+        }
+
+        if (isset($coreExtensionConfig['theme'])) {
+            $this->enabledThemes = \array_keys($coreExtensionConfig['theme']);
+        }
+
+        $this->eventDispatcher->dispatch(DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION, new AfterSettingsInitializationEvent($this->enabledModules, $this->enabledThemes));
     }
 }

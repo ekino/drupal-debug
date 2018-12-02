@@ -13,14 +13,4 @@ class DisableInternalPageCacheAction extends AbstractDisableDrupalCacheAction
     {
         return 'page';
     }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableInternalPageCacheAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
-    }
 }

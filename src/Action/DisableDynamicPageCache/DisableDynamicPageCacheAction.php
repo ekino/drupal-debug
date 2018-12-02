@@ -13,14 +13,4 @@ class DisableDynamicPageCacheAction extends AbstractDisableDrupalCacheAction
     {
         return 'dynamic_page_cache';
     }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableDynamicPageCacheAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
-    }
 }

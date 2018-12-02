@@ -3,15 +3,20 @@
 namespace Ekino\Drupal\Debug\Action\WatchRoutingDefinitions;
 
 use Drupal\Core\Routing\RouteBuilderInterface;
-use Ekino\Drupal\Debug\Action\AbstractFileBackendDependantAction;
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Exception\NotSupportedException;
 use Ekino\Drupal\Debug\Kernel\Event\AfterRequestPreHandleEvent;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
 
-class WatchRoutingDefinitionsAction extends AbstractFileBackendDependantAction implements EventSubscriberActionInterface
+class WatchRoutingDefinitionsAction implements EventSubscriberActionInterface, ActionWithOptionsInterface
 {
+    /**
+     * @var WatchRoutingDefinitionsOptions
+     */
+    private $options;
+
     /**
      * {@inheritdoc}
      */
@@ -23,25 +28,31 @@ class WatchRoutingDefinitionsAction extends AbstractFileBackendDependantAction i
     }
 
     /**
+     * @param WatchRoutingDefinitionsOptions $options
+     */
+    public function __construct(WatchRoutingDefinitionsOptions $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
      * @param AfterRequestPreHandleEvent $event
-     *
-     * @throws NotSupportedException
      */
     public function process(AfterRequestPreHandleEvent $event)
     {
-        $resourcesFreshnessChecker = new ResourcesFreshnessChecker($this->cacheFilePath, $this->resources);
+        $resourcesFreshnessChecker = new ResourcesFreshnessChecker($this->options->getCacheFilePath(), $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes()));
         if ($resourcesFreshnessChecker->isFresh()) {
             return;
         }
 
         $container = $event->getContainer();
         if (!$container->has('router.builder')) {
-            throw new NotSupportedException();
+            throw new NotSupportedException('The "router.builder" service should already be set in the container.');
         }
 
         $routerBuilder = $container->get('router.builder');
         if (!$routerBuilder instanceof RouteBuilderInterface) {
-            throw new NotSupportedException();
+            throw new NotSupportedException(sprintf('The "router.builder" service class should implement the "%s" interface', RouteBuilderInterface::class));
         }
 
         $routerBuilder->rebuild();
@@ -52,18 +63,8 @@ class WatchRoutingDefinitionsAction extends AbstractFileBackendDependantAction i
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    public static function getOptionsClass()
     {
-        return array(
-            '%machine_name%.routing.yml',
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getDefaultCacheFileName()
-    {
-        return 'routing.meta';
+        return WatchRoutingDefinitionsOptions::class;
     }
 }

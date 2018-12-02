@@ -6,5 +6,4 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 interface CompilerPassActionInterface extends ActionInterface, CompilerPassInterface
 {
-
 }

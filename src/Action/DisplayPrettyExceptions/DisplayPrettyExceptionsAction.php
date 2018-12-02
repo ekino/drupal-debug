@@ -2,12 +2,12 @@
 
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptions;
 
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\CompilerPassActionInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Exception\NotSupportedException;
-use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
+use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
-use Ekino\Drupal\Debug\Logger\DefaultLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,81 +16,58 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 
-class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, EventSubscriberActionInterface
+class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, EventSubscriberActionInterface, ActionWithOptionsInterface
 {
     /**
      * @var string
      */
-    const LOGGER_SERVICE_ID = 'ekino.drupal.debug.action.display_pretty_exception.logger';
+    const LOGGER_SERVICE_ID = 'ekino.drupal.debug.action.display_pretty_exceptions.logger';
 
     /**
-     * @var string|null
+     * @var DisplayPrettyExceptionsOptions
      */
-    private $charset;
-
-    /**
-     * @var string|null
-     */
-    private $fileLinkFormat;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private $options;
 
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         return array(
-            DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION => 'setLogger'
+            DebugKernelEvents::AFTER_ATTACH_SYNTHETIC => 'setLogger',
         );
     }
 
     /**
-     * @param string|null $charset
-     * @param string|null $fileLinkFormat
-     * @param LoggerInterface|null $logger
+     * @param DisplayPrettyExceptionsOptions $options
      */
-    public function __construct($charset, $fileLinkFormat, LoggerInterface $logger = null)
+    public function __construct(DisplayPrettyExceptionsOptions $options)
     {
-        $this->charset = $charset;
-        $this->fileLinkFormat = $fileLinkFormat;
-        $this->logger = $logger;
+        $this->options = $options;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws NotSupportedException
-     *
-     * @throws \ReflectionException
      */
     public function process(ContainerBuilder $container)
     {
         if (!$container->has('event_dispatcher')) {
-            throw new NotSupportedException();
+            throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
         }
 
-        $definition = $container->getDefinition('event_dispatcher');
-        $class = $definition->getClass();
-        if (!is_string($class)) {
-            throw new NotSupportedException();
+        $eventDispatcherDefinition = $container->getDefinition('event_dispatcher');
+        $eventDispatcherClass = $eventDispatcherDefinition->getClass();
+        if (!\is_string($eventDispatcherClass)) {
+            throw new NotSupportedException('The "event_dispatcher" service class should be a string.');
         }
 
-        $refl = new \ReflectionClass($class);
-        if (!$refl->implementsInterface(EventDispatcherInterface::class)) {
-            throw new NotSupportedException();
+        if (!(new \ReflectionClass($eventDispatcherClass))->implementsInterface(EventDispatcherInterface::class)) {
+            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface', EventDispatcherInterface::class));
         }
 
         $loggerReference = null;
-        if ($this->logger instanceof LoggerInterface) {
-            if ($container->hasDefinition(self::LOGGER_SERVICE_ID)) {
-                throw new NotSupportedException();
-            }
-
+        if ($this->options->getLogger() instanceof LoggerInterface) {
             $loggerDefinition = new Definition();
-            $loggerDefinition->setPrivate(true);
             $loggerDefinition->setSynthetic(true);
 
             $container->setDefinition(self::LOGGER_SERVICE_ID, $loggerDefinition);
@@ -98,47 +75,51 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
             $loggerReference = new Reference(self::LOGGER_SERVICE_ID);
         }
 
-        $definition->addMethodCall('addSubscriber', array(
+        $eventDispatcherDefinition->addMethodCall('addSubscriber', array(
             new Definition(ExceptionListener::class, array(
                 new Definition(ExceptionController::class, array(
                     new Definition(ExceptionHandler::class, array(
                         true,
-                        $this->charset,
-                        $this->fileLinkFormat,
+                        $this->options->getCharset(),
+                        $this->options->getFileLinkFormat(),
                     )),
                 )),
                 $loggerReference,
                 true,
-            ))
+            )),
         ));
     }
 
     /**
-     * @param AfterContainerInitializationEvent $event
+     * @param AfterAttachSyntheticEvent $event
      */
-    public function setLogger(AfterContainerInitializationEvent $event)
+    public function setLogger(AfterAttachSyntheticEvent $event)
     {
-      if (!$this->logger instanceof LoggerInterface) {
-          return;
-      }
+        $container = $event->getContainer();
 
-      $container = $event->getContainer();
-      if (!$container->has(self::LOGGER_SERVICE_ID)) {
-          throw new \LogicException();
-      }
+        $serviceExists = $container->has(self::LOGGER_SERVICE_ID);
 
-      $container->set(self::LOGGER_SERVICE_ID, $this->logger);
+        $logger = $this->options->getLogger();
+        $loggerExists = $logger instanceof LoggerInterface;
+
+        if (!$serviceExists && !$loggerExists) {
+            return;
+        }
+
+        if ($serviceExists && !$loggerExists) {
+            throw new \LogicException('The options should return a concrete logger.');
+        } elseif (!$serviceExists && $loggerExists) {
+            throw new \LogicException(\sprintf('The container should have a synthetic service with the id "%s".', self::LOGGER_SERVICE_ID));
+        }
+
+        $container->set(self::LOGGER_SERVICE_ID, $logger);
     }
 
     /**
-     * @param string $appRoot
-     *
-     * @return DisplayPrettyExceptionsAction
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public static function getDefaultAction($appRoot)
+    public static function getOptionsClass()
     {
-        return new self(null, null, DefaultLogger::get($appRoot));
+        return DisplayPrettyExceptionsOptions::class;
     }
 }

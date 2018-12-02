@@ -12,17 +12,7 @@ class EnableTwigDebugAction extends AbstractOverrideTwigConfigAction
     protected function getOverride()
     {
         return array(
-            'debug' => true
+            'debug' => true,
         );
-    }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return EnableTwigDebugAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
     }
 }

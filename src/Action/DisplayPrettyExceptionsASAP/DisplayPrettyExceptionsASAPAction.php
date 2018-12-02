@@ -2,22 +2,18 @@
 
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP;
 
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\Debug\ExceptionHandler;
 
-class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterface
+class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterface, ActionWithOptionsInterface
 {
     /**
-     * @var string|null
+     * @var DisplayPrettyExceptionsASAPOptions
      */
-    private $charset;
-
-    /**
-     * @var string|null
-     */
-    private $fileLinkFormat;
+    private $options;
 
     /**
      * {@inheritdoc}
@@ -30,34 +26,31 @@ class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterfac
     }
 
     /**
-     * @param string|null $charset
-     * @param string|null $fileLinkFormat
+     * @param DisplayPrettyExceptionsASAPOptions $options
      */
-    public function __construct($charset, $fileLinkFormat)
+    public function __construct(DisplayPrettyExceptionsASAPOptions $options)
     {
-        $this->charset = $charset;
-        $this->fileLinkFormat = $fileLinkFormat;
+        $this->options = $options;
     }
 
     public function process()
     {
-        set_exception_handler(function (\Throwable $exception) {
+        // https://github.com/symfony/symfony/pull/28954
+        \set_exception_handler(function (\Throwable $exception) {
             if (!$exception instanceof \Exception) {
                 $exception = new FatalThrowableError($exception);
             }
 
-            $exceptionHandler = new ExceptionHandler(true, $this->charset, $this->fileLinkFormat);
+            $exceptionHandler = new ExceptionHandler(true, $this->options->getCharset(), $this->options->getFileLinkFormat());
             $exceptionHandler->sendPhpResponse($exception);
         });
     }
 
     /**
-     * @param string $appRoot
-     *
-     * @return DisplayPrettyExceptionsASAPAction
+     * {@inheritdoc}
      */
-    public static function getDefaultAction($appRoot)
+    public static function getOptionsClass()
     {
-        return new self(null, null);
+        return DisplayPrettyExceptionsASAPOptions::class;
     }
 }

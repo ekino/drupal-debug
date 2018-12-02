@@ -12,17 +12,7 @@ class EnableTwigStrictVariablesAction extends AbstractOverrideTwigConfigAction
     protected function getOverride()
     {
         return array(
-            'strict_variables' => true
+            'strict_variables' => true,
         );
-    }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return EnableTwigStrictVariablesAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
     }
 }

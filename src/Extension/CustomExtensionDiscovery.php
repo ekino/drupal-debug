@@ -47,41 +47,35 @@ class CustomExtensionDiscovery
 
     /**
      * @return CustomModule[]
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @throws \ReflectionException
      */
     public function getCustomModules()
     {
-        return $this->get('module');
+        /** @var CustomModule[] $customModules */
+        $customModules = $this->get('module');
+
+        return $customModules;
     }
 
     /**
      * @return CustomTheme[]
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @throws \ReflectionException
      */
     public function getCustomThemes()
     {
-        return $this->get('theme');
+        /** @var CustomTheme[] $customThemes */
+        $customThemes = $this->get('theme');
+
+        return $customThemes;
     }
 
     /**
      * @param string $type
      *
-     * @return AbstractCustomExtension[]
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @throws \ReflectionException
+     * @return CustomModule[]|CustomTheme[]
      */
     private function get($type)
     {
         if (!isset(self::$cache[$type])) {
-            throw new \InvalidArgumentException('The "%s" type is invalid.', $type);
+            throw new \InvalidArgumentException(sprintf('The "%s" type is invalid.', $type));
         }
 
         if (!isset(self::$cache[$type][$this->appRoot])) {
@@ -114,27 +108,30 @@ class CustomExtensionDiscovery
 
                 break;
             default:
-                throw new \LogicException();
+                throw new \LogicException('The type should be "module" or "theme".');
         }
 
-        return array_filter(array_map(function ($possibleRootPath) {
-            return sprintf('%s/%s', $this->appRoot, $possibleRootPath);
+        return \array_filter(\array_map(function ($possibleRootPath) {
+            return \sprintf('%s/%s', $this->appRoot, $possibleRootPath);
         }, $possibleRootPaths), 'is_dir');
     }
 
     /**
-     * @param string $type
+     * @param string       $type
      * @param \SplFileInfo $splFileInfo
      *
      * @return AbstractCustomExtension[]
-     *
-     * @throws \ReflectionException
      */
     private function searchRecursively($type, \SplFileInfo $splFileInfo)
     {
         $customExtensions = array();
 
-        $directoryIterator = new \RecursiveDirectoryIterator($splFileInfo->getRealPath(), \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::CURRENT_AS_SELF);
+        $realPath = $splFileInfo->getRealPath();
+        if (!\is_string($realPath)) {
+            throw new \RuntimeException('The path should be a string.');
+        }
+
+        $directoryIterator = new \RecursiveDirectoryIterator($realPath, \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::CURRENT_AS_SELF);
         $filter = new RecursiveCustomExtensionFilterIterator($directoryIterator);
         $iterator = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD);
         foreach ($iterator as $splFileInfo) {
@@ -145,12 +142,10 @@ class CustomExtensionDiscovery
     }
 
     /**
-     * @param string $type
+     * @param string       $type
      * @param \SplFileInfo $splFileInfo
      *
      * @return AbstractCustomExtension
-     *
-     * @throws \LogicException
      */
     private function create($type, \SplFileInfo $splFileInfo)
     {
@@ -160,7 +155,7 @@ class CustomExtensionDiscovery
             case 'theme':
                 return new CustomTheme($splFileInfo->getPath(), $splFileInfo->getBasename('.info.yml'));
             default:
-                throw new \LogicException();
+                throw new \LogicException('The type should be "module" or "theme".');
         }
     }
 }

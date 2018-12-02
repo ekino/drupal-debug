@@ -31,4 +31,3 @@ class ExceptionController
         return new Response($this->exceptionHandler->getHtml($exception), $exception->getStatusCode());
     }
 }
-

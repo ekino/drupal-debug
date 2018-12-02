@@ -2,7 +2,7 @@
 
 namespace Ekino\Drupal\Debug\Kernel\Event;
 
-final class DebugKernelEvents
+class DebugKernelEvents
 {
     /**
      * @var string
@@ -18,6 +18,11 @@ final class DebugKernelEvents
      * @var string
      */
     const AFTER_SETTINGS_INITIALIZATION = 'ekino.drupal.debug.debug_kernel.after_settings_initialization';
+
+    /**
+     * @var string
+     */
+    const AFTER_ATTACH_SYNTHETIC = 'ekino.drupal.debug.debug_kernel.after_attach_synthetic';
 
     /**
      * @var string

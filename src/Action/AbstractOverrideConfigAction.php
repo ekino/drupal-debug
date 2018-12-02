@@ -3,7 +3,7 @@
 namespace Ekino\Drupal\Debug\Action;
 
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 abstract class AbstractOverrideConfigAction implements EventSubscriberActionInterface
 {
@@ -21,7 +21,7 @@ abstract class AbstractOverrideConfigAction implements EventSubscriberActionInte
     {
         global $config;
 
-        $propertyAccessor = new PropertyAccessor();
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
         foreach ($this->getOverrides() as $propertyPath => $value) {
             $propertyAccessor->setValue($config, $propertyPath, $value);
         }

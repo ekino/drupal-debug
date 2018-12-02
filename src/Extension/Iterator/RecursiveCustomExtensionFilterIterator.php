@@ -12,16 +12,14 @@ class RecursiveCustomExtensionFilterIterator extends \RecursiveFilterIterator
     private $blacklist;
 
     /**
-     * @param \RecursiveIterator $iterator
-     *
-     * @throws \ReflectionException
+     * @param \RecursiveDirectoryIterator $iterator
      */
-    public function __construct(\RecursiveIterator $iterator)
+    public function __construct(\RecursiveDirectoryIterator $iterator)
     {
         parent::__construct($iterator);
 
         $drupalRecursiveExtensionFilterIterator = new RecursiveExtensionFilterIterator(new NullRecursiveIterator(), array(
-            'tests'
+            'tests',
         ));
         $refl = new \ReflectionProperty($drupalRecursiveExtensionFilterIterator, 'blacklist');
         $refl->setAccessible(true);
@@ -34,19 +32,24 @@ class RecursiveCustomExtensionFilterIterator extends \RecursiveFilterIterator
      */
     public function accept()
     {
-        $name = $this->current()->getFilename();
-        if ('.' === $name[0]) {
+        $current = $this->current();
+        if (null === $current) {
+            return false;
+        }
+
+        $fileName = $current->getFilename();
+        if ('.' === $fileName[0]) {
             return false;
         }
 
         if (!$this->isDir()) {
-            return '.info.yml' === substr($name, -9);
+            return '.info.yml' === \substr($fileName, -9);
         }
 
-        if ('config' === $name) {
-            return 'modules/config' === substr($this->current()->getPathname(), -14);
+        if ('config' === $fileName) {
+            return 'modules/config' === \substr($current->getPathname(), -14);
         }
 
-        return !in_array($name, $this->blacklist, true);
+        return !\in_array($fileName, $this->blacklist, true);
     }
 }

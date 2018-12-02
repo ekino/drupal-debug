@@ -1,0 +1,2 @@
+parameters:
+    bootstrap: quality-analysis/phpstan/bootstrap.php

@@ -9,7 +9,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function current()
     {
-
     }
 
     /**
@@ -17,7 +16,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function next()
     {
-
     }
 
     /**
@@ -25,7 +23,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function key()
     {
-
     }
 
     /**
@@ -33,7 +30,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function valid()
     {
-
     }
 
     /**
@@ -41,7 +37,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function rewind()
     {
-
     }
 
     /**
@@ -49,7 +44,6 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function hasChildren()
     {
-
     }
 
     /**
@@ -57,6 +51,5 @@ class NullRecursiveIterator implements \RecursiveIterator
      */
     public function getChildren()
     {
-
     }
 }

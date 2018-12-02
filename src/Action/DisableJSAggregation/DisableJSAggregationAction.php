@@ -23,17 +23,7 @@ class DisableJSAggregationAction extends AbstractOverrideConfigAction
     protected function getOverrides()
     {
         return array(
-          '[system.performance][js][preprocess]' => false
+          '[system.performance][js][preprocess]' => false,
         );
-    }
-
-    /**
-     * @param string $appRoot
-     *
-     * @return DisableJSAggregationAction
-     */
-    public static function getDefaultAction($appRoot)
-    {
-        return new self();
     }
 }

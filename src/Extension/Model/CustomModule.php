@@ -35,7 +35,7 @@ class CustomModule extends AbstractCustomExtension
      */
     public function serialize()
     {
-        return serialize(array(
+        return \serialize(array(
             $this->rootPath,
             $this->machineName,
             $this->camelCaseMachineName,
@@ -47,6 +47,6 @@ class CustomModule extends AbstractCustomExtension
      */
     public function unserialize($serialized)
     {
-        list($this->rootPath, $this->machineName, $this->camelCaseMachineName) = unserialize($serialized);
+        list($this->rootPath, $this->machineName, $this->camelCaseMachineName) = \unserialize($serialized);
     }
 }

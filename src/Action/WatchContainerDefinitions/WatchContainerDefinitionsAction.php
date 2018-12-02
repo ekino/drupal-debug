@@ -2,15 +2,21 @@
 
 namespace Ekino\Drupal\Debug\Action\WatchContainerDefinitions;
 
-use Ekino\Drupal\Debug\Action\AbstractFileBackendDependantAction;
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Cache\FileBackend;
 use Ekino\Drupal\Debug\Cache\FileCache;
-use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Ekino\Drupal\Debug\Helper\SettingsHelper;
+use Ekino\Drupal\Debug\Kernel\Event\AfterSettingsInitializationEvent;
+use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 
-class WatchContainerDefinitionsAction extends AbstractFileBackendDependantAction implements EventSubscriberActionInterface
+class WatchContainerDefinitionsAction implements EventSubscriberActionInterface, ActionWithOptionsInterface
 {
+    /**
+     * @var WatchContainerDefinitionsOptions
+     */
+    private $options;
+
     /**
      * {@inheritdoc}
      */
@@ -21,14 +27,22 @@ class WatchContainerDefinitionsAction extends AbstractFileBackendDependantAction
         );
     }
 
-    public function process()
+    /**
+     * @param WatchContainerDefinitionsOptions $options
+     */
+    public function __construct(WatchContainerDefinitionsOptions $options)
+    {
+        $this->options = $options;
+    }
+
+    public function process(AfterSettingsInitializationEvent $event)
     {
         (new SettingsHelper())->override('[bootstrap_container_definition]', array(
             'services' => array(
                 'cache.container' => array(
                     'class' => FileBackend::class,
                     'arguments' => array(
-                        new FileCache($this->cacheFilePath, $this->resources),
+                        new FileCache($this->options->getCacheFilePath(), $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes())),
                     ),
                 ),
             ),
@@ -38,19 +52,8 @@ class WatchContainerDefinitionsAction extends AbstractFileBackendDependantAction
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    public static function getOptionsClass()
     {
-        return array(
-            '%machine_name%.services.yml',
-            '%camel_case_machine_name%ServiceProvider.php',
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getDefaultCacheFileName()
-    {
-        return 'container_definition.php';
+        return WatchContainerDefinitionsOptions::class;
     }
 }

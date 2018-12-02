@@ -2,7 +2,7 @@
 
 namespace Ekino\Drupal\Debug\Cache\Event;
 
-final class FileBackendEvents
+class FileBackendEvents
 {
     /**
      * @var string

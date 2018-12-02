@@ -3,26 +3,30 @@
 namespace Ekino\Drupal\Debug\Action\WatchHooksImplementations;
 
 use Drupal\Core\Extension\ModuleHandler;
-use Ekino\Drupal\Debug\Action\AbstractFileBackendDependantAction;
+use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\CompilerPassActionInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
-use Ekino\Drupal\Debug\Cache\Event\FileBackendEvents;
 use Ekino\Drupal\Debug\Cache\FileBackend;
 use Ekino\Drupal\Debug\Cache\FileCache;
-use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
-use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Ekino\Drupal\Debug\Exception\NotSupportedException;
+use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
+use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class WatchHooksImplementationsAction extends AbstractFileBackendDependantAction implements CompilerPassActionInterface, EventSubscriberActionInterface
+class WatchHooksImplementationsAction implements CompilerPassActionInterface, EventSubscriberActionInterface, ActionWithOptionsInterface
 {
     /**
      * @var string
      */
-    const RESOURCES_SERVICE_ID = 'ekino.drupal.debug.action.watch_hook.resources';
+    const RESOURCES_SERVICE_ID = 'ekino.drupal.debug.action.watch_hooks_implementations.resources';
+
+    /**
+     * @var WatchHooksImplementationsOptions
+     */
+    private $options;
 
     /**
      * {@inheritdoc}
@@ -30,94 +34,76 @@ class WatchHooksImplementationsAction extends AbstractFileBackendDependantAction
     public static function getSubscribedEvents()
     {
         return array(
-            DebugKernelEvents::AFTER_CONTAINER_INITIALIZATION => 'setResources'
+            DebugKernelEvents::AFTER_ATTACH_SYNTHETIC => 'setResources',
         );
     }
 
     /**
+     * @param WatchHooksImplementationsOptions $options
+     */
+    public function __construct(WatchHooksImplementationsOptions $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
      * {@inheritdoc}
-     *
-     * @throws NotSupportedException
      */
     public function process(ContainerBuilder $container)
     {
         if (!$container->has('module_handler')) {
-            throw new NotSupportedException();
+            throw new NotSupportedException('The "module_handler" service should already be set in the container.');
         }
 
         $moduleHandlerDefinition = $container->getDefinition('module_handler');
         if (ModuleHandler::class !== $moduleHandlerDefinition->getClass()) {
-            throw new NotSupportedException();
+            throw new NotSupportedException(sprintf('The "module_handler" service class should be "%s".', ModuleHandler::class));
         }
 
         if (!$container->has('event_dispatcher')) {
-            throw new NotSupportedException();
+            throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
         }
 
         $eventDispatcherDefinition = $container->getDefinition('event_dispatcher');
-        if (!in_array(EventDispatcherInterface::class, class_implements($eventDispatcherDefinition->getClass()))) {
-            throw new NotSupportedException();
+        $eventDispatcherClass = $eventDispatcherDefinition->getClass();
+        if (!\is_string($eventDispatcherClass)) {
+            throw new NotSupportedException('The "event_dispatcher" service class should be a string.');
+        }
+
+        if (!(new \ReflectionClass($eventDispatcherClass))->implementsInterface(EventDispatcherInterface::class)) {
+            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface', EventDispatcherInterface::class));
         }
 
         $resourcesDefinition = new Definition();
         $resourcesDefinition->setSynthetic(true);
-        $resourcesDefinition->setPrivate(true);
         $container->setDefinition(self::RESOURCES_SERVICE_ID, $resourcesDefinition);
 
         $fileBackendDefinition = new Definition(FileBackend::class, array(
             new Definition(FileCache::class, array(
-                $this->cacheFilePath,
+                $this->options->getCacheFilePath(),
                 new Reference(self::RESOURCES_SERVICE_ID),
-            ))
+            )),
         ));
         $fileBackendDefinition->addMethodCall('setEventDispatcher', array(
             new Reference('event_dispatcher'),
         ));
 
         $moduleHandlerDefinition->replaceArgument(2, $fileBackendDefinition);
-
-        $eventDispatcherDefinition
-            ->addMethodCall('addListener', array(
-                FileBackendEvents::ON_CACHE_NOT_FRESH,
-                new Definition(LoadNewExtensions::class, array(
-                    new Reference('module_handler'),
-                ))
-            ));
     }
 
     /**
-     * @param AfterContainerInitializationEvent $event
+     * @param AfterAttachSyntheticEvent $event
      */
-    public function setResources(AfterContainerInitializationEvent $event)
+    public function setResources(AfterAttachSyntheticEvent $event)
     {
-        $event->getContainer()->set(self::RESOURCES_SERVICE_ID, $this->resources);
+        $event->getContainer()->set(self::RESOURCES_SERVICE_ID, $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes()));
     }
 
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    public static function getOptionsClass()
     {
-        return array(
-            '%machine_name%.module',
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getDefaultThemeFileResourceMasks()
-    {
-        return array(
-            '%machine_name%.theme',
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getDefaultCacheFileName()
-    {
-        return 'hooks.php';
+        return WatchHooksImplementationsOptions::class;
     }
 }

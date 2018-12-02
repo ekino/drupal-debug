@@ -2,8 +2,9 @@
 
 namespace Ekino\Drupal\Debug\Cache;
 
+use Carbon\Carbon;
+use Ekino\Drupal\Debug\Resource\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
-use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -20,14 +21,14 @@ class FileCache
     private $resourcesFreshnessChecker;
 
     /**
-     * @param string $filePath
-     * @param SelfCheckingResourceInterface[] $resources
+     * @param string              $filePath
+     * @param ResourcesCollection $resourcesCollection
      */
-    public function __construct($filePath, array $resources)
+    public function __construct($filePath, ResourcesCollection $resourcesCollection)
     {
         $this->filePath = $filePath;
 
-        $this->resourcesFreshnessChecker = new ResourcesFreshnessChecker(sprintf('%s.meta', $filePath), $resources);
+        $this->resourcesFreshnessChecker = new ResourcesFreshnessChecker(\sprintf('%s.meta', $filePath), $resourcesCollection);
     }
 
     /**
@@ -43,16 +44,38 @@ class FileCache
      */
     public function get()
     {
-        if (!is_file($this->filePath)) {
+        if (!\is_file($this->filePath)) {
             return false;
         }
 
-        $data = require $this->filePath;
-        if (!is_array($data) || !array_key_exists('data', $data)) {
-            throw new \LogicException();
+        try {
+            $data = require $this->filePath;
+        } catch (\Error $e) {
+            return false;
+        }
+
+        if (!\is_array($data)) {
+            throw new \LogicException('The file cache data content should be an array.');
+        }
+
+        if (!\array_key_exists('data', $data)) {
+            throw new \LogicException('The file cache data content should have a "data" key.');
         }
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        $data = $this->get();
+        if (!\is_array($data)) {
+            return array();
+        }
+
+        return $data['data'];
     }
 
     /**
@@ -61,26 +84,26 @@ class FileCache
     public function write(array $data)
     {
         $currentData = $this->get();
-        if (is_array($currentData)) {
-            $data = array_merge($currentData['data'], $data);
+        if (\is_array($currentData)) {
+            $data = \array_merge($currentData['data'], $data);
         }
 
-        $umask = umask();
+        $umask = \umask();
         $filesystem = new Filesystem();
-        
-        $filesystem->dumpFile($this->filePath, '<?php return ' . var_export(array(
-            'date' => date(DATE_ATOM),
+
+        $filesystem->dumpFile($this->filePath, '<?php return '.\var_export(array(
+            'date' => Carbon::now()->format(DATE_ATOM),
             'data' => $data,
-        ), true) . ';');
-        
+        ), true).';');
+
         try {
             $filesystem->chmod($this->filePath, 0666, $umask);
         } catch (IOException $e) {
             // discard chmod failure (some filesystem may not support it)
         }
 
-        if (function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
-            @opcache_invalidate($this->filePath, true);
+        if (\function_exists('opcache_invalidate') && \filter_var(\ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
+            @\opcache_invalidate($this->filePath, true);
         }
 
         $this->resourcesFreshnessChecker->commit();
@@ -88,7 +111,9 @@ class FileCache
 
     public function invalidate()
     {
-        unlink($this->filePath);
+        if (\is_file($this->filePath)) {
+            \unlink($this->filePath);
+        }
     }
 
     /**
@@ -97,13 +122,5 @@ class FileCache
     public function getFilePath()
     {
         return $this->filePath;
-    }
-
-    /**
-     * @return SelfCheckingResourceInterface[]
-     */
-    public function getCurrentResources()
-    {
-        return $this->resourcesFreshnessChecker->getCurrentResources();
     }
 }

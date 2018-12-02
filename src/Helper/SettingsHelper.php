@@ -3,13 +3,13 @@
 namespace Ekino\Drupal\Debug\Helper;
 
 use Drupal\Core\Site\Settings;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class SettingsHelper
 {
     /**
      * @param string $propertyPath
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function override($propertyPath, $value)
     {
@@ -19,6 +19,6 @@ class SettingsHelper
             return $this->storage;
         })->bindTo($settings, $settings)();
 
-        (new PropertyAccessor())->setValue($storage, $propertyPath, $value);
+        PropertyAccess::createPropertyAccessor()->setValue($storage, $propertyPath, $value);
     }
 }
