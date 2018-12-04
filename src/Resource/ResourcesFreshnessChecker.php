@@ -2,6 +2,7 @@
 
 namespace Ekino\Drupal\Debug\Resource;
 
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;

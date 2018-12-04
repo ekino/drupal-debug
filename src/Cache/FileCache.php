@@ -3,7 +3,7 @@
 namespace Ekino\Drupal\Debug\Cache;
 
 use Carbon\Carbon;
-use Ekino\Drupal\Debug\Resource\ResourcesCollection;
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;

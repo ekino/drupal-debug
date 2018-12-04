@@ -8,8 +8,8 @@ use Ekino\Drupal\Debug\Extension\CustomExtensionDiscovery;
 use Ekino\Drupal\Debug\Extension\Model\CustomModule;
 use Ekino\Drupal\Debug\Extension\Model\CustomTheme;
 use Ekino\Drupal\Debug\Option\OptionsInterface;
-use Ekino\Drupal\Debug\Resource\CustomExtensionFileResource;
-use Ekino\Drupal\Debug\Resource\ResourcesCollection;
+use Ekino\Drupal\Debug\Resource\Model\CustomExtensionFileResource;
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 abstract class AbstractFileBackendDependantOptions implements OptionsInterface
