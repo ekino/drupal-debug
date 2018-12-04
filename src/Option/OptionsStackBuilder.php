@@ -8,7 +8,7 @@ use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsOpt
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsOptions;
 use Ekino\Drupal\Debug\Action\WatchHooksImplementations\WatchHooksImplementationsOptions;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsOptions;
-use Ekino\Drupal\Debug\Resource\ResourcesCollection;
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Psr\Log\LoggerInterface;
 
 class OptionsStackBuilder

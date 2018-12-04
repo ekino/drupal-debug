@@ -5,7 +5,7 @@ namespace Ekino\Drupal\Debug\Configuration;
 use Ekino\Drupal\Debug\Cache\FileCache;
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use Ekino\Drupal\Debug\Configuration\Model\SubstituteOriginalDrupalKernelConfiguration;
-use Ekino\Drupal\Debug\Resource\ResourcesCollection;
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\Config\Resource\FileResource;

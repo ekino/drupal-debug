@@ -6,7 +6,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Ekino\Drupal\Debug\Exception\NotSupportedException;
 use Ekino\Drupal\Debug\Kernel\DebugKernel;
-use Ekino\Drupal\Debug\Resource\ResourcesCollection;
+use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;

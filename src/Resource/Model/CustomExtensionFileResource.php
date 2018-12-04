@@ -1,6 +1,6 @@
 <?php
 
-namespace Ekino\Drupal\Debug\Resource;
+namespace Ekino\Drupal\Debug\Resource\Model;
 
 use Ekino\Drupal\Debug\Extension\Model\CustomExtensionInterface;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
