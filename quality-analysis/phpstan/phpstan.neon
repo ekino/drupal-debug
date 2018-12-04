@@ -1,2 +1,5 @@
 parameters:
+    level: 7
+    paths:
+        - src
     bootstrap: quality-analysis/phpstan/bootstrap.php
