@@ -50,14 +50,14 @@ class DebugKernel extends OriginalDrupalKernel
      */
     public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, OptionsStack $optionsStack = null)
     {
-        $this->eventDispatcher = new EventDispatcher();
+        $this->eventDispatcher = $this->getEventDispatcher();
 
         $appRoot = $app_root;
         if (!\is_string($appRoot)) {
             $appRoot = static::guessApplicationRoot();
         }
 
-        $this->actionManager = new ActionManager($appRoot, $optionsStack instanceof OptionsStack ? $optionsStack : OptionsStack::create());
+        $this->actionManager = $this->getActionManager($appRoot, $optionsStack instanceof OptionsStack ? $optionsStack : OptionsStack::create());
 
         $this->actionManager->addEventSubscriberActionsToEventDispatcher($this->eventDispatcher);
 
@@ -162,6 +162,25 @@ class DebugKernel extends OriginalDrupalKernel
         $this->actionManager->addCompilerPassActionsToContainerBuilder($containerBuilder);
 
         return $containerBuilder;
+    }
+
+    /**
+     * @return EventDispatcher
+     */
+    protected function getEventDispatcher()
+    {
+        return new EventDispatcher();
+    }
+
+    /**
+     * @param string $appRoot
+     * @param OptionsStack $optionsStack
+     *
+     * @return ActionManager
+     */
+    protected function getActionManager($appRoot, OptionsStack $optionsStack)
+    {
+        return new ActionManager($appRoot, $optionsStack);
     }
 
     private function afterSettingsInitialization()

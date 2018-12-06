@@ -4,12 +4,16 @@
     "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer eXperience.",
     "autoload": {
         "psr-4": {
-            "Ekino\\Drupal\\Debug\\": "src/",
-            "Ekino\\Drupal\\Debug\\Tests\\": "tests/"
+            "Ekino\\Drupal\\Debug\\": "src/"
         },
         "files": [
             "src/initialize.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ekino\\Drupal\\Debug\\Tests\\": "tests/"
+        }
     },
     "require": {
         "drupal/core": "^8.6",
