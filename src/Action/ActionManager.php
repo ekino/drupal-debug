@@ -96,7 +96,9 @@ class ActionManager
             DisplayPrettyExceptionsASAPAction::class,
             EnableDebugClassLoaderAction::class,
             EnableTwigDebugAction::class,
-            EnableTwigStrictVariablesAction::class,
+            // Drupal Core does not handle strict variables. temporarily
+            // @see https://www.drupal.org/project/drupal/issues/2445705
+            //EnableTwigStrictVariablesAction::class,
             ThrowErrorsAsExceptionsAction::class,
             WatchContainerDefinitionsAction::class,
             WatchHooksImplementationsAction::class,
