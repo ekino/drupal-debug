@@ -47,12 +47,12 @@ class ResourcesFreshnessChecker
     {
         if (!$this->currentResourcesCollection instanceof ResourcesCollection) {
             if (is_file($this->filePath)) {
-                $currentResourcesSerializedContent = file_get_contents($this->filePath);
+                $currentResourcesSerializedContent = @\file_get_contents($this->filePath);
                 if (false === $currentResourcesSerializedContent) {
                     throw new \RuntimeException('The current resources serialized content could not be read.');
                 }
 
-                $this->currentResourcesCollection = unserialize($currentResourcesSerializedContent);
+                $this->currentResourcesCollection = \unserialize($currentResourcesSerializedContent);
             } else {
                 $this->currentResourcesCollection = new ResourcesCollection();
             }

@@ -8,6 +8,9 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
+    <php>
+        <env name="DRUPAL_DEBUG_TESTS_ARE_RUNNING" value="true" force="true" />
+    </php>
 
     <testsuites>
         <testsuite name="tests">

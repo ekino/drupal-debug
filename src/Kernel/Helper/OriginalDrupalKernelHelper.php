@@ -8,6 +8,7 @@ use Ekino\Drupal\Debug\Exception\NotSupportedException;
 use Ekino\Drupal\Debug\Kernel\DebugKernel;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
+use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -35,7 +36,7 @@ class OriginalDrupalKernelHelper
     {
         $originalDrupalKernelFilePath = $classLoader->findFile('Drupal\Core\DrupalKernel');
         if (!\is_string($originalDrupalKernelFilePath)) {
-            throw new \RuntimeException('The original DrupalKernel class could not be found.');
+            throw new \RuntimeException('The original DrupalKernel class file could not be found.');
         }
 
         $originalDrupalKernelSubstituteFilePath = \sprintf('%s/OriginalDrupalKernel.php', $cacheDirectory);
@@ -43,21 +44,22 @@ class OriginalDrupalKernelHelper
         // not change, then the original DrupalKernel substitute does not need
         // to be recreated.
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(\sprintf('%s.meta', $originalDrupalKernelSubstituteFilePath), new ResourcesCollection(array(
+            new FileExistenceResource($originalDrupalKernelSubstituteFilePath),
             new FileResource($originalDrupalKernelFilePath),
-            new FileResource(__DIR__.'/../DebugKernel.php'),
+            new FileResource(sprintf('%s/../DebugKernel.php', __DIR__)),
         )));
 
         if (!$resourcesFreshnessChecker->isFresh()) {
             self::createOriginalDrupalKernelSubstitute($originalDrupalKernelFilePath, $originalDrupalKernelSubstituteFilePath);
+
+            $resourcesFreshnessChecker->commit();
         }
 
         require $originalDrupalKernelSubstituteFilePath;
 
-        if (!\class_alias(DebugKernel::class, DrupalKernel::class)) {
+        if (!@\class_alias(DebugKernel::class, DrupalKernel::class)) {
             throw new \RuntimeException('The DebugKernel class could not be aliased.');
         }
-
-        $resourcesFreshnessChecker->commit();
     }
 
     /**
@@ -66,7 +68,7 @@ class OriginalDrupalKernelHelper
      */
     private static function createOriginalDrupalKernelSubstitute($originalDrupalKernelFilePath, $originalDrupalKernelSubstituteFilePath)
     {
-        $content = \file_get_contents($originalDrupalKernelFilePath);
+        $content = @\file_get_contents($originalDrupalKernelFilePath);
         if (false === $content) {
             throw new \RuntimeException('The original DrupalKernel content could not be read.');
         }
