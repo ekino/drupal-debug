@@ -1,3 +1,6 @@
 vendor/
 composer.lock
 .php_cs.cache
+tests/**/reference/**
+tests/**/cache/**
+tests/**/fixtures/__*

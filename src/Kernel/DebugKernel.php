@@ -173,7 +173,7 @@ class DebugKernel extends OriginalDrupalKernel
     }
 
     /**
-     * @param string $appRoot
+     * @param string       $appRoot
      * @param OptionsStack $optionsStack
      *
      * @return ActionManager

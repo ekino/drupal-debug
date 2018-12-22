@@ -1,0 +1,5 @@
+services:
+  use_custom_service.service.foo:
+    class: Drupal\use_custom_service\Service\FooService
+    arguments:
+      - "%message%"

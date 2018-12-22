@@ -144,8 +144,8 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
             /** @var CustomModule $customModule */
             foreach ($customModules as $customModule) {
                 $replacePairs = array(
-                  '%machine_name%' => $customModule->getMachineName(),
-                  '%camel_case_machine_name%' => $customModule->getCamelCaseMachineName(),
+                    '%machine_name%' => $customModule->getMachineName(),
+                    '%camel_case_machine_name%' => $customModule->getCamelCaseMachineName(),
                 );
 
                 foreach (static::getDefaultModuleFileResourceMasks() as $mask) {
@@ -160,7 +160,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
             /** @var CustomTheme $customTheme */
             foreach ($customThemes as $customTheme) {
                 $replacePairs = array(
-                  '%machine_name%' => $customTheme->getMachineName(),
+                    '%machine_name%' => $customTheme->getMachineName(),
                 );
 
                 foreach (static::getDefaultThemeFileResourceMasks() as $mask) {

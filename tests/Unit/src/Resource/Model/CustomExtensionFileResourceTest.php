@@ -13,12 +13,12 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * @var string
      */
-    const EXISTING_FILE_PATH = __DIR__ . '/fixtures/existing.php';
+    const EXISTING_FILE_PATH = __DIR__.'/fixtures/__existing.php';
 
     /**
      * @var string
      */
-    const NOT_EXISTING_FILE_PATH = __DIR__ . '/fixtures/not_existing.php';
+    const NOT_EXISTING_FILE_PATH = __DIR__.'/fixtures/__not_existing.php';
 
     /**
      * @var CustomTheme
@@ -95,7 +95,7 @@ class CustomExtensionFileResourceTest extends TestCase
     {
         $customExtensionFileResource = $this->getContextualCustomExtensionFileResource($existsNow, $existed);
 
-        if (is_int($filemtime)) {
+        if (\is_int($filemtime)) {
             $filePath = $customExtensionFileResource->getFilePath();
             if (!touch($filePath, $filemtime)) {
                 $this->markTestIncomplete(sprintf('File "%s" could not be touched.', $filePath));

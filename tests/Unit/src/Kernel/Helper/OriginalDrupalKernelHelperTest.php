@@ -37,7 +37,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @var string
      */
-    const CANNOT_BE_READ_FILE_PATH = __DIR__.'/fixtures/cannot_be_read.php';
+    const CANNOT_BE_READ_FILE_PATH = __DIR__.'/fixtures/__cannot_be_read.php';
 
     /**
      * @var string
@@ -177,7 +177,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testGG()
+    public function testSubstituteWhenTheSubstituteIsFresh()
     {
         $this->setUpOriginalFilePathAndFreshness('original', true);
 

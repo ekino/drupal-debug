@@ -1,0 +1,5 @@
+<?php
+
+function throw_uncaught_exception_form_user_login_form_alter() {
+    throw new \Exception('This is an useless exception message.');
+}
