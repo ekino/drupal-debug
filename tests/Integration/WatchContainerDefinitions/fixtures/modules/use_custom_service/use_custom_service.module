@@ -1,0 +1,24 @@
+<?php
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+function use_custom_service_page_bottom(array &$page_bottom) {
+    $container = \Drupal::getContainer();
+    if (!$container instanceof ContainerInterface) {
+        throw new \RuntimeException('The container should be set.');
+    }
+
+    if ($container->has('use_custom_service.service.foo')) {
+        $message = $container->get('use_custom_service.service.foo')->getMessage();
+    } else {
+        if ($container->hasParameter('use_custom_service.parameter.bar')) {
+            $message = $container->getParameter('use_custom_service.parameter.bar');
+        } else {
+            $message = 'No service message!!!';
+        }
+    }
+
+    $page_bottom[] = array(
+        '#markup' => sprintf('Drupal debug ==> %s', $message),
+    );
+}

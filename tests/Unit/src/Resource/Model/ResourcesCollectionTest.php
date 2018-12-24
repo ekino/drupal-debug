@@ -13,12 +13,12 @@ class ResourcesCollectionTest extends TestCase
     /**
      * @var string
      */
-    const RESOURCE_1_FILE_PATH = __DIR__ . '/fixtures/File1.php';
+    const RESOURCE_1_FILE_PATH = __DIR__.'/fixtures/File1.php';
 
     /**
      * @var string
      */
-    const RESOURCE_2_FILE_PATH = __DIR__ . '/fixtures/File2.php';
+    const RESOURCE_2_FILE_PATH = __DIR__.'/fixtures/File2.php';
 
     /**
      * @var MockObject[]|SelfCheckingResourceInterface[]

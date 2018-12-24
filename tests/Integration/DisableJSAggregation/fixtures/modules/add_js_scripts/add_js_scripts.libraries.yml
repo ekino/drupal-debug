@@ -1,0 +1,4 @@
+foo:
+  js:
+    assets/js/1.js: {}
+    assets/js/2.js: {}

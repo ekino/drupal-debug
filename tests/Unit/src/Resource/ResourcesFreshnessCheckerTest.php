@@ -15,27 +15,27 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * @var string
      */
-    const EXISTING_FILE_PATH = __DIR__ . '/fixtures/existing.meta';
+    const EXISTING_FILE_PATH = __DIR__.'/fixtures/__existing.meta';
 
     /**
      * @var string
      */
-    const NOT_EXISTING_FILE_PATH = __DIR__ . '/fixtures/not_existing.meta';
+    const NOT_EXISTING_FILE_PATH = __DIR__.'/fixtures/__not_existing.meta';
 
     /**
      * @var string
      */
-    const RESOURCE_1_FILE_PATH = __DIR__ . '/fixtures/File1.php';
+    const RESOURCE_1_FILE_PATH = __DIR__.'/fixtures/File1.php';
 
     /**
      * @var string
      */
-    const RESOURCE_2_FILE_PATH = __DIR__ . '/fixtures/File2.php';
+    const RESOURCE_2_FILE_PATH = __DIR__.'/fixtures/File2.php';
 
     /**
      * @var string
      */
-    const RESOURCE_3_FILE_PATH = __DIR__ . '/fixtures/File3.php';
+    const RESOURCE_3_FILE_PATH = __DIR__.'/fixtures/File3.php';
 
     /**
      * {@inheritdoc}

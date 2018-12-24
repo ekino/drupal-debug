@@ -14,7 +14,7 @@ class FileCacheTest extends TestCase
     /**
      * @var string
      */
-    const NOT_EXISTING_FILE_PATH = __DIR__.'/fixtures/not_existing.php';
+    const NOT_EXISTING_FILE_PATH = __DIR__.'/fixtures/__not_existing.php';
 
     /**
      * @var string

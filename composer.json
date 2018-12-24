@@ -12,37 +12,47 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Ekino\\Drupal\\Debug\\Tests\\": "tests/"
+            "Ekino\\Drupal\\Debug\\Tests\\": "tests/",
+            "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service"
         }
     },
     "require": {
+        "composer-plugin-api": "^1.1",
         "drupal/core": "^8.6",
-        "symfony/config": "^3.4 || ^4.0",
-        "symfony/var-dumper": "^3.4 || ^4.0",
-        "symfony/debug": "^3.4 || ^4.0",
-        "symfony/event-dispatcher": "^3.4 || ^4.0",
         "monolog/monolog": "^1.0",
-        "symfony/polyfill-php70": "^1.0",
-        "symfony/property-access": "^3.4 || ^4.0",
+        "nesbot/carbon": "^1.34",
+        "symfony/config": "^3.4 || ^4.0",
+        "symfony/console": "^3.4 || ^4.0",
+        "symfony/debug": "^3.4 || ^4.0",
+        "symfony/dependency-injection": "^3.4 || ^4.0",
+        "symfony/event-dispatcher": "^3.4 || ^4.0",
+        "symfony/filesystem": "^3.4 || ^4.0",
         "symfony/http-foundation": "^3.4 || ^4.0",
         "symfony/http-kernel": "^3.4 || ^4.0",
-        "symfony/dependency-injection": "^3.4 || ^4.0",
-        "nesbot/carbon": "^1.34",
-        "composer-plugin-api": "^1.1"
+        "symfony/polyfill-php70": "^1.0",
+        "symfony/property-access": "^3.4 || ^4.0",
+        "symfony/var-dumper": "^3.4 || ^4.0",
+        "symfony/yaml": "^3.4 || ^4.0"
     },
     "require-dev": {
+        "composer/composer": "^1.7",
         "drupal-composer/drupal-scaffold": "^2.5",
         "fabpot/goutte": "^3.2",
-        "phpunit/phpunit": "^6.5",
-        "symfony/panther": "^0.2.0",
-        "composer/composer": "^1.7",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "phpstan/phpstan": "^0.10.5"
+        "phpstan/phpstan": "^0.10.5",
+        "phpunit/phpunit": "^6.5",
+        "symfony/browser-kit": "^3.4 || ^4.0",
+        "symfony/finder": "^3.4 || ^4.0",
+        "symfony/panther": "^0.2.0",
+        "symfony/process": "^3.4 || ^4.0"
     },
     "extra": {
         "class": [
             "Ekino\\Drupal\\Debug\\Composer\\Plugin\\ManageConfigurationPlugin",
             "Ekino\\Drupal\\Debug\\Composer\\Plugin\\RegisterCommandsPlugin"
         ]
+    },
+    "config": {
+        "sort-packages": true
     }
 }

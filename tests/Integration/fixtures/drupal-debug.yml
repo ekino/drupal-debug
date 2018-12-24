@@ -1,0 +1,7 @@
+drupal-debug:
+    defaults:
+        cache_directory: ../cache
+        logger:
+            file_path: ../cache/logs/drupal-debug.log
+    substitute_original_drupal_kernel:
+        composer_autoload_file_path: ../../../vendor/autoload.php
