@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Resource;
 
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
@@ -24,7 +26,7 @@ class ResourcesFreshnessChecker
      *
      * Do not use directly, call getCurrentResourcesCollection() method instead.
      *
-     * @var null|ResourcesCollection
+     * @var ResourcesCollection|null
      */
     private $currentResourcesCollection;
 
@@ -46,13 +48,16 @@ class ResourcesFreshnessChecker
     public function getCurrentResourcesCollection()
     {
         if (!$this->currentResourcesCollection instanceof ResourcesCollection) {
-            if (is_file($this->filePath)) {
+            if (\is_file($this->filePath)) {
                 $currentResourcesSerializedContent = @\file_get_contents($this->filePath);
                 if (false === $currentResourcesSerializedContent) {
                     throw new \RuntimeException('The current resources serialized content could not be read.');
                 }
 
                 $this->currentResourcesCollection = \unserialize($currentResourcesSerializedContent);
+                if (!$this->currentResourcesCollection instanceof ResourcesCollection) {
+                    throw new \RuntimeException(\sprintf('The current resources unserialized content class should be "%s".', ResourcesCollection::class));
+                }
             } else {
                 $this->currentResourcesCollection = new ResourcesCollection();
             }

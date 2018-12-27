@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -18,7 +20,7 @@ class FileBackend implements CacheBackendInterface
     private $fileCache;
 
     /**
-     * @var null|EventDispatcherInterface
+     * @var EventDispatcherInterface|null
      */
     private $eventDispatcher;
 
@@ -171,7 +173,7 @@ class FileBackend implements CacheBackendInterface
 
     /**
      * @param string     $eventName
-     * @param null|Event $event
+     * @param Event|null $event
      */
     private function dispatch($eventName, Event $event = null)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Configuration\Model;
 
 use Monolog\Handler\StreamHandler;
@@ -8,7 +10,7 @@ use Monolog\Logger;
 class DefaultsConfiguration extends AbstractConfiguration
 {
     /**
-     * @var null|false|Logger
+     * @var false|Logger|null
      */
     private $logger;
 
@@ -31,7 +33,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     }
 
     /**
-     * @return null|Logger
+     * @return Logger|null
      */
     public function getLogger()
     {
@@ -47,7 +49,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getCharset()
     {
@@ -55,7 +57,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getFileLinkFormat()
     {

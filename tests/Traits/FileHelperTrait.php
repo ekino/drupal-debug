@@ -1,6 +1,8 @@
 <?php
 
-namespace Ekino\Drupal\Debug\Tests;
+declare(strict_types=1);
+
+namespace Ekino\Drupal\Debug\Tests\Traits;
 
 use PHPUnit\Framework\IncompleteTestError;
 
@@ -12,9 +14,9 @@ trait FileHelperTrait
      */
     private static function deleteFile($path, $mandatory = false)
     {
-        if (is_file($path)) {
-            if (!unlink($path) && $mandatory) {
-                throw new IncompleteTestError(sprintf('The file "%s" should not exist and could not be deleted.', $path));
+        if (\is_file($path)) {
+            if (!\unlink($path) && $mandatory) {
+                throw new IncompleteTestError(\sprintf('The file "%s" should not exist and could not be deleted.', $path));
             }
         }
     }
@@ -26,9 +28,9 @@ trait FileHelperTrait
      */
     private static function getFileContent($path)
     {
-        $content = file_get_contents($path);
+        $content = \file_get_contents($path);
         if (!\is_string($content)) {
-            throw new IncompleteTestError(sprintf('The content of the file "%s" could not be gotten.', $path));
+            throw new IncompleteTestError(\sprintf('The content of the file "%s" could not be gotten.', $path));
         }
 
         return $content;
@@ -40,8 +42,8 @@ trait FileHelperTrait
      */
     private static function writeFile($path, $content)
     {
-        if (!file_put_contents($path, $content)) {
-            throw new IncompleteTestError(sprintf('The file "%s" content could not be written.', $path));
+        if (!\file_put_contents($path, $content)) {
+            throw new IncompleteTestError(\sprintf('The file "%s" content could not be written.', $path));
         }
     }
 
@@ -51,8 +53,10 @@ trait FileHelperTrait
      */
     private static function touch($path, $timestamp)
     {
-        if (!touch($path, $timestamp)) {
-            throw new IncompleteTestError(sprintf('The file "%s" could not be touched.', $path));
+        if (!\touch($path, $timestamp)) {
+            throw new IncompleteTestError(\sprintf('The file "%s" could not be touched.', $path));
         }
+
+        \clearstatcache();
     }
 }

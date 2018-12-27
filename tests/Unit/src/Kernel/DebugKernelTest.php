@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel;
 
 use Composer\Autoload\ClassLoader;
@@ -66,7 +68,7 @@ class DebugKernelTest extends TestCase
     {
         require self::TEST_ORIGINAL_DRUPAL_KERNEL_CLASS_FILE_PATH;
 
-        class_alias(TestOriginalDrupalKernel::class, OriginalDrupalKernel::class);
+        \class_alias(TestOriginalDrupalKernel::class, OriginalDrupalKernel::class);
 
         require self::TEST_DEBUG_KERNEL_INSTANTIATION_FILE_PATH;
 

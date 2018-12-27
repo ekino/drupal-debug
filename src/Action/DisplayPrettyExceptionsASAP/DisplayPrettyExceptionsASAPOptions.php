@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP;
 
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
@@ -8,18 +10,18 @@ use Ekino\Drupal\Debug\Option\OptionsInterface;
 class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
 {
     /**
-     * @var null|string
+     * @var string|null
      */
     private $charset;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $fileLinkFormat;
 
     /**
-     * @param null|string $charset
-     * @param null|string $fileLinkFormat
+     * @param string|null $charset
+     * @param string|null $fileLinkFormat
      */
     public function __construct($charset, $fileLinkFormat)
     {
@@ -28,7 +30,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getCharset()
     {
@@ -36,7 +38,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getFileLinkFormat()
     {

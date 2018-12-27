@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Resource\Model;
 
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
@@ -40,7 +42,7 @@ class ResourcesCollection implements \Countable, \Serializable
      */
     public function serialize()
     {
-        return serialize($this->resources);
+        return \serialize($this->resources);
     }
 
     /**
@@ -48,6 +50,6 @@ class ResourcesCollection implements \Countable, \Serializable
      */
     public function unserialize($serialized)
     {
-        $this->resources = unserialize($serialized);
+        $this->resources = \unserialize($serialized);
     }
 }

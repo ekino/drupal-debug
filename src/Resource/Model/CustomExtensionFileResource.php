@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Resource\Model;
 
 use Ekino\Drupal\Debug\Extension\Model\CustomExtensionInterface;

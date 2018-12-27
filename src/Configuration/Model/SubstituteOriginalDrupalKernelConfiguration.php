@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Configuration\Model;
 
 use Composer\Autoload\ClassLoader;
@@ -8,7 +10,7 @@ use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
 {
     /**
-     * @var null|ClassLoader
+     * @var ClassLoader|null
      */
     private $classLoader;
 

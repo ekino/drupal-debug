@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\use_custom_service;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

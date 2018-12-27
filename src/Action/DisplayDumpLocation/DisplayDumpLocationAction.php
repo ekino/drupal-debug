@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayDumpLocation;
 
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;

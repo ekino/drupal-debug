@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Cache\Event;
 
 use Ekino\Drupal\Debug\Cache\FileCache;

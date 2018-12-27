@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration\DisableJSAggregation;
 
 use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
@@ -28,6 +30,6 @@ class DisableJSAggregationActionTest extends AbstractTestCase
      */
     private function countScripts(Client $client)
     {
-        return iterator_count($client->request('GET', '/')->filter('script'));
+        return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::script'));
     }
 }

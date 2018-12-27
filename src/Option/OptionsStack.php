@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Option;
 
 class OptionsStack
@@ -34,7 +36,7 @@ class OptionsStack
     /**
      * @param string $class
      *
-     * @return null|OptionsInterface
+     * @return OptionsInterface|null
      */
     public function get($class)
     {

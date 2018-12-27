@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Resource\Model;
 
 use Carbon\Carbon;
@@ -40,14 +42,14 @@ class CustomExtensionFileResourceTest extends TestCase
      */
     public function setUp()
     {
-        touch(self::EXISTING_FILE_PATH);
-        if (!is_file(self::EXISTING_FILE_PATH)) {
-            $this->markTestIncomplete(sprintf('File "%s" could not be created.', self::EXISTING_FILE_PATH));
+        \touch(self::EXISTING_FILE_PATH);
+        if (!\is_file(self::EXISTING_FILE_PATH)) {
+            $this->markTestIncomplete(\sprintf('File "%s" could not be created.', self::EXISTING_FILE_PATH));
         }
 
-        if (is_file(self::NOT_EXISTING_FILE_PATH)) {
-            if (!unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->markTestIncomplete(sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
+        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
+            if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
+                $this->markTestIncomplete(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -56,7 +58,7 @@ class CustomExtensionFileResourceTest extends TestCase
         $this->customExtensionFileResource = new CustomExtensionFileResource(self::EXISTING_FILE_PATH, $this->customExtension);
 
         $customExtensionFileResourcePath = $this->customExtensionFileResource->getFilePath();
-        $this->serializedCustomExtensionFileResource = sprintf('a:3:{i:0;s:%s:"%s";i:1;C:46:"Ekino\Drupal\Debug\Extension\Model\CustomTheme":35:{a:2:{i:0;s:4:"/foo";i:1;s:3:"bar";}}i:2;b:1;}', mb_strlen($customExtensionFileResourcePath), $customExtensionFileResourcePath);
+        $this->serializedCustomExtensionFileResource = \sprintf('a:3:{i:0;s:%s:"%s";i:1;C:46:"Ekino\Drupal\Debug\Extension\Model\CustomTheme":35:{a:2:{i:0;s:4:"/foo";i:1;s:3:"bar";}}i:2;b:1;}', \mb_strlen($customExtensionFileResourcePath), $customExtensionFileResourcePath);
     }
 
     /**
@@ -64,12 +66,12 @@ class CustomExtensionFileResourceTest extends TestCase
      */
     protected function tearDown()
     {
-        if (is_file(self::EXISTING_FILE_PATH)) {
-            unlink(self::EXISTING_FILE_PATH);
+        if (\is_file(self::EXISTING_FILE_PATH)) {
+            \unlink(self::EXISTING_FILE_PATH);
         }
 
-        if (is_file(self::NOT_EXISTING_FILE_PATH)) {
-            unlink(self::NOT_EXISTING_FILE_PATH);
+        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
+            \unlink(self::NOT_EXISTING_FILE_PATH);
         }
     }
 
@@ -97,11 +99,11 @@ class CustomExtensionFileResourceTest extends TestCase
 
         if (\is_int($filemtime)) {
             $filePath = $customExtensionFileResource->getFilePath();
-            if (!touch($filePath, $filemtime)) {
-                $this->markTestIncomplete(sprintf('File "%s" could not be touched.', $filePath));
+            if (!\touch($filePath, $filemtime)) {
+                $this->markTestIncomplete(\sprintf('File "%s" could not be touched.', $filePath));
             }
 
-            clearstatcache();
+            \clearstatcache();
         }
 
         $this->assertSame($expected, $customExtensionFileResource->isFresh($timestamp));
@@ -170,14 +172,14 @@ class CustomExtensionFileResourceTest extends TestCase
         $customExtensionFileResource = new CustomExtensionFileResource($filePath, $this->customExtension);
 
         if (!$existed && $existsNow) {
-            touch($filePath);
-            if (!is_file($filePath)) {
-                $this->markTestIncomplete(sprintf('File "%s" could not be created.'));
+            \touch($filePath);
+            if (!\is_file($filePath)) {
+                $this->markTestIncomplete(\sprintf('File "%s" could not be created.', $filePath));
             }
         } elseif ($existed && !$existsNow) {
-            unlink($filePath);
-            if (is_file($filePath)) {
-                $this->markTestIncomplete(sprintf('File "%s" could not be deleted.'));
+            \unlink($filePath);
+            if (\is_file($filePath)) {
+                $this->markTestIncomplete(\sprintf('File "%s" could not be deleted.', $filePath));
             }
         }
 

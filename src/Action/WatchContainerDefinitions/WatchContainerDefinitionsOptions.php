@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\WatchContainerDefinitions;
 
 use Ekino\Drupal\Debug\Action\AbstractFileBackendDependantOptions;
@@ -13,7 +15,7 @@ class WatchContainerDefinitionsOptions extends AbstractFileBackendDependantOptio
     {
         return array(
           '%machine_name%.services.yml',
-          '%camel_case_machine_name%ServiceProvider.php',
+          'src/%camel_case_machine_name%ServiceProvider.php',
         );
     }
 

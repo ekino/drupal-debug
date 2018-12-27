@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -281,6 +283,6 @@ class FileBackendTest extends TestCase
     private function expectNotImplementedMethod($method)
     {
         $this->expectException(NotImplementedException::class);
-        $this->expectExceptionMessage(sprintf('The %s() method is not implemented.', $method));
+        $this->expectExceptionMessage(\sprintf('The %s() method is not implemented.', $method));
     }
 }

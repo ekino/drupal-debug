@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Extension\Iterator;
 
 use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;

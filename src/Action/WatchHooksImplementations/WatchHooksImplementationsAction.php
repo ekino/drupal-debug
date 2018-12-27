@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\WatchHooksImplementations;
 
 use Drupal\Core\Extension\ModuleHandler;
@@ -57,7 +59,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
 
         $moduleHandlerDefinition = $container->getDefinition('module_handler');
         if (ModuleHandler::class !== $moduleHandlerDefinition->getClass()) {
-            throw new NotSupportedException(sprintf('The "module_handler" service class should be "%s".', ModuleHandler::class));
+            throw new NotSupportedException(\sprintf('The "module_handler" service class should be "%s".', ModuleHandler::class));
         }
 
         if (!$container->has('event_dispatcher')) {

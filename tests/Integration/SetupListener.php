@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration;
 
 use PHPUnit\Framework\TestListener;
@@ -16,19 +18,19 @@ class SetupListener implements TestListener
     /**
      * {@inheritdoc}
      */
-    public function startTestSuite(TestSuite $suite)
+    public function startTestSuite(TestSuite $suite): void
     {
         if (!$this->supports($suite)) {
             return;
         }
 
-        $drupalDirectoryPath = realpath(AbstractTestCase::DRUPAL_DIRECTORY_PATH);
+        $drupalDirectoryPath = \realpath(AbstractTestCase::DRUPAL_DIRECTORY_PATH);
         if (!\is_string($drupalDirectoryPath)) {
             throw new \RuntimeException('The Drupal directory path was not found.');
         }
 
-        $defaultSitesDirectoryPath = sprintf('%s/sites/default', AbstractTestCase::DRUPAL_DIRECTORY_PATH);
-        $settingsFilePath = sprintf('%s/settings.php', $defaultSitesDirectoryPath);
+        $defaultSitesDirectoryPath = \sprintf('%s/sites/default', AbstractTestCase::DRUPAL_DIRECTORY_PATH);
+        $settingsFilePath = \sprintf('%s/settings.php', $defaultSitesDirectoryPath);
 
         $filesystem = new Filesystem();
         if ($filesystem->exists($settingsFilePath)) {
@@ -47,9 +49,9 @@ class SetupListener implements TestListener
 
         $drupalInstallationsCount = 0;
 
-        $process = new Process(sprintf('%s %s/core/scripts/drupal install minimal', $phpBinary, $drupalDirectoryPath));
+        $process = new Process(\sprintf('%s %s/core/scripts/drupal install minimal', $phpBinary, $drupalDirectoryPath));
         $process->mustRun(function ($type, $output) use (&$drupalInstallationsCount) {
-            if (\is_int(strpos($output, 'Congratulations, you installed Drupal!'))) {
+            if (\is_int(\strpos($output, 'Congratulations, you installed Drupal!'))) {
                 ++$drupalInstallationsCount;
             }
         });
@@ -74,7 +76,7 @@ class SetupListener implements TestListener
     /**
      * {@inheritdoc}
      */
-    public function endTestSuite(TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
         if (!$this->supports($suite)) {
             return;

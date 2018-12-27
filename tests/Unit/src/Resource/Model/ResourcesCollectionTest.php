@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Resource\Model;
 
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
@@ -46,8 +48,9 @@ class ResourcesCollectionTest extends TestCase
         );
 
         $this->resourcesCollection = new ResourcesCollection($this->resources);
-
-        $this->serializedResourcesCollection = sprintf('a:2:{i:0;C:46:"Symfony\Component\Config\Resource\FileResource":92:{s:%s:"%s";}i:1;C:46:"Symfony\Component\Config\Resource\FileResource":92:{s:%s:"%s";}}', mb_strlen(self::RESOURCE_1_FILE_PATH), self::RESOURCE_1_FILE_PATH, mb_strlen(self::RESOURCE_2_FILE_PATH), self::RESOURCE_2_FILE_PATH);
+        $resource1FilePathLength = \mb_strlen(self::RESOURCE_1_FILE_PATH);
+        $resource2FilePathLength = \mb_strlen(self::RESOURCE_2_FILE_PATH);
+        $this->serializedResourcesCollection = \sprintf('a:2:{i:0;C:46:"Symfony\Component\Config\Resource\FileResource":%s:{s:%s:"%s";}i:1;C:46:"Symfony\Component\Config\Resource\FileResource":%s:{s:%s:"%s";}}', ($resource1FilePathLength + \mb_strlen((string) $resource1FilePathLength) + 6), $resource1FilePathLength, self::RESOURCE_1_FILE_PATH, ($resource2FilePathLength + \mb_strlen((string) $resource2FilePathLength) + 6), $resource2FilePathLength, self::RESOURCE_2_FILE_PATH);
     }
 
     public function testAll()

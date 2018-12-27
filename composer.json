@@ -1,5 +1,6 @@
 {
     "name": "ekino/drupal-debug",
+    "license": "MIT",
     "type": "composer-plugin",
     "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer eXperience.",
     "autoload": {
@@ -12,15 +13,21 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Ekino\\Drupal\\Debug\\Tests\\": "tests/",
-            "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service"
-        }
+            "Ekino\\Drupal\\Debug\\Tests\\Integration\\": "tests/Integration/",
+            "Ekino\\Drupal\\Debug\\Tests\\Traits\\": "tests/Traits/",
+            "Ekino\\Drupal\\Debug\\Tests\\Unit\\": "tests/Unit/src/",
+            "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service/src/"
+        },
+        "classmap": [
+            "tests/Unit/src/Kernel/test_classes/"
+        ]
     },
     "require": {
+        "php": ">=7.1",
         "composer-plugin-api": "^1.1",
         "drupal/core": "^8.6",
-        "monolog/monolog": "^1.0",
-        "nesbot/carbon": "^1.34",
+        "monolog/monolog": "^1.3",
+        "nesbot/carbon": "^1.24",
         "symfony/config": "^3.4 || ^4.0",
         "symfony/console": "^3.4 || ^4.0",
         "symfony/debug": "^3.4 || ^4.0",
@@ -37,14 +44,15 @@
     "require-dev": {
         "composer/composer": "^1.7",
         "drupal-composer/drupal-scaffold": "^2.5",
-        "fabpot/goutte": "^3.2",
-        "friendsofphp/php-cs-fixer": "^2.13",
-        "phpstan/phpstan": "^0.10.5",
-        "phpunit/phpunit": "^6.5",
+        "fabpot/goutte": "^3.2.3",
+        "guzzlehttp/guzzle": "^6.3",
+        "phpstan/phpstan": "^0.10",
+        "phpstan/phpstan-phpunit": "^0.10",
+        "phpunit/phpunit": "^7.5",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/finder": "^3.4 || ^4.0",
-        "symfony/panther": "^0.2.0",
-        "symfony/process": "^3.4 || ^4.0"
+        "symfony/panther": "^0.2",
+        "symfony/process": "^3.4.2 || ^4.0.2"
     },
     "extra": {
         "class": [

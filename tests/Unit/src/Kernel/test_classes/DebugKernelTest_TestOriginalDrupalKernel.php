@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\test_classes;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -10,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TestOriginalDrupalKernel
 {
     /**
-     * @var null|Container
+     * @var Container|null
      */
     protected $container;
 
@@ -40,7 +42,7 @@ class TestOriginalDrupalKernel
     }
 
     /**
-     * @param null|string $appRoot
+     * @param string|null $appRoot
      */
     public static function bootEnvironment($appRoot = null)
     {

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration\WatchContainerDefinitions;
 
 use Carbon\Carbon;
-use Ekino\Drupal\Debug\Tests\FileHelperTrait;
 use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
 class WatchContainerDefinitionsTest extends AbstractTestCase
@@ -17,7 +19,7 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
 
     const SERVICE_PROVIDER_TEMPLATE_FILE_PATH = __DIR__.'/fixtures/ServiceProviderTemplate.php';
 
-    const MODULE_SERVICE_PROVIDER_FILE_PATH = __DIR__.'/fixtures/modules/use_custom_service/UseCustomServiceServiceProvider.php';
+    const MODULE_SERVICE_PROVIDER_FILE_PATH = __DIR__.'/fixtures/modules/use_custom_service/src/UseCustomServiceServiceProvider.php';
 
     private static $servicesTemplateFileContent = null;
 
@@ -125,9 +127,9 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
 
     private function writeTemplatedFile($path, $content, $message)
     {
-        $touch = is_file($path);
+        $touch = \is_file($path);
 
-        self::writeFile($path, strtr($content, array(
+        self::writeFile($path, \strtr($content, array(
             '%message%' => $message,
         )));
 

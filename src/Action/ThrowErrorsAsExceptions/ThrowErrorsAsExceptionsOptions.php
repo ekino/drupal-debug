@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions;
 
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
@@ -14,13 +16,13 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
     private $levels;
 
     /**
-     * @var null|LoggerInterface
+     * @var LoggerInterface|null
      */
     private $logger;
 
     /**
      * @param int                  $levels
-     * @param null|LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct($levels, LoggerInterface $logger = null)
     {
@@ -37,7 +39,7 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
     }
 
     /**
-     * @return null|LoggerInterface
+     * @return LoggerInterface|null
      */
     public function getLogger()
     {

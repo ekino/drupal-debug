@@ -1,6 +1,8 @@
 <?php
 
-namespace Ekino\Drupal\Debug\Tests\Unit\Kernel;
+declare(strict_types=1);
+
+namespace Ekino\Drupal\Debug\Tests\Unit\Helper;
 
 use Drupal\Core\Site\Settings;
 use Ekino\Drupal\Debug\Helper\SettingsHelper;

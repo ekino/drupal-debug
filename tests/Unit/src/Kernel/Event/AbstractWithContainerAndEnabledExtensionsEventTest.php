@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\Event;
 
 use Ekino\Drupal\Debug\Kernel\Event\AbstractWithContainerAndEnabledExtensionsEvent;

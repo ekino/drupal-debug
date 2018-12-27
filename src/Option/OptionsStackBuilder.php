@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Option;
 
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsOptions;
@@ -40,9 +42,9 @@ class OptionsStackBuilder
     }
 
     /**
-     * @param null|string          $charset
-     * @param null|string          $fileLinkFormat
-     * @param null|LoggerInterface $logger
+     * @param string|null          $charset
+     * @param string|null          $fileLinkFormat
+     * @param LoggerInterface|null $logger
      */
     public function setDisplayPrettyExceptionsOptions($charset, $fileLinkFormat, LoggerInterface $logger = null)
     {
@@ -52,8 +54,8 @@ class OptionsStackBuilder
     }
 
     /**
-     * @param null|string $charset
-     * @param null|string $fileLinkFormat
+     * @param string|null $charset
+     * @param string|null $fileLinkFormat
      */
     public function setDisplayPrettyExceptionsASAPOptions($charset, $fileLinkFormat)
     {
@@ -62,7 +64,7 @@ class OptionsStackBuilder
 
     /**
      * @param int                  $levels
-     * @param null|LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function setThrowErrorsAsExceptionsOptions($levels, LoggerInterface $logger = null)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration\DisplayDumpLocation;
 
 use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
@@ -20,7 +22,10 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
      */
     protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
     {
-        $this->assertSame("add_dump_die.module on line 4:\n\"fcy\"\n", $this->getDumpText($client));
+        $this->assertThat($this->getDumpText($client), $this->logicalOr(
+            $this->identicalTo("add_dump_die.module on line 4:\n\"fcy\"\n"),
+            $this->identicalTo("\"fcy\"\n")
+        ));
     }
 
     /**
@@ -30,6 +35,6 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
      */
     private function getDumpText(Client $client)
     {
-        return $client->request('GET', '/')->filter('pre[class="sf-dump"]')->text();
+        return $client->request('GET', '/')->filterXPath("descendant-or-self::pre[@class = 'sf-dump']")->text();
     }
 }
