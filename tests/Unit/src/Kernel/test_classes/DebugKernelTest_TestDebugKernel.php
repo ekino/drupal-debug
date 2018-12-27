@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\test_classes;
 
 use Ekino\Drupal\Debug\Action\ActionManager;
@@ -36,7 +38,7 @@ class TestDebugKernelActionManager extends ActionManager
     /**
      * {@inheritdoc}
      */
-    public function __construct($appRoot, OptionsStack $optionsStack)
+    public function __construct()
     {
     }
 
@@ -63,6 +65,6 @@ class TestDebugKernel extends DebugKernel
      */
     protected function getActionManager($appRoot, OptionsStack $optionsStack)
     {
-        return new TestDebugKernelActionManager($appRoot, $optionsStack);
+        return new TestDebugKernelActionManager();
     }
 }

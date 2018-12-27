@@ -1,0 +1,38 @@
+language: php
+
+jobs:
+    include:
+        -
+            php: "7.1"
+        -
+            php: "7.2"
+            env: lint=1
+        -
+            php: "7.3"
+        -
+            php: "7.3"
+            env: deps=low
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+before_script:
+    - phpenv config-rm xdebug.ini || echo "xdebug not available"
+
+install:
+    - if [[ $deps = 'low' ]]; then
+          composer update --prefer-dist --no-progress --no-suggest --prefer-stable --prefer-lowest --ansi;
+      else
+          composer update --prefer-dist --no-progress --no-suggest --ansi;
+      fi
+    - if [[ $lint = '1' ]]; then
+          composer require friendsofphp/php-cs-fixer --prefer-dist --no-progress --no-suggest --ansi;
+      fi
+
+script:
+    - vendor/bin/phpunit
+    - if [[ $lint = '1' ]]; then
+          vendor/bin/php-cs-fixer fix --dry-run --diff --no-ansi;
+          vendor/bin/phpstan analyse -c quality-analysis/phpstan/phpstan.neon;
+      fi

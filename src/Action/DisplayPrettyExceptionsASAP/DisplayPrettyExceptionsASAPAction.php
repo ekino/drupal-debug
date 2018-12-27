@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP;
 
 use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;

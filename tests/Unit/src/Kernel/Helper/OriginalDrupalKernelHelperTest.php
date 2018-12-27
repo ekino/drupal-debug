@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\Helper;
 
 use Carbon\Carbon;
@@ -47,7 +49,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @var string
      */
-    const CLASS_ALIAS_FAIL_FILE_PATH = __DIR__.'/fixtures/class_alias_fail.php';
+    const CLASS_ALIAS_FAIL_FILE_PATH = __DIR__.'/test_classes/TestOtherKernel.php';
 
     /**
      * @var string
@@ -60,7 +62,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     private $classLoader;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     private $inOneYearTimestamp;
 
@@ -82,8 +84,8 @@ class OriginalDrupalKernelHelperTest extends TestCase
             self::SUBSTITUTE_FRESHNESS_META_FILE_PATH,
             self::CANNOT_BE_READ_FILE_PATH,
         ) as $filePath) {
-            if (is_file($filePath)) {
-                unlink($filePath);
+            if (\is_file($filePath)) {
+                \unlink($filePath);
             }
         }
     }
@@ -196,15 +198,15 @@ class OriginalDrupalKernelHelperTest extends TestCase
     }
 
     /**
-     * @param null|string $filePath
+     * @param string|null $filePath
      * @param bool        $fresh
      */
     private function setUpOriginalFilePathAndFreshness($filePath = null, $fresh = false)
     {
         if ('original' === $filePath) {
-            $filePath = realpath(sprintf('%s/../../../../../vendor/drupal/core/lib/Drupal/Core/DrupalKernel.php', __DIR__));
+            $filePath = \realpath(\sprintf('%s/../../../../../vendor/drupal/core/lib/Drupal/Core/DrupalKernel.php', __DIR__));
             if (!\is_string($filePath)) {
-                $this->markTestIncomplete(sprintf('The original DrupalKernel class file could not be found.'));
+                $this->markTestIncomplete(\sprintf('The original DrupalKernel class file could not be found.'));
             }
         }
 
@@ -225,24 +227,28 @@ class OriginalDrupalKernelHelperTest extends TestCase
             $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH, new ResourcesCollection(array(
                 new FileExistenceResource(self::SUBSTITUTE_FILE_PATH),
                 new FileResource($filePath),
-                new FileResource(sprintf('%s/../../../../../src/Kernel/DebugKernel.php', __DIR__)),
+                new FileResource(\sprintf('%s/../../../../../src/Kernel/DebugKernel.php', __DIR__)),
             )));
             $resourcesFreshnessChecker->commit();
             if (!$resourcesFreshnessChecker->isFresh()) {
                 $this->markTestIncomplete('The substitute should be fresh.');
             }
 
+            if (!\is_int($this->inOneYearTimestamp)) {
+                $this->markTestIncomplete('The timestamp should be set.');
+            }
+
             foreach (array(self::SUBSTITUTE_FILE_PATH, self::SUBSTITUTE_FRESHNESS_META_FILE_PATH) as $filePath) {
-                if (!touch($filePath, $this->inOneYearTimestamp)) {
-                    $this->markTestIncomplete(sprintf('The file "%s" could not be touched.', $filePath));
+                if (!\touch($filePath, $this->inOneYearTimestamp)) {
+                    $this->markTestIncomplete(\sprintf('The file "%s" could not be touched.', $filePath));
                 }
             }
 
-            clearstatcache();
+            \clearstatcache();
         } else {
-            if (is_file(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
-                if (!unlink(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
-                    $this->markTestIncomplete(sprintf('The file "%s" should not exist and could not be deleted.', self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
+            if (\is_file(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
+                if (!\unlink(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
+                    $this->markTestIncomplete(\sprintf('The file "%s" should not exist and could not be deleted.', self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
                 }
             }
         }
@@ -260,11 +266,11 @@ class OriginalDrupalKernelHelperTest extends TestCase
     {
         $this->assertFileExists(self::SUBSTITUTE_FILE_PATH);
 
-        $this->assertTrue(class_exists('Drupal\Core\OriginalDrupalKernel'));
+        $this->assertTrue(\class_exists('Drupal\Core\OriginalDrupalKernel'));
 
         $refl = new \ReflectionMethod(OriginalDrupalKernel::class, 'guessApplicationRoot');
         $refl->setAccessible(true);
-        $this->assertSame(realpath(sprintf('%s/../../../../../vendor/drupal', __DIR__)), $refl->invoke(null));
+        $this->assertSame(\realpath(\sprintf('%s/../../../../../vendor/drupal', __DIR__)), $refl->invoke(null));
     }
 
     private function assertThatTheOriginalDrupalKernelWasSubstituted()

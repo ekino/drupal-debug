@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Kernel;
 
 use Drupal\Core\OriginalDrupalKernel;
@@ -45,8 +47,8 @@ class DebugKernel extends OriginalDrupalKernel
      * @param string            $environment
      * @param object            $class_loader
      * @param bool              $allow_dumping
-     * @param null|string       $app_root
-     * @param null|OptionsStack $optionsStack
+     * @param string|null       $app_root
+     * @param OptionsStack|null $optionsStack
      */
     public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, OptionsStack $optionsStack = null)
     {

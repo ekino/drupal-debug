@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration;
 
 use Drupal\Core\DrupalKernel;
@@ -48,7 +50,7 @@ abstract class AbstractTestCase extends TestCase
     protected $runTestInSeparateProcess = true;
 
     /**
-     * @var null|WebServerManager
+     * @var WebServerManager|null
      */
     private $webServerManager = null;
 
@@ -69,8 +71,8 @@ abstract class AbstractTestCase extends TestCase
 
         $this->clearCache();
 
-        foreach (self::$modulesToInstall as $moduleToInstall) {
-            $this->installModule($moduleToInstall);
+        if (!empty(self::$modulesToInstall)) {
+            $this->installModules(self::$modulesToInstall);
         }
     }
 
@@ -88,15 +90,20 @@ abstract class AbstractTestCase extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        $fixturesModulesDirectoryPath = sprintf('%s/fixtures/modules', \dirname((new \ReflectionClass(static::class))->getFileName()));
+        $testCaseFilename = (new \ReflectionClass(static::class))->getFileName();
+        if (!\is_string($testCaseFilename)) {
+            self::markTestIncomplete('The test case filename could not be determined.');
+        }
+
+        $fixturesModulesDirectoryPath = \sprintf('%s/fixtures/modules', \dirname($testCaseFilename));
         $filesystem = new Filesystem();
 
         if ($filesystem->exists($fixturesModulesDirectoryPath)) {
-            self::$modulesToInstall = array_map(function (SplFileInfo $splFileInfo) {
+            self::$modulesToInstall = \array_values(\array_map(function (SplFileInfo $splFileInfo) {
                 return $splFileInfo->getBasename();
-            }, iterator_to_array(Finder::create()->directories()->depth(0)->in($fixturesModulesDirectoryPath)));
+            }, \iterator_to_array(Finder::create()->directories()->depth(0)->in($fixturesModulesDirectoryPath))));
 
-            $filesystem->symlink($fixturesModulesDirectoryPath, sprintf('%s/modules', self::DRUPAL_DIRECTORY_PATH));
+            $filesystem->symlink($fixturesModulesDirectoryPath, \sprintf('%s/modules', self::DRUPAL_DIRECTORY_PATH));
         }
     }
 
@@ -130,29 +137,31 @@ abstract class AbstractTestCase extends TestCase
         $this->doTestTargetedBehaviorWithDebugKernel($goutteClient);
     }
 
-    private function installModule($name)
+    private function installModules(array $names)
     {
-        $currentWorkingDirectory = getcwd();
+        $currentWorkingDirectory = \getcwd();
+        if (!\is_string($currentWorkingDirectory)) {
+            $this->markTestIncomplete('The current working directory could not be determined.');
+        }
 
-        chdir(self::DRUPAL_DIRECTORY_PATH);
+        \chdir(self::DRUPAL_DIRECTORY_PATH);
 
         $request = new Request();
         $classLoader = require 'autoload.php';
 
         $kernel = DrupalKernel::createFromRequest($request, $classLoader, 'test');
         $kernel->prepareLegacyRequest($request);
+        /** @var ModuleInstallerInterface $moduleInstaller */
         $moduleInstaller = $kernel->getContainer()->get('module_installer');
         if (!$moduleInstaller instanceof ModuleInstallerInterface) {
             $this->markTestIncomplete('The module installer service is not the expected one.');
         }
 
-        if (!$moduleInstaller->install(array($name))) {
-            $this->markTestIncomplete(sprintf('The module "%s" could not be installed.', $name));
+        if (!$moduleInstaller->install($names)) {
+            $this->markTestIncomplete(\sprintf('The modules "%s" could not be installed.', \implode(', ', $names)));
         }
 
-        //$kernel->invalidateContainer();
-
-        chdir($currentWorkingDirectory);
+        \chdir($currentWorkingDirectory);
     }
 
     private function clearCache()

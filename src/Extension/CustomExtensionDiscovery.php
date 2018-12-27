@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Extension;
 
 use Ekino\Drupal\Debug\Extension\Iterator\RecursiveCustomExtensionFilterIterator;
@@ -75,7 +77,7 @@ class CustomExtensionDiscovery
     private function get($type)
     {
         if (!isset(self::$cache[$type])) {
-            throw new \InvalidArgumentException(sprintf('The "%s" type is invalid.', $type));
+            throw new \InvalidArgumentException(\sprintf('The "%s" type is invalid.', $type));
         }
 
         if (!isset(self::$cache[$type][$this->appRoot])) {

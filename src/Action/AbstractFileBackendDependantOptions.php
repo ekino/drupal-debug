@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action;
 
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
@@ -70,7 +72,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
                 case CustomTheme::class:
                     return \in_array($customExtension->getMachineName(), $enabledThemes);
                 default:
-                    throw new NotImplementedException(sprintf('The behavior for the "%s" custom extension class is not implemented.', \get_class($customExtension)));
+                    throw new NotImplementedException(\sprintf('The behavior for the "%s" custom extension class is not implemented.', \get_class($customExtension)));
             }
         }));
     }

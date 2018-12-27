@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Extension\Model;
 
 abstract class AbstractCustomExtension implements CustomExtensionInterface

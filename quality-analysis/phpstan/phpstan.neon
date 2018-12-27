@@ -1,5 +1,25 @@
+includes:
+    - ../../vendor/phpstan/phpstan-phpunit/extension.neon
 parameters:
+    bootstrap: quality-analysis/phpstan/bootstrap.php
     level: 7
     paths:
         - src
-    bootstrap: quality-analysis/phpstan/bootstrap.php
+        - tests
+    excludes_analyse:
+        - tests/Unit/src/Cache/fixtures/invalid.php
+    ignoreErrors:
+        # Closures undefined properties of another scope
+        - '#^Access to an undefined property Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:\$line\.$#'
+        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:style\(\)\.$#'
+        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:dumpLine\(\)\.$#'
+        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Extension\\Iterator\\RecursiveCustomExtensionFilterIterator\:\:isDir\(\)\.$#'
+        - '#^Access to an undefined property Ekino\\Drupal\\Debug\\Helper\\SettingsHelper\:\:\$storage\.$#'
+        # Closures instanceof always false of another scope
+        - '#^Instanceof between \$this\(Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\) and Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper will always evaluate to false\.$#'
+        # Intentional errors
+        - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
+        - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelInstantiationActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
+        # Intentional ignores
+        - '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
+        - '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'

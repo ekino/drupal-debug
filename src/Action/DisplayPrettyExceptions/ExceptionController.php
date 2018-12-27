@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptions;
 
 use Symfony\Component\Debug\Exception\FlattenException;

@@ -4,3 +4,4 @@ composer.lock
 tests/**/reference/**
 tests/**/cache/**
 tests/**/fixtures/__*
+/cache/

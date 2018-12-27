@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Cache;
 
 use Carbon\Carbon;
@@ -51,9 +53,9 @@ class FileCacheTest extends TestCase
      */
     public function setUp()
     {
-        if (is_file(self::NOT_EXISTING_FILE_PATH)) {
-            if (!unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->markTestIncomplete(sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
+        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
+            if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
+                $this->markTestIncomplete(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -65,9 +67,25 @@ class FileCacheTest extends TestCase
      */
     protected function tearDown()
     {
-        if (is_file(self::NOT_EXISTING_FILE_PATH)) {
-            unlink(self::NOT_EXISTING_FILE_PATH);
+        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
+            \unlink(self::NOT_EXISTING_FILE_PATH);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        Carbon::setTestNow(Carbon::createMidnightDate(2018, 11, 11));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        Carbon::setTestNow(null);
     }
 
     /**
@@ -169,8 +187,8 @@ class FileCacheTest extends TestCase
     public function testWrite(array $expected, array $currentData = null, array $dataToWrite)
     {
         if (\is_array($currentData)) {
-            if (!file_put_contents(self::NOT_EXISTING_FILE_PATH, '<?php return '.var_export($currentData, true).';')) {
-                $this->markTestIncomplete(sprintf('File "%s" content could not be initialized.', self::NOT_EXISTING_FILE_PATH));
+            if (!\file_put_contents(self::NOT_EXISTING_FILE_PATH, '<?php return '.\var_export($currentData, true).';')) {
+                $this->markTestIncomplete(\sprintf('File "%s" content could not be initialized.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -187,8 +205,6 @@ class FileCacheTest extends TestCase
 
     public function writeProvider()
     {
-        Carbon::setTestNow(Carbon::createMidnightDate(2018, 11, 11));
-
         $date = '2018-11-11T00:00:00+00:00';
 
         return array(
@@ -265,9 +281,9 @@ class FileCacheTest extends TestCase
 
     public function testInvalidate()
     {
-        touch(self::NOT_EXISTING_FILE_PATH);
-        if (!is_file(self::NOT_EXISTING_FILE_PATH)) {
-            $this->markTestIncomplete(sprintf('File "%s" could not be created.', self::NOT_EXISTING_FILE_PATH));
+        \touch(self::NOT_EXISTING_FILE_PATH);
+        if (!\is_file(self::NOT_EXISTING_FILE_PATH)) {
+            $this->markTestIncomplete(\sprintf('File "%s" could not be created.', self::NOT_EXISTING_FILE_PATH));
         }
 
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);

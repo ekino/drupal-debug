@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptions;
 
 use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
@@ -97,22 +99,16 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
     {
         $container = $event->getContainer();
 
-        $serviceExists = $container->has(self::LOGGER_SERVICE_ID);
-
         $logger = $this->options->getLogger();
-        $loggerExists = $logger instanceof LoggerInterface;
+        if ($logger instanceof LoggerInterface) {
+            if (!$container->has(self::LOGGER_SERVICE_ID)) {
+                throw new \LogicException(\sprintf('The container should have a synthetic service with the id "%s".', self::LOGGER_SERVICE_ID));
+            }
 
-        if (!$serviceExists && !$loggerExists) {
-            return;
-        }
-
-        if ($serviceExists && !$loggerExists) {
+            $container->set(self::LOGGER_SERVICE_ID, $logger);
+        } elseif ($container->has(self::LOGGER_SERVICE_ID)) {
             throw new \LogicException('The options should return a concrete logger.');
-        } elseif (!$serviceExists && $loggerExists) {
-            throw new \LogicException(\sprintf('The container should have a synthetic service with the id "%s".', self::LOGGER_SERVICE_ID));
         }
-
-        $container->set(self::LOGGER_SERVICE_ID, $logger);
     }
 
     /**

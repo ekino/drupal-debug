@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\WatchRoutingDefinitions;
 
 use Drupal\Core\Routing\RouteBuilderInterface;
@@ -52,7 +54,7 @@ class WatchRoutingDefinitionsAction implements EventSubscriberActionInterface, A
 
         $routerBuilder = $container->get('router.builder');
         if (!$routerBuilder instanceof RouteBuilderInterface) {
-            throw new NotSupportedException(sprintf('The "router.builder" service class should implement the "%s" interface', RouteBuilderInterface::class));
+            throw new NotSupportedException(\sprintf('The "router.builder" service class should implement the "%s" interface', RouteBuilderInterface::class));
         }
 
         $routerBuilder->rebuild();

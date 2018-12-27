@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Configuration;
 
 use Ekino\Drupal\Debug\Cache\FileCache;
@@ -36,22 +38,22 @@ class ConfigurationManager
     private static $initialized = false;
 
     /**
-     * @var null|array
+     * @var array|null
      */
     private static $configurationFilePathInfo = null;
 
     /**
-     * @var null|array
+     * @var array|null
      */
     private static $processedConfigurations = null;
 
     /**
-     * @var null|DefaultsConfiguration
+     * @var DefaultsConfiguration|null
      */
     private static $defaultsConfiguration = null;
 
     /**
-     * @var null|SubstituteOriginalDrupalKernelConfiguration
+     * @var SubstituteOriginalDrupalKernelConfiguration|null
      */
     private static $substituteOriginalDrupalKernelConfiguration = null;
 

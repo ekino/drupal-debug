@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Integration\DisplayPrettyExceptions;
 
 use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use PHPUnit\Framework\Constraint\StringContains;
 use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\Response;
 
 class DisplayPrettyExceptionsActionTest extends AbstractTestCase
 {
@@ -14,7 +18,9 @@ class DisplayPrettyExceptionsActionTest extends AbstractTestCase
     {
         $client->request('GET', '/');
 
-        $this->assertSame('The website encountered an unexpected error. Please try again later.', $client->getResponse()->getContent());
+        /** @var Response $response */
+        $response = $client->getResponse();
+        $this->assertSame('The website encountered an unexpected error. Please try again later.', $response->getContent());
     }
 
     /**
@@ -26,6 +32,9 @@ class DisplayPrettyExceptionsActionTest extends AbstractTestCase
 
         $this->assertContains('Whoops, looks like something went wrong.', $text);
         $this->assertContains('This is an useless exception message.', $text);
-        $this->assertContains('in throw_uncaught_exception.module line 4', $text);
+        $this->assertThat($text, $this->logicalOr(
+            $this->stringContains('in throw_uncaught_exception.module line 4', false),
+            $this->stringContains('in throw_uncaught_exception.module (line 4)', false)
+        ));
     }
 }

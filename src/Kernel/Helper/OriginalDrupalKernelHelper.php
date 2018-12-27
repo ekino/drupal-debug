@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Kernel\Helper;
 
 use Composer\Autoload\ClassLoader;
@@ -46,7 +48,7 @@ class OriginalDrupalKernelHelper
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(\sprintf('%s.meta', $originalDrupalKernelSubstituteFilePath), new ResourcesCollection(array(
             new FileExistenceResource($originalDrupalKernelSubstituteFilePath),
             new FileResource($originalDrupalKernelFilePath),
-            new FileResource(sprintf('%s/../DebugKernel.php', __DIR__)),
+            new FileResource(\sprintf('%s/../DebugKernel.php', __DIR__)),
         )));
 
         if (!$resourcesFreshnessChecker->isFresh()) {

@@ -1,0 +1,33 @@
+<?php
+
+use PhpCsFixer\Config;
+
+return Config::create()
+    ->setRules(array(
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'array_syntax' => array(
+            'syntax' => 'long'
+        ),
+        'declare_strict_types' => true,
+        'native_function_invocation' => array(
+            'include' => array('@all'),
+        ),
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_imports' => true,
+        'phpdoc_types_order' => array(
+            'null_adjustment' => 'always_last',
+            'sort_algorithm' => 'none'
+        ),
+        'psr4' => false,
+    ))
+    ->setRiskyAllowed(true)
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in(array(
+                __DIR__.'/src',
+                __DIR__.'/tests',
+            ))
+            ->notPath('Unit/src/Cache/fixtures/invalid.php')
+    );

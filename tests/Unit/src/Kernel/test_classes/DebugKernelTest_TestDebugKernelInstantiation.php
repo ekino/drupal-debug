@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\test_classes;
 
 use Ekino\Drupal\Debug\Action\ActionManager;
@@ -16,7 +18,7 @@ class TestDebugKernelInstantiationEventDispatcher extends EventDispatcher
      */
     public function dispatch($eventName, Event $event = null)
     {
-        TestDebugKernelInstantiation::$stack[] = sprintf('dispatch.%s', $eventName);
+        TestDebugKernelInstantiation::$stack[] = \sprintf('dispatch.%s', $eventName);
     }
 }
 

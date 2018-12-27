@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptions;
 
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
@@ -9,24 +11,24 @@ use Psr\Log\LoggerInterface;
 class DisplayPrettyExceptionsOptions implements OptionsInterface
 {
     /**
-     * @var null|string
+     * @var string|null
      */
     private $charset;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $fileLinkFormat;
 
     /**
-     * @var null|LoggerInterface
+     * @var LoggerInterface|null
      */
     private $logger;
 
     /**
-     * @param null|string          $charset
-     * @param null|string          $fileLinkFormat
-     * @param null|LoggerInterface $logger
+     * @param string|null          $charset
+     * @param string|null          $fileLinkFormat
+     * @param LoggerInterface|null $logger
      */
     public function __construct($charset, $fileLinkFormat, LoggerInterface $logger = null)
     {
@@ -36,7 +38,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getCharset()
     {
@@ -44,7 +46,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getFileLinkFormat()
     {
@@ -52,7 +54,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     }
 
     /**
-     * @return null|LoggerInterface
+     * @return LoggerInterface|null
      */
     public function getLogger()
     {
