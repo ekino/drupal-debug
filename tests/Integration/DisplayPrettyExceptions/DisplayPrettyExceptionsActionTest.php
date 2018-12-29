@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Integration\DisplayPrettyExceptions;
 
 use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
-use PHPUnit\Framework\Constraint\StringContains;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 

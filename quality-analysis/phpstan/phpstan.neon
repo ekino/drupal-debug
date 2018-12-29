@@ -23,3 +23,5 @@ parameters:
         # Intentional ignores
         - '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
         - '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
+        # Error in the code of xdebug
+        - '#^Parameter \#1 \$cleanup of function xdebug_stop_code_coverage expects bool, int given\.$#'

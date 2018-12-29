@@ -35,6 +35,6 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
      */
     private function getDumpText(Client $client)
     {
-        return $client->request('GET', '/')->filterXPath("descendant-or-self::pre[@class = 'sf-dump']")->text();
+        return $client->request('GET', '/')->filterXPath('descendant-or-self::pre[@class="sf-dump"]')->text();
     }
 }

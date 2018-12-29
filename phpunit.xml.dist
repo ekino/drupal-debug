@@ -14,20 +14,20 @@
 
     <testsuites>
         <testsuite name="unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
+            <directory suffix="Test.php">tests/Unit</directory>
         </testsuite>
         <testsuite name="integration">
-            <directory suffix="Test.php">./tests/Integration</directory>
+            <directory suffix="Test.php">tests/Integration</directory>
         </testsuite>
     </testsuites>
 
     <listeners>
-        <listener class="Ekino\Drupal\Debug\Tests\Integration\SetupListener" file="./tests/Integration/SetupListener.php" />
+        <listener class="Ekino\Drupal\Debug\Tests\Integration\SetupListener" file="tests/Integration/SetupListener.php" />
     </listeners>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
 
