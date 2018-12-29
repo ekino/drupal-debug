@@ -7,6 +7,14 @@ if (!function_exists('opcache_invalidate')) {
     }
 }
 
+if (!defined('XDEBUG_CC_DEAD_CODE')) {
+    define('XDEBUG_CC_DEAD_CODE', 1);
+}
+
+if (!defined('XDEBUG_CC_UNUSED')) {
+    define('XDEBUG_CC_UNUSED', 2);
+}
+
 require sprintf('%s/../../vendor/autoload.php', __DIR__);
 
 // We don't want to put it in composer autoload because when the DrupalKernel

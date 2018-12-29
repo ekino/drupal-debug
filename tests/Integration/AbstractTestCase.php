@@ -76,6 +76,9 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown()
     {
         if ($this->webServerManager instanceof WebServerManager) {
@@ -90,6 +93,10 @@ abstract class AbstractTestCase extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        if (\extension_loaded('xdebug')) {
+            \xdebug_stop_code_coverage(0);
+        }
+
         $testCaseFilename = (new \ReflectionClass(static::class))->getFileName();
         if (!\is_string($testCaseFilename)) {
             self::markTestIncomplete('The test case filename could not be determined.');
@@ -107,17 +114,19 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        if (\extension_loaded('xdebug')) {
+            \xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+        }
+    }
+
     public function testInitialBehaviorWithDrupalKernel()
     {
-        $this->webServerManager = new WebServerManager(self::DRUPAL_DIRECTORY_PATH, 'localhost', 9966);
-        $this->webServerManager->start();
-
-        $goutteClient = new GoutteClient();
-        $goutteClient->setClient(new GuzzleClient(array(
-            'base_uri' => 'http://localhost:9966',
-        )));
-
-        $this->doTestInitialBehaviorWithDrupalKernel($goutteClient);
+        $this->doTestInitialBehaviorWithDrupalKernel($this->getClient(9966));
     }
 
     public function testTargetedBehaviorWithDebugKernel()
@@ -126,17 +135,12 @@ abstract class AbstractTestCase extends TestCase
         $_ENV[ConfigurationManager::CONFIGURATION_FILE_PATH_ENVIRONMENT_VARIABLE_NAME] = self::DEFAULT_CONFIGURATION_FILE_PATH;
         $_ENV[ConfigurationManager::CONFIGURATION_CACHE_DIRECTORY_ENVIRONMENT_VARIABLE_NAME] = self::CACHE_DIRECTORY_PATH;
 
-        $this->webServerManager = new WebServerManager(self::DRUPAL_DIRECTORY_PATH, 'localhost', 9967);
-        $this->webServerManager->start();
-
-        $goutteClient = new GoutteClient();
-        $goutteClient->setClient(new GuzzleClient(array(
-            'base_uri' => 'http://localhost:9967',
-        )));
-
-        $this->doTestTargetedBehaviorWithDebugKernel($goutteClient);
+        $this->doTestTargetedBehaviorWithDebugKernel($this->getClient(9967));
     }
 
+    /**
+     * @param string[] $names
+     */
     private function installModules(array $names)
     {
         $currentWorkingDirectory = \getcwd();
@@ -158,7 +162,7 @@ abstract class AbstractTestCase extends TestCase
         }
 
         if (!$moduleInstaller->install($names)) {
-            $this->markTestIncomplete(\sprintf('The modules "%s" could not be installed.', \implode(', ', $names)));
+            $this->markTestIncomplete(\sprintf('The module(s) "%s" could not be installed.', \implode(', ', $names)));
         }
 
         \chdir($currentWorkingDirectory);
@@ -167,6 +171,23 @@ abstract class AbstractTestCase extends TestCase
     private function clearCache()
     {
         (new Filesystem())->remove(Finder::create()->in(self::CACHE_DIRECTORY_PATH));
+    }
+
+    private function getClient(int $port): BrowserKitClient
+    {
+        if ($this->webServerManager instanceof WebServerManager) {
+            $this->webServerManager->quit();
+        }
+
+        $this->webServerManager = new WebServerManager(self::DRUPAL_DIRECTORY_PATH, 'localhost', $port);
+        $this->webServerManager->start();
+
+        $goutteClient = new GoutteClient();
+        $goutteClient->setClient(new GuzzleClient(array(
+          'base_uri' => \sprintf('http://localhost:%s', $port),
+        )));
+
+        return $goutteClient;
     }
 
     abstract protected function doTestInitialBehaviorWithDrupalKernel(BrowserKitClient $client);

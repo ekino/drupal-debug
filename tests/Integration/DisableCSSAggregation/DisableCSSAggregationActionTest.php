@@ -30,6 +30,6 @@ class DisableCSSAggregationActionTest extends AbstractTestCase
      */
     private function countStylesheetLinks(Client $client)
     {
-        return \iterator_count($client->request('GET', '/')->filterXPath("descendant-or-self::link[@rel = 'stylesheet']"));
+        return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::link[@rel="stylesheet"]'));
     }
 }

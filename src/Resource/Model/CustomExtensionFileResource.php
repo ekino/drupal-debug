@@ -79,7 +79,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      */
     public function isNew()
     {
-        return false == $this->existed && \is_file($this->filePath);
+        return false === $this->existed && \is_file($this->filePath);
     }
 
     /**
