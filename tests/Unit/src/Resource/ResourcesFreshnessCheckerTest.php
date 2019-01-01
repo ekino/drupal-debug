@@ -55,7 +55,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         (new Filesystem())->dumpFile(self::EXISTING_FILE_PATH, \serialize(new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_1_FILE_PATH, self::getCustomExtension()),

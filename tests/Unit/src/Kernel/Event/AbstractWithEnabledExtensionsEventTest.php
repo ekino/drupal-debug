@@ -17,7 +17,7 @@ class AbstractWithEnabledExtensionsEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->abstractWithEnabledExtensionsEvent = new TestAbstractWithEnabledExtensionsEvent(array('foo'), array('bar'));
     }

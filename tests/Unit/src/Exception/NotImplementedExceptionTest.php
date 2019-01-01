@@ -17,7 +17,7 @@ class NotImplementedExceptionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->notImplementedException = new NotImplementedException('foo');
     }

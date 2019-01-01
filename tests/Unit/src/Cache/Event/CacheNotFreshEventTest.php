@@ -24,7 +24,7 @@ class CacheNotFreshEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->fileCache = $this->createMock(FileCache::class);
 

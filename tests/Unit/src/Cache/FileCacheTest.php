@@ -51,7 +51,7 @@ class FileCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
