@@ -1,0 +1,6 @@
+use_custom_route.foo:
+  path: '%path%'
+  defaults:
+    _controller: '\Drupal\use_custom_route\Controller\FooController::action'
+  requirements:
+    _access: 'TRUE'
