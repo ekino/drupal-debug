@@ -40,7 +40,7 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         \touch(self::EXISTING_FILE_PATH);
         if (!\is_file(self::EXISTING_FILE_PATH)) {

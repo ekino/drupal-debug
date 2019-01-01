@@ -64,7 +64,7 @@ class DebugKernelTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         require self::TEST_ORIGINAL_DRUPAL_KERNEL_CLASS_FILE_PATH;
 

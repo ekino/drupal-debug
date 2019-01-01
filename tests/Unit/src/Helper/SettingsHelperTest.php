@@ -23,7 +23,7 @@ class SettingsHelperTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->settingsHelper = new SettingsHelper();
     }

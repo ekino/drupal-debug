@@ -33,7 +33,7 @@ class FileBackendTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 

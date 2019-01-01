@@ -17,7 +17,7 @@ class NotSupportedExceptionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->notSupportedException = new NotSupportedException('foo');
     }

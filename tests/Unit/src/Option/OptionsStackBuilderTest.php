@@ -26,7 +26,7 @@ class OptionsStackBuilderTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->optionsStackBuilder = OptionsStackBuilder::create();
     }

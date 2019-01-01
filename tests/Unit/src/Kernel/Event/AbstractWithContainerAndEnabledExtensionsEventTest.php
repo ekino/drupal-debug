@@ -24,7 +24,7 @@ class AbstractWithContainerAndEnabledExtensionsEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->container = $this->createMock(ContainerInterface::class);
 

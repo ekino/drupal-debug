@@ -9,7 +9,7 @@ use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class WatchContainerDefinitionsTest extends AbstractTestCase
+class WatchContainerDefinitionsActionTest extends AbstractTestCase
 {
     use FileHelperTrait;
 
@@ -25,15 +25,15 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
 
     private static $serviceProviderTemplateFileContent = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        self::deleteFile(self::MODULE_SERVICES_FILE_PATH, true);
-        self::deleteFile(self::MODULE_SERVICE_PROVIDER_FILE_PATH, true);
+        $this->deleteServicesFile();
+        $this->deleteServiceProviderFile();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -41,7 +41,7 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
         self::deleteFile(self::MODULE_SERVICE_PROVIDER_FILE_PATH);
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -52,7 +52,7 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestInitialBehaviorWithDrupalKernel(Client $client)
+    protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
         $this->assertContains('Drupal debug ==> No service message!!!', $client->request('GET', '/')->text());
 
@@ -80,7 +80,7 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
+    protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $this->assertContains('Drupal debug ==> No service message!!!', $client->request('GET', '/')->text());
 
@@ -115,17 +115,17 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
         $this->assertNotContains('Drupal debug ==> Services file is modified', $text);
     }
 
-    private function writeServicesFile($message)
+    private function writeServicesFile(string $message): void
     {
         $this->writeTemplatedFile(self::MODULE_SERVICES_FILE_PATH, self::$servicesTemplateFileContent, $message);
     }
 
-    private function writeServiceProviderFile($message)
+    private function writeServiceProviderFile(string $message): void
     {
         $this->writeTemplatedFile(self::MODULE_SERVICE_PROVIDER_FILE_PATH, self::$serviceProviderTemplateFileContent, $message);
     }
 
-    private function writeTemplatedFile($path, $content, $message)
+    private function writeTemplatedFile(string $path, string $content, string $message): void
     {
         $touch = \is_file($path);
 
@@ -138,12 +138,12 @@ class WatchContainerDefinitionsTest extends AbstractTestCase
         }
     }
 
-    private function deleteServicesFile()
+    private function deleteServicesFile(): void
     {
         self::deleteFile(self::MODULE_SERVICES_FILE_PATH, true);
     }
 
-    private function deleteServiceProviderFile()
+    private function deleteServiceProviderFile(): void
     {
         self::deleteFile(self::MODULE_SERVICE_PROVIDER_FILE_PATH, true);
     }
