@@ -11,7 +11,7 @@ class EnableTwigDebugAction extends AbstractOverrideTwigConfigAction
     /**
      * {@inheritdoc}
      */
-    protected function getOverride()
+    protected function getOverrides(): array
     {
         return array(
             'debug' => true,

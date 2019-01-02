@@ -26,7 +26,7 @@ class FileCache
      * @param string              $filePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function __construct($filePath, ResourcesCollection $resourcesCollection)
+    public function __construct(string $filePath, ResourcesCollection $resourcesCollection)
     {
         $this->filePath = $filePath;
 
@@ -36,7 +36,7 @@ class FileCache
     /**
      * @return bool
      */
-    public function isFresh()
+    public function isFresh(): bool
     {
         return $this->resourcesFreshnessChecker->isFresh();
     }
@@ -70,7 +70,7 @@ class FileCache
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $data = $this->get();
         if (!\is_array($data)) {
@@ -83,7 +83,7 @@ class FileCache
     /**
      * @param array $data
      */
-    public function write(array $data)
+    public function write(array $data): void
     {
         $currentData = $this->get();
         if (\is_array($currentData)) {
@@ -111,7 +111,7 @@ class FileCache
         $this->resourcesFreshnessChecker->commit();
     }
 
-    public function invalidate()
+    public function invalidate(): void
     {
         if (\is_file($this->filePath)) {
             \unlink($this->filePath);
@@ -121,7 +121,7 @@ class FileCache
     /**
      * @return string
      */
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->filePath;
     }

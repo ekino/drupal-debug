@@ -17,17 +17,17 @@ class NotSupportedExceptionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->notSupportedException = new NotSupportedException('foo');
     }
 
-    public function testInstanceOfException()
+    public function testInstanceOfException(): void
     {
         $this->assertInstanceOf(\Exception::class, $this->notSupportedException);
     }
 
-    public function testGetMessage()
+    public function testGetMessage(): void
     {
         $this->assertSame('foo', $this->notSupportedException->getMessage());
     }

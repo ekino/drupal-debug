@@ -11,17 +11,17 @@ class WatchRoutingDefinitionsOptions extends AbstractFileBackendDependantOptions
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array(
-          '%machine_name%.routing.yml',
+            '%machine_name%.routing.yml',
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultCacheFileName()
+    protected static function getDefaultCacheFileName(): string
     {
         return 'routing.meta';
     }

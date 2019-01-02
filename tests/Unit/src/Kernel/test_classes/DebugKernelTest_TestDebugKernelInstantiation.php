@@ -16,9 +16,11 @@ class TestDebugKernelInstantiationEventDispatcher extends EventDispatcher
     /**
      * {@inheritdoc}
      */
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch($eventName, Event $event = null): Event
     {
         TestDebugKernelInstantiation::$stack[] = \sprintf('dispatch.%s', $eventName);
+
+        return new Event();
     }
 }
 
@@ -27,7 +29,7 @@ class TestDebugKernelInstantiationActionManager extends ActionManager
     /**
      * {@inheritdoc}
      */
-    public function __construct($appRoot, OptionsStack $optionsStack)
+    public function __construct(string $appRoot, OptionsStack $optionsStack)
     {
         TestDebugKernelInstantiation::$stack[] = $appRoot;
         TestDebugKernelInstantiation::$stack[] = $optionsStack;
@@ -36,7 +38,7 @@ class TestDebugKernelInstantiationActionManager extends ActionManager
     /**
      * {@inheritdoc}
      */
-    public function addEventSubscriberActionsToEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    public function addEventSubscriberActionsToEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
         TestDebugKernelInstantiation::$stack[] = 'addEventSubscriberActionsToEventDispatcher';
     }
@@ -52,7 +54,7 @@ class TestDebugKernelInstantiation extends DebugKernel
     /**
      * {@inheritdoc}
      */
-    protected function getEventDispatcher()
+    protected function getEventDispatcher(): EventDispatcherInterface
     {
         return new TestDebugKernelInstantiationEventDispatcher();
     }
@@ -60,7 +62,7 @@ class TestDebugKernelInstantiation extends DebugKernel
     /**
      * {@inheritdoc}
      */
-    protected function getActionManager($appRoot, OptionsStack $optionsStack)
+    protected function getActionManager(string $appRoot, OptionsStack $optionsStack): ActionManager
     {
         return new TestDebugKernelInstantiationActionManager($appRoot, $optionsStack);
     }
@@ -68,12 +70,12 @@ class TestDebugKernelInstantiation extends DebugKernel
     /**
      * {@inheritdoc}
      */
-    public static function bootEnvironment($appRoot = null)
+    public static function bootEnvironment($appRoot = null): void
     {
         self::$stack[] = 'bootEnvironment';
     }
 
-    public static function reset()
+    public static function reset(): void
     {
         self::$stack = array();
     }

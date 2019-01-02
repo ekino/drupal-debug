@@ -32,7 +32,7 @@ class RecursiveCustomExtensionFilterIterator extends \RecursiveFilterIterator
     /**
      * {@inheritdoc}
      */
-    public function accept()
+    public function accept(): bool
     {
         $current = $this->current();
         if (null === $current) {

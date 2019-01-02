@@ -28,7 +28,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
      * @param string                   $filePath
      * @param CustomExtensionInterface $customExtension
      */
-    public function __construct($filePath, CustomExtensionInterface $customExtension)
+    public function __construct(string $filePath, CustomExtensionInterface $customExtension)
     {
         $this->filePath = $filePath;
         $this->customExtension = $customExtension;
@@ -39,7 +39,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->filePath;
     }
@@ -47,7 +47,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * @return string
      */
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->filePath;
     }
@@ -55,7 +55,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * @return CustomExtensionInterface
      */
-    public function getCustomExtension()
+    public function getCustomExtension(): CustomExtensionInterface
     {
         return $this->customExtension;
     }
@@ -63,7 +63,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * {@inheritdoc}
      */
-    public function isFresh($timestamp)
+    public function isFresh($timestamp): bool
     {
         if (!\is_file($this->filePath)) {
             return !$this->existed;
@@ -77,7 +77,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * @return bool
      */
-    public function isNew()
+    public function isNew(): bool
     {
         return false === $this->existed && \is_file($this->filePath);
     }
@@ -85,7 +85,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize(array(
             $this->filePath,
@@ -97,7 +97,7 @@ class CustomExtensionFileResource implements SelfCheckingResourceInterface, \Ser
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->filePath, $this->customExtension, $this->existed) = \unserialize($serialized);
     }

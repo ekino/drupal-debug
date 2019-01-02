@@ -31,7 +31,7 @@ abstract class AbstractWithEnabledExtensionsEvent extends Event
     /**
      * @return array
      */
-    public function getEnabledModules()
+    public function getEnabledModules(): array
     {
         return $this->enabledModules;
     }
@@ -39,7 +39,7 @@ abstract class AbstractWithEnabledExtensionsEvent extends Event
     /**
      * @return array
      */
-    public function getEnabledThemes()
+    public function getEnabledThemes(): array
     {
         return $this->enabledThemes;
     }

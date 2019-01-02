@@ -11,18 +11,18 @@ class WatchContainerDefinitionsOptions extends AbstractFileBackendDependantOptio
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array(
-          '%machine_name%.services.yml',
-          'src/%camel_case_machine_name%ServiceProvider.php',
+            '%machine_name%.services.yml',
+            'src/%camel_case_machine_name%ServiceProvider.php',
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultCacheFileName()
+    protected static function getDefaultCacheFileName(): string
     {
         return 'container_definition.php';
     }

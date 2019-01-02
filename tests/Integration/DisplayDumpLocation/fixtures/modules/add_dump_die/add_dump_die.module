@@ -1,5 +1,6 @@
 <?php
 
-function add_dump_die_form_user_login_form_alter() {
+function add_dump_die_form_user_login_form_alter(): void
+{
     dump('fcy'); die();
 }

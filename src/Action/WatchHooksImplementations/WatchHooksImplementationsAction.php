@@ -33,7 +33,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_ATTACH_SYNTHETIC => 'setResources',
@@ -51,7 +51,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('module_handler')) {
             throw new NotSupportedException('The "module_handler" service should already be set in the container.');
@@ -96,7 +96,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
     /**
      * @param AfterAttachSyntheticEvent $event
      */
-    public function setResources(AfterAttachSyntheticEvent $event)
+    public function setResources(AfterAttachSyntheticEvent $event): void
     {
         $event->getContainer()->set(self::RESOURCES_SERVICE_ID, $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes()));
     }
@@ -104,7 +104,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return WatchHooksImplementationsOptions::class;
     }

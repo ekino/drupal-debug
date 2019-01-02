@@ -22,7 +22,7 @@ class WatchContainerDefinitionsAction implements EventSubscriberActionInterface,
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION => 'process',
@@ -37,7 +37,7 @@ class WatchContainerDefinitionsAction implements EventSubscriberActionInterface,
         $this->options = $options;
     }
 
-    public function process(AfterSettingsInitializationEvent $event)
+    public function process(AfterSettingsInitializationEvent $event): void
     {
         (new SettingsHelper())->override('[bootstrap_container_definition]', array(
             'services' => array(
@@ -54,7 +54,7 @@ class WatchContainerDefinitionsAction implements EventSubscriberActionInterface,
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return WatchContainerDefinitionsOptions::class;
     }

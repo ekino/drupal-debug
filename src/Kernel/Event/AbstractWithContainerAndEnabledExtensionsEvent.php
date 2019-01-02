@@ -28,7 +28,7 @@ abstract class AbstractWithContainerAndEnabledExtensionsEvent extends AbstractWi
     /**
      * @return ContainerInterface
      */
-    public function getContainer()
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }

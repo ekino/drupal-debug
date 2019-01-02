@@ -48,7 +48,7 @@ class WatchRoutingDefinitionsActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestInitialBehaviorWithDrupalKernel(Client $client)
+    protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
         $this->assertRoutePathNotFound($client, self::ROUTE_PATH_1);
         $this->assertRoutePathNotFound($client, self::ROUTE_PATH_2);
@@ -63,7 +63,7 @@ class WatchRoutingDefinitionsActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
+    protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $this->assertRoutePathNotFound($client, self::ROUTE_PATH_1);
         $this->assertRoutePathNotFound($client, self::ROUTE_PATH_2);

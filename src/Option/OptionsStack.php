@@ -28,7 +28,7 @@ class OptionsStack
      *
      * @return OptionsStack
      */
-    public static function create(array $options = array())
+    public static function create(array $options = array()): self
     {
         return new self($options);
     }
@@ -38,7 +38,7 @@ class OptionsStack
      *
      * @return OptionsInterface|null
      */
-    public function get($class)
+    public function get(string $class): ?OptionsInterface
     {
         if (!isset($this->optionsStack[$class])) {
             return null;
@@ -50,7 +50,7 @@ class OptionsStack
     /**
      * @param OptionsInterface $options
      */
-    public function set(OptionsInterface $options)
+    public function set(OptionsInterface $options): void
     {
         $this->optionsStack[\get_class($options)] = $options;
     }

@@ -11,7 +11,7 @@ class EnableTwigStrictVariablesAction extends AbstractOverrideTwigConfigAction
     /**
      * {@inheritdoc}
      */
-    protected function getOverride()
+    protected function getOverrides(): array
     {
         return array(
             'strict_variables' => true,

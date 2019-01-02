@@ -42,7 +42,7 @@ class CustomExtensionDiscovery
     /**
      * @param string $appRoot
      */
-    public function __construct($appRoot)
+    public function __construct(string $appRoot)
     {
         $this->appRoot = $appRoot;
     }
@@ -50,7 +50,7 @@ class CustomExtensionDiscovery
     /**
      * @return CustomModule[]
      */
-    public function getCustomModules()
+    public function getCustomModules(): array
     {
         /** @var CustomModule[] $customModules */
         $customModules = $this->get('module');
@@ -61,7 +61,7 @@ class CustomExtensionDiscovery
     /**
      * @return CustomTheme[]
      */
-    public function getCustomThemes()
+    public function getCustomThemes(): array
     {
         /** @var CustomTheme[] $customThemes */
         $customThemes = $this->get('theme');
@@ -74,7 +74,7 @@ class CustomExtensionDiscovery
      *
      * @return CustomModule[]|CustomTheme[]
      */
-    private function get($type)
+    private function get(string $type): array
     {
         if (!isset(self::$cache[$type])) {
             throw new \InvalidArgumentException(\sprintf('The "%s" type is invalid.', $type));
@@ -98,7 +98,7 @@ class CustomExtensionDiscovery
      *
      * @return string[]
      */
-    private function getExistingRootPaths($type)
+    private function getExistingRootPaths(string $type): array
     {
         switch ($type) {
             case 'module':
@@ -124,7 +124,7 @@ class CustomExtensionDiscovery
      *
      * @return AbstractCustomExtension[]
      */
-    private function searchRecursively($type, \SplFileInfo $splFileInfo)
+    private function searchRecursively(string $type, \SplFileInfo $splFileInfo): array
     {
         $customExtensions = array();
 
@@ -149,7 +149,7 @@ class CustomExtensionDiscovery
      *
      * @return AbstractCustomExtension
      */
-    private function create($type, \SplFileInfo $splFileInfo)
+    private function create(string $type, \SplFileInfo $splFileInfo): AbstractCustomExtension
     {
         switch ($type) {
             case 'module':

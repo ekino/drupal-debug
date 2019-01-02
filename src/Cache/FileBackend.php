@@ -61,7 +61,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function getMultiple(&$cids, $allow_invalid = false)
+    public function getMultiple(&$cids, $allow_invalid = false): array
     {
         throw new NotImplementedException('The getMultiple() method is not implemented.');
     }
@@ -69,7 +69,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array())
+    public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()): void
     {
         if (Cache::PERMANENT !== $expire) {
             throw new NotImplementedException(\sprintf('$expire argument with "%s" value is not implemented.', $expire));
@@ -87,7 +87,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function setMultiple(array $items)
+    public function setMultiple(array $items): void
     {
         throw new NotImplementedException('The setMultiple() method is not implemented.');
     }
@@ -95,7 +95,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($cid)
+    public function delete($cid): void
     {
         $data = $this->fileCache->get();
         if (!\is_array($data)) {
@@ -110,7 +110,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteMultiple(array $cids)
+    public function deleteMultiple(array $cids): void
     {
         throw new NotImplementedException('The deleteMultiple() method is not implemented.');
     }
@@ -118,7 +118,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteAll()
+    public function deleteAll(): void
     {
         $this->fileCache->invalidate();
     }
@@ -126,7 +126,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidate($cid)
+    public function invalidate($cid): void
     {
         throw new NotImplementedException('The invalidate() method is not implemented.');
     }
@@ -134,7 +134,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidateMultiple(array $cids)
+    public function invalidateMultiple(array $cids): void
     {
         throw new NotImplementedException('The invalidateMultiple() method is not implemented.');
     }
@@ -142,7 +142,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidateAll()
+    public function invalidateAll(): void
     {
         throw new NotImplementedException('The invalidateAll() method is not implemented.');
     }
@@ -150,7 +150,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function garbageCollection()
+    public function garbageCollection(): void
     {
         throw new NotImplementedException('The garbageCollection() method is not implemented.');
     }
@@ -158,7 +158,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * {@inheritdoc}
      */
-    public function removeBin()
+    public function removeBin(): void
     {
         throw new NotImplementedException('The removeBin() method is not implemented.');
     }
@@ -166,7 +166,7 @@ class FileBackend implements CacheBackendInterface
     /**
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -175,7 +175,7 @@ class FileBackend implements CacheBackendInterface
      * @param string     $eventName
      * @param Event|null $event
      */
-    private function dispatch($eventName, Event $event = null)
+    private function dispatch(string $eventName, ?Event $event): void
     {
         if ($this->eventDispatcher instanceof EventDispatcherInterface) {
             $this->eventDispatcher->dispatch($eventName, $event);

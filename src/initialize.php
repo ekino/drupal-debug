@@ -6,7 +6,7 @@ use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Kernel\Helper\OriginalDrupalKernelHelper;
 
 if (!\function_exists('_drupal_debug_initialize')) {
-    function _drupal_debug_initialize()
+    function _drupal_debug_initialize(): void
     {
         ConfigurationManager::initialize();
 

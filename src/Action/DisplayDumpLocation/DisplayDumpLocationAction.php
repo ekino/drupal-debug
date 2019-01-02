@@ -17,14 +17,14 @@ class DisplayDumpLocationAction implements EventSubscriberActionInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::ON_KERNEL_INSTANTIATION => 'process',
         );
     }
 
-    public function process()
+    public function process(): void
     {
         if (!\class_exists(SourceContextProvider::class)) {
             return;
@@ -33,8 +33,8 @@ class DisplayDumpLocationAction implements EventSubscriberActionInterface
         $cloner = new VarCloner();
         $dumper = \in_array(\PHP_SAPI, array('cli', 'phpdbg'), true) ? new CliDumper() : new HtmlDumper();
 
-        VarDumper::setHandler(function ($var) use ($cloner, $dumper) {
-            (function () {
+        VarDumper::setHandler(function ($var) use ($cloner, $dumper): void {
+            (function (): void {
                 list('name' => $name, 'file' => $file, 'line' => $line) = (new SourceContextProvider())->getContext();
 
                 $attr = array();

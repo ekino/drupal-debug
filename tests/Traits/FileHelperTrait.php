@@ -12,7 +12,7 @@ trait FileHelperTrait
      * @param string $path
      * @param bool   $mandatory
      */
-    private static function deleteFile($path, $mandatory = false)
+    private static function deleteFile(string $path, bool $mandatory = false): void
     {
         if (\is_file($path)) {
             if (!\unlink($path) && $mandatory) {
@@ -26,7 +26,7 @@ trait FileHelperTrait
      *
      * @return string
      */
-    private static function getFileContent($path)
+    private static function getFileContent(string $path): string
     {
         $content = \file_get_contents($path);
         if (!\is_string($content)) {
@@ -40,7 +40,7 @@ trait FileHelperTrait
      * @param string $path
      * @param string $content
      */
-    private static function writeFile($path, $content)
+    private static function writeFile(string $path, string $content): void
     {
         if (!\file_put_contents($path, $content)) {
             throw new IncompleteTestError(\sprintf('The file "%s" content could not be written.', $path));
@@ -51,7 +51,7 @@ trait FileHelperTrait
      * @param string $path
      * @param int    $timestamp
      */
-    private static function touch($path, $timestamp)
+    private static function touch(string $path, int $timestamp): void
     {
         if (!\touch($path, $timestamp)) {
             throw new IncompleteTestError(\sprintf('The file "%s" could not be touched.', $path));

@@ -20,7 +20,7 @@ class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterfac
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_ENVIRONMENT_BOOT => 'process',
@@ -35,10 +35,10 @@ class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterfac
         $this->options = $options;
     }
 
-    public function process()
+    public function process(): void
     {
         // https://github.com/symfony/symfony/pull/28954
-        \set_exception_handler(function (\Throwable $exception) {
+        \set_exception_handler(function (\Throwable $exception): void {
             if (!$exception instanceof \Exception) {
                 $exception = new FatalThrowableError($exception);
             }
@@ -51,7 +51,7 @@ class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterfac
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return DisplayPrettyExceptionsASAPOptions::class;
     }

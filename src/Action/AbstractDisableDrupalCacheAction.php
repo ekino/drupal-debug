@@ -19,7 +19,7 @@ abstract class AbstractDisableDrupalCacheAction implements EventSubscriberAction
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION => 'overrideSettings',
@@ -27,7 +27,7 @@ abstract class AbstractDisableDrupalCacheAction implements EventSubscriberAction
         );
     }
 
-    public function overrideSettings()
+    public function overrideSettings(): void
     {
         (new SettingsHelper())->override(\sprintf('[cache][bins][%s]', $this->getBin()), self::NULL_BACKEND_FACTORY_SERVICE_ID);
     }
@@ -35,7 +35,7 @@ abstract class AbstractDisableDrupalCacheAction implements EventSubscriberAction
     /**
      * @param AfterContainerInitializationEvent $event
      */
-    public function setNullBackend(AfterContainerInitializationEvent $event)
+    public function setNullBackend(AfterContainerInitializationEvent $event): void
     {
         $container = $event->getContainer();
         if ($container->has(self::NULL_BACKEND_FACTORY_SERVICE_ID)) {
@@ -48,5 +48,5 @@ abstract class AbstractDisableDrupalCacheAction implements EventSubscriberAction
     /**
      * @return string
      */
-    abstract protected function getBin();
+    abstract protected function getBin(): string;
 }

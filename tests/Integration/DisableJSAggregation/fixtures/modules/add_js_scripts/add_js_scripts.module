@@ -1,5 +1,6 @@
 <?php
 
-function add_js_scripts_form_user_login_form_alter(&$form) {
+function add_js_scripts_form_user_login_form_alter(array &$form): void
+{
     $form['#attached']['library'][] = 'add_js_scripts/foo';
 }

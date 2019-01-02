@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Unit\Resource;
 
 use Carbon\Carbon;
+use Ekino\Drupal\Debug\Extension\Model\AbstractCustomExtension;
 use Ekino\Drupal\Debug\Extension\Model\CustomTheme;
 use Ekino\Drupal\Debug\Resource\Model\CustomExtensionFileResource;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
@@ -55,7 +56,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         (new Filesystem())->dumpFile(self::EXISTING_FILE_PATH, \serialize(new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_1_FILE_PATH, self::getCustomExtension()),
@@ -78,21 +79,21 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->deleteFile(self::EXISTING_FILE_PATH);
         $this->deleteFile(self::NOT_EXISTING_FILE_PATH);
         $this->deleteFile(self::CANNOT_BE_READ_FILE_PATH);
     }
 
-    public function testGetCurrentResourcesWhenThereIsNone()
+    public function testGetCurrentResourcesWhenThereIsNone(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::NOT_EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
         $this->assertEquals(new ResourcesCollection(), $resourcesFreshnessChecker->getCurrentResourcesCollection());
     }
 
-    public function testGetCurrentResourcesWhenTheFileCannotBeRead()
+    public function testGetCurrentResourcesWhenTheFileCannotBeRead(): void
     {
         $filesystem = new Filesystem();
         $filesystem->dumpFile(self::CANNOT_BE_READ_FILE_PATH, '');
@@ -108,7 +109,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $resourcesFreshnessChecker->getCurrentResourcesCollection();
     }
 
-    public function testGetCurrentResourcesWhenTheUnserializedContentIsNotTheExpectedOne()
+    public function testGetCurrentResourcesWhenTheUnserializedContentIsNotTheExpectedOne(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::UNEXPECTED_CONTENT_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
@@ -118,7 +119,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $resourcesFreshnessChecker->getCurrentResourcesCollection();
     }
 
-    public function testGetCurrentResources()
+    public function testGetCurrentResources(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
@@ -128,21 +129,21 @@ class ResourcesFreshnessCheckerTest extends TestCase
         )), $resourcesFreshnessChecker->getCurrentResourcesCollection());
     }
 
-    public function testIsFreshWhenTheFileDoesNotExists()
+    public function testIsFreshWhenTheFileDoesNotExists(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::NOT_EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
         $this->assertFalse($resourcesFreshnessChecker->isFresh());
     }
 
-    public function testIsFreshWhenResourcesCountIsDifferent()
+    public function testIsFreshWhenResourcesCountIsDifferent(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
         $this->assertFalse($resourcesFreshnessChecker->isFresh());
     }
 
-    public function testIsFreshWhenResourcesAreDifferent()
+    public function testIsFreshWhenResourcesAreDifferent(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_1_FILE_PATH, $this->getCustomExtension()),
@@ -152,7 +153,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $this->assertFalse($resourcesFreshnessChecker->isFresh());
     }
 
-    public function testIsFreshWhenResourcesWereNotModified()
+    public function testIsFreshWhenResourcesWereNotModified(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_1_FILE_PATH, $this->getCustomExtension()),
@@ -162,7 +163,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $this->assertTrue($resourcesFreshnessChecker->isFresh());
     }
 
-    public function testIsFreshWhenResourcesWereModified()
+    public function testIsFreshWhenResourcesWereModified(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_1_FILE_PATH, $this->getCustomExtension()),
@@ -174,7 +175,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $this->assertFalse($resourcesFreshnessChecker->isFresh());
     }
 
-    public function testIsFreshWhenResourcesWereNotModifiedButAreNotInTheSameOrder()
+    public function testIsFreshWhenResourcesWereNotModifiedButAreNotInTheSameOrder(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_2_FILE_PATH, $this->getCustomExtension()),
@@ -187,7 +188,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * @dataProvider commitProvider
      */
-    public function testCommitWithExistingFile($filePath)
+    public function testCommitWithExistingFile(string $filePath): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker($filePath, new ResourcesCollection(array(
             new CustomExtensionFileResource(self::RESOURCE_3_FILE_PATH, $this->getCustomExtension()),
@@ -201,7 +202,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         )), $resourcesFreshnessChecker->getCurrentResourcesCollection());
     }
 
-    public function commitProvider()
+    public function commitProvider(): array
     {
         return array(
             array(self::EXISTING_FILE_PATH),
@@ -209,7 +210,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         );
     }
 
-    private function resetResourcesModificationTime()
+    private function resetResourcesModificationTime(): void
     {
         $resourcesFilePaths = array(
             self::RESOURCE_1_FILE_PATH,
@@ -230,7 +231,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
     /**
      * @return CustomTheme
      */
-    private function getCustomExtension()
+    private function getCustomExtension(): AbstractCustomExtension
     {
         return new CustomTheme('/foo', 'bar');
     }

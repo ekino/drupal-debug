@@ -23,7 +23,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
      * @param string|null $charset
      * @param string|null $fileLinkFormat
      */
-    public function __construct($charset, $fileLinkFormat)
+    public function __construct(?string $charset, ?string $fileLinkFormat)
     {
         $this->charset = $charset;
         $this->fileLinkFormat = $fileLinkFormat;
@@ -32,7 +32,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
     /**
      * @return string|null
      */
-    public function getCharset()
+    public function getCharset(): ?string
     {
         return $this->charset;
     }
@@ -40,7 +40,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
     /**
      * @return string|null
      */
-    public function getFileLinkFormat()
+    public function getFileLinkFormat(): ?string
     {
         return $this->fileLinkFormat;
     }
@@ -51,7 +51,7 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
      *
      * @return DisplayPrettyExceptionsASAPOptions
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration)
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
         return new self($defaultsConfiguration->getCharset(), $defaultsConfiguration->getFileLinkFormat());
     }

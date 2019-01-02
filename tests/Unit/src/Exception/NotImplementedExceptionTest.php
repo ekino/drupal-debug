@@ -17,17 +17,17 @@ class NotImplementedExceptionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->notImplementedException = new NotImplementedException('foo');
     }
 
-    public function testInstanceOfException()
+    public function testInstanceOfException(): void
     {
         $this->assertInstanceOf(\Exception::class, $this->notImplementedException);
     }
 
-    public function testGetMessage()
+    public function testGetMessage(): void
     {
         $this->assertSame('foo', $this->notImplementedException->getMessage());
     }

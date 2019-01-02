@@ -24,7 +24,7 @@ class ResourcesCollection implements \Countable, \Serializable
     /**
      * @return SelfCheckingResourceInterface[]
      */
-    public function all()
+    public function all(): array
     {
         return $this->resources;
     }
@@ -32,7 +32,7 @@ class ResourcesCollection implements \Countable, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->resources);
     }
@@ -40,7 +40,7 @@ class ResourcesCollection implements \Countable, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize($this->resources);
     }
@@ -48,7 +48,7 @@ class ResourcesCollection implements \Countable, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         $this->resources = \unserialize($serialized);
     }

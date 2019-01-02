@@ -69,7 +69,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->inOneYearTimestamp = Carbon::now()->addYear()->getTimestamp();
     }
@@ -77,7 +77,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach (array(
             self::SUBSTITUTE_FILE_PATH,
@@ -90,7 +90,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         }
     }
 
-    public function testSubstituteWhenTheOriginalFileIsNotFound()
+    public function testSubstituteWhenTheOriginalFileIsNotFound(): void
     {
         $this->setUpOriginalFilePathAndFreshness(null);
 
@@ -100,7 +100,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         $this->callSubstitute();
     }
 
-    public function testSubstituteWhenTheSubstituteIsNotFreshAndTheOriginalFileCannotBeRead()
+    public function testSubstituteWhenTheSubstituteIsNotFreshAndTheOriginalFileCannotBeRead(): void
     {
         $filesystem = new Filesystem();
         $filesystem->dumpFile(self::CANNOT_BE_READ_FILE_PATH, '');
@@ -116,7 +116,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         $this->callSubstitute();
     }
 
-    public function testSubstituteWhenTheSubstituteIsNotFreshAndThereIsMoreReplacementsInTheOriginalFileThanExpected()
+    public function testSubstituteWhenTheSubstituteIsNotFreshAndThereIsMoreReplacementsInTheOriginalFileThanExpected(): void
     {
         $this->setUpOriginalFilePathAndFreshness(self::NO_REPLACEMENTS_FILE_PATH, false);
 
@@ -129,7 +129,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testSubstituteWhenTheSubstituteIsNotFreshAndTheClassAliasFail()
+    public function testSubstituteWhenTheSubstituteIsNotFreshAndTheClassAliasFail(): void
     {
         $this->setUpOriginalFilePathAndFreshness('original', false);
 
@@ -147,7 +147,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testSubstituteWhenTheSubstituteIsNotFresh()
+    public function testSubstituteWhenTheSubstituteIsNotFresh(): void
     {
         $this->setUpOriginalFilePathAndFreshness('original', false);
 
@@ -163,7 +163,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testSubstituteWhenTheSubstituteIsFreshButTheClassAliasFail()
+    public function testSubstituteWhenTheSubstituteIsFreshButTheClassAliasFail(): void
     {
         $this->setUpOriginalFilePathAndFreshness('original', true);
 
@@ -179,7 +179,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testSubstituteWhenTheSubstituteIsFresh()
+    public function testSubstituteWhenTheSubstituteIsFresh(): void
     {
         $this->setUpOriginalFilePathAndFreshness('original', true);
 
@@ -192,7 +192,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         $this->assertThatTheOriginalDrupalKernelWasSubstituted();
     }
 
-    private function callSubstitute()
+    private function callSubstitute(): void
     {
         OriginalDrupalKernelHelper::substitute($this->classLoader, self::CACHE_DIRECTORY);
     }
@@ -201,7 +201,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
      * @param string|null $filePath
      * @param bool        $fresh
      */
-    private function setUpOriginalFilePathAndFreshness($filePath = null, $fresh = false)
+    private function setUpOriginalFilePathAndFreshness(?string $filePath, bool $fresh = false): void
     {
         if ('original' === $filePath) {
             $filePath = \realpath(\sprintf('%s/../../../../../vendor/drupal/core/lib/Drupal/Core/DrupalKernel.php', __DIR__));
@@ -254,7 +254,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         }
     }
 
-    private function setUpAndExpectClassAliasFail()
+    private function setUpAndExpectClassAliasFail(): void
     {
         require self::CLASS_ALIAS_FAIL_FILE_PATH;
 
@@ -262,7 +262,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         $this->expectExceptionMessage('The DebugKernel class could not be aliased.');
     }
 
-    private function assertThatTheSubstituteFileWasCreated()
+    private function assertThatTheSubstituteFileWasCreated(): void
     {
         $this->assertFileExists(self::SUBSTITUTE_FILE_PATH);
 
@@ -273,22 +273,22 @@ class OriginalDrupalKernelHelperTest extends TestCase
         $this->assertSame(\realpath(\sprintf('%s/../../../../../vendor/drupal', __DIR__)), $refl->invoke(null));
     }
 
-    private function assertThatTheOriginalDrupalKernelWasSubstituted()
+    private function assertThatTheOriginalDrupalKernelWasSubstituted(): void
     {
         $this->assertSame(DebugKernel::class, (new \ReflectionClass(DrupalKernel::class))->getName());
     }
 
-    private function assertThatTheSubstituteFreshnessMetaFileWasCommitted()
+    private function assertThatTheSubstituteFreshnessMetaFileWasCommitted(): void
     {
         $this->assertFileExists(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH);
     }
 
-    private function assertThatTheSubstituteFileWasNotModified()
+    private function assertThatTheSubstituteFileWasNotModified(): void
     {
         $this->assertSame($this->inOneYearTimestamp, \filemtime(self::SUBSTITUTE_FILE_PATH));
     }
 
-    private function assertThatTheSubstituteFreshnessMetaFileWasNotModified()
+    private function assertThatTheSubstituteFreshnessMetaFileWasNotModified(): void
     {
         $this->assertSame($this->inOneYearTimestamp, \filemtime(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
     }

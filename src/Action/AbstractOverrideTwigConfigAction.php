@@ -17,17 +17,17 @@ abstract class AbstractOverrideTwigConfigAction implements CompilerPassActionInt
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasParameter(self::TWIG_CONFIG_PARAMETER_NAME)) {
             throw new NotSupportedException(\sprintf('The "%s" parameter should already be set in the container builder.', self::TWIG_CONFIG_PARAMETER_NAME));
         }
 
-        $container->setParameter(self::TWIG_CONFIG_PARAMETER_NAME, \array_merge($container->getParameter(self::TWIG_CONFIG_PARAMETER_NAME), $this->getOverride()));
+        $container->setParameter(self::TWIG_CONFIG_PARAMETER_NAME, \array_merge($container->getParameter(self::TWIG_CONFIG_PARAMETER_NAME), $this->getOverrides()));
     }
 
     /**
      * @return array
      */
-    abstract protected function getOverride();
+    abstract protected function getOverrides(): array;
 }

@@ -24,18 +24,18 @@ class OptionsStackTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->options = new TestOptions();
         $this->optionsStack = OptionsStack::create();
     }
 
-    public function testCreateWithoutOptions()
+    public function testCreateWithoutOptions(): void
     {
         $this->assertAttributeSame(array(), 'optionsStack', $this->optionsStack);
     }
 
-    public function testCreateWithOptions()
+    public function testCreateWithOptions(): void
     {
         $optionsStack = OptionsStack::create(array(
             $this->options,
@@ -46,12 +46,12 @@ class OptionsStackTest extends TestCase
         ), 'optionsStack', $optionsStack);
     }
 
-    public function testGetWithAnUnknownClass()
+    public function testGetWithAnUnknownClass(): void
     {
         $this->assertNull($this->optionsStack->get('A\Foo\Options'));
     }
 
-    public function testGetWithAKnownClass()
+    public function testGetWithAKnownClass(): void
     {
         $optionsStack = OptionsStack::create(array(
             $this->options,
@@ -61,7 +61,7 @@ class OptionsStackTest extends TestCase
         $this->assertSame($this->options, $optionsStack->get(TestOptions::class));
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $this->optionsStack->set($this->options);
 
@@ -70,7 +70,7 @@ class OptionsStackTest extends TestCase
         ), 'optionsStack', $this->optionsStack);
     }
 
-    public function testSetWithTheSameOptionsClassTwice()
+    public function testSetWithTheSameOptionsClassTwice(): void
     {
         $this->optionsStack->set($this->options);
 
@@ -88,7 +88,7 @@ class TestOptions implements OptionsInterface
     /**
      * {@inheritdoc}
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration)
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
     }
 }

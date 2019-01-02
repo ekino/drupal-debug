@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Kernel;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\OriginalDrupalKernel;
 use Ekino\Drupal\Debug\Action\ActionManager;
 use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
@@ -14,6 +16,7 @@ use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Ekino\Drupal\Debug\Option\OptionsStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class DebugKernel extends OriginalDrupalKernel
@@ -45,16 +48,15 @@ class DebugKernel extends OriginalDrupalKernel
 
     /**
      * @param string            $environment
-     * @param object            $class_loader
-     * @param bool              $allow_dumping
-     * @param string|null       $app_root
+     * @param object            $classLoader
+     * @param bool              $allowDumping
+     * @param string|null       $appRoot
      * @param OptionsStack|null $optionsStack
      */
-    public function __construct($environment, $class_loader, $allow_dumping = true, $app_root = null, OptionsStack $optionsStack = null)
+    public function __construct(string $environment, $classLoader, bool $allowDumping = true, ?string $appRoot = null, ?OptionsStack $optionsStack = null)
     {
         $this->eventDispatcher = $this->getEventDispatcher();
 
-        $appRoot = $app_root;
         if (!\is_string($appRoot)) {
             $appRoot = static::guessApplicationRoot();
         }
@@ -73,13 +75,13 @@ class DebugKernel extends OriginalDrupalKernel
         $this->enabledThemes = array();
         $this->settingsWereInitializedWithTheDedicatedDrupalKernelMethod = false;
 
-        parent::__construct($environment, $class_loader, $allow_dumping, $appRoot);
+        parent::__construct($environment, $classLoader, $allowDumping, $appRoot);
     }
 
     /**
      * @return DebugKernel
      */
-    public function boot()
+    public function boot(): DrupalKernelInterface
     {
         // The kernel cannot be booted without settings.
         //
@@ -101,7 +103,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    public function preHandle(Request $request)
+    public function preHandle(Request $request): void
     {
         parent::preHandle($request);
 
@@ -111,7 +113,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function getKernelParameters()
+    protected function getKernelParameters(): array
     {
         return \array_merge(parent::getKernelParameters(), array(
             'kernel.debug' => true,
@@ -121,7 +123,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function initializeContainer()
+    protected function initializeContainer(): ContainerInterface
     {
         $container = parent::initializeContainer();
 
@@ -133,7 +135,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function initializeSettings(Request $request)
+    protected function initializeSettings(Request $request): void
     {
         parent::initializeSettings($request);
 
@@ -145,7 +147,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function attachSynthetic(ContainerInterface $container)
+    protected function attachSynthetic(ContainerInterface $container): ContainerInterface
     {
         $container = parent::attachSynthetic($container);
 
@@ -157,7 +159,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function getContainerBuilder()
+    protected function getContainerBuilder(): ContainerBuilder
     {
         $containerBuilder = parent::getContainerBuilder();
 
@@ -169,7 +171,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * @return EventDispatcher
      */
-    protected function getEventDispatcher()
+    protected function getEventDispatcher(): EventDispatcherInterface
     {
         return new EventDispatcher();
     }
@@ -180,12 +182,12 @@ class DebugKernel extends OriginalDrupalKernel
      *
      * @return ActionManager
      */
-    protected function getActionManager($appRoot, OptionsStack $optionsStack)
+    protected function getActionManager(string $appRoot, OptionsStack $optionsStack): ActionManager
     {
         return new ActionManager($appRoot, $optionsStack);
     }
 
-    private function afterSettingsInitialization()
+    private function afterSettingsInitialization(): void
     {
         $coreExtensionConfig = $this->getConfigStorage()->read('core.extension');
         if (isset($coreExtensionConfig['module'])) {

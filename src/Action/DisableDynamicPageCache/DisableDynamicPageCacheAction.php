@@ -11,7 +11,7 @@ class DisableDynamicPageCacheAction extends AbstractDisableDrupalCacheAction
     /**
      * {@inheritdoc}
      */
-    protected function getBin()
+    protected function getBin(): string
     {
         return 'dynamic_page_cache';
     }

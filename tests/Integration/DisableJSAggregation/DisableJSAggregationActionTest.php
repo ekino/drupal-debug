@@ -12,7 +12,7 @@ class DisableJSAggregationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestInitialBehaviorWithDrupalKernel(Client $client)
+    protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
         $this->assertSame(1, $this->countScripts($client));
     }
@@ -20,7 +20,7 @@ class DisableJSAggregationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
+    protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $this->assertSame(2, $this->countScripts($client));
     }
@@ -28,7 +28,7 @@ class DisableJSAggregationActionTest extends AbstractTestCase
     /**
      * @return int
      */
-    private function countScripts(Client $client)
+    private function countScripts(Client $client): int
     {
         return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::script'));
     }

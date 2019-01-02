@@ -13,14 +13,14 @@ class EnableDebugClassLoaderAction implements EventSubscriberActionInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::ON_KERNEL_INSTANTIATION => 'process',
         );
     }
 
-    public function process()
+    public function process(): void
     {
         DebugClassLoader::enable();
     }

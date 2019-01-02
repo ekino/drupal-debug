@@ -24,14 +24,14 @@ class AbstractWithContainerAndEnabledExtensionsEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
 
         $this->abstractWithContainerAndEnabledExtensionsEvent = new TestAbstractWithContainerAndEnabledExtensionsEvent($this->container, array(), array());
     }
 
-    public function testGetContainer()
+    public function testGetContainer(): void
     {
         $this->assertSame($this->container, $this->abstractWithContainerAndEnabledExtensionsEvent->getContainer());
     }

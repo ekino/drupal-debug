@@ -40,7 +40,7 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         \touch(self::EXISTING_FILE_PATH);
         if (!\is_file(self::EXISTING_FILE_PATH)) {
@@ -64,7 +64,7 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (\is_file(self::EXISTING_FILE_PATH)) {
             \unlink(self::EXISTING_FILE_PATH);
@@ -75,17 +75,17 @@ class CustomExtensionFileResourceTest extends TestCase
         }
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertSame(self::EXISTING_FILE_PATH, $this->customExtensionFileResource->__toString());
     }
 
-    public function testGetFilePath()
+    public function testGetFilePath(): void
     {
         $this->assertSame(self::EXISTING_FILE_PATH, $this->customExtensionFileResource->getFilePath());
     }
 
-    public function testGetCustomExtension()
+    public function testGetCustomExtension(): void
     {
         $this->assertSame($this->customExtension, $this->customExtensionFileResource->getCustomExtension());
     }
@@ -93,7 +93,7 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * @dataProvider isFreshProvider
      */
-    public function testIsFresh($expected, $existsNow, $existed, $filemtime = null, $timestamp = null)
+    public function testIsFresh(bool $expected, bool $existsNow, bool $existed, ?int $filemtime = null, ?int $timestamp = null): void
     {
         $customExtensionFileResource = $this->getContextualCustomExtensionFileResource($existsNow, $existed);
 
@@ -106,10 +106,10 @@ class CustomExtensionFileResourceTest extends TestCase
             \clearstatcache();
         }
 
-        $this->assertSame($expected, $customExtensionFileResource->isFresh($timestamp));
+        $this->assertSame($expected, $customExtensionFileResource->isFresh(\is_int($timestamp) ? $timestamp : 0));
     }
 
-    public function isFreshProvider()
+    public function isFreshProvider(): array
     {
         $now = Carbon::now();
         $nowTs = $now->getTimestamp();
@@ -129,14 +129,14 @@ class CustomExtensionFileResourceTest extends TestCase
     /**
      * @dataProvider isNewProvider
      */
-    public function testIsNew($expected, $existed, $existsNow)
+    public function testIsNew(bool $expected, bool $existed, bool $existsNow): void
     {
         $customExtensionFileResource = $this->getContextualCustomExtensionFileResource($existsNow, $existed);
 
         $this->assertSame($expected, $customExtensionFileResource->isNew());
     }
 
-    public function isNewProvider()
+    public function isNewProvider(): array
     {
         return array(
           array(true, false, true),
@@ -146,12 +146,12 @@ class CustomExtensionFileResourceTest extends TestCase
         );
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $this->assertSame($this->serializedCustomExtensionFileResource, $this->customExtensionFileResource->serialize());
     }
 
-    public function testUnserialize()
+    public function testUnserialize(): void
     {
         $customExtensionFileResource = new CustomExtensionFileResource('foo', $this->createMock(CustomExtensionInterface::class));
         $customExtensionFileResource->unserialize($this->serializedCustomExtensionFileResource);
@@ -165,7 +165,7 @@ class CustomExtensionFileResourceTest extends TestCase
      *
      * @return CustomExtensionFileResource
      */
-    private function getContextualCustomExtensionFileResource($existsNow, $existed)
+    private function getContextualCustomExtensionFileResource(bool $existsNow, bool $existed): CustomExtensionFileResource
     {
         $filePath = $existed ? self::EXISTING_FILE_PATH : self::NOT_EXISTING_FILE_PATH;
 

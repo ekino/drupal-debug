@@ -51,7 +51,7 @@ class FileCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
@@ -65,7 +65,7 @@ class FileCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             \unlink(self::NOT_EXISTING_FILE_PATH);
@@ -75,7 +75,7 @@ class FileCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         Carbon::setTestNow(Carbon::createMidnightDate(2018, 11, 11));
     }
@@ -83,7 +83,7 @@ class FileCacheTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Carbon::setTestNow(null);
     }
@@ -91,7 +91,7 @@ class FileCacheTest extends TestCase
     /**
      * @dataProvider isFreshProvider
      */
-    public function testIsFresh($expected, $isFresh)
+    public function testIsFresh(bool $expected, bool $isFresh): void
     {
         $this->resourcesFreshnessChecker
             ->expects($this->atLeastOnce())
@@ -101,7 +101,7 @@ class FileCacheTest extends TestCase
         $this->assertSame($expected, $this->fileCache->isFresh());
     }
 
-    public function isFreshProvider()
+    public function isFreshProvider(): array
     {
         return array(
             array(false, false),
@@ -109,14 +109,14 @@ class FileCacheTest extends TestCase
         );
     }
 
-    public function testGetWhenTheFileDoesNotExists()
+    public function testGetWhenTheFileDoesNotExists(): void
     {
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);
 
         $this->assertFalse($fileCache->get());
     }
 
-    public function testGetWhenTheFileIsInvalid()
+    public function testGetWhenTheFileIsInvalid(): void
     {
         if (\PHP_VERSION_ID <= 70000) {
             $this->markTestSkipped('Requires PHP 7.');
@@ -127,7 +127,7 @@ class FileCacheTest extends TestCase
         $this->assertFalse($fileCache->get());
     }
 
-    public function testGetWhenTheDataIsNotAnArray()
+    public function testGetWhenTheDataIsNotAnArray(): void
     {
         $fileCache = $this->getFileCache(self::NOT_AN_ARRAY_FILE_PATH);
 
@@ -137,7 +137,7 @@ class FileCacheTest extends TestCase
         $fileCache->get();
     }
 
-    public function testGetWhenTheDataKeyDoesNotExists()
+    public function testGetWhenTheDataKeyDoesNotExists(): void
     {
         $fileCache = $this->getFileCache(self::DATA_KEY_DOES_NOT_EXIST_FILE_PATH);
 
@@ -147,7 +147,7 @@ class FileCacheTest extends TestCase
         $fileCache->get();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $fileCache = $this->getFileCache(self::VALID_FILE_PATH);
 
@@ -162,14 +162,14 @@ class FileCacheTest extends TestCase
         ), $fileCache->get());
     }
 
-    public function testGetDataWhenDataIsNotAnArray()
+    public function testGetDataWhenDataIsNotAnArray(): void
     {
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);
 
         $this->assertSame(array(), $fileCache->getData());
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $fileCache = $this->getFileCache(self::VALID_FILE_PATH);
 
@@ -184,7 +184,7 @@ class FileCacheTest extends TestCase
     /**
      * @dataProvider writeProvider
      */
-    public function testWrite(array $expected, array $currentData = null, array $dataToWrite)
+    public function testWrite(array $expected, array $currentData = null, array $dataToWrite): void
     {
         if (\is_array($currentData)) {
             if (!\file_put_contents(self::NOT_EXISTING_FILE_PATH, '<?php return '.\var_export($currentData, true).';')) {
@@ -203,7 +203,7 @@ class FileCacheTest extends TestCase
         $this->assertSame($expected, $fileCache->get());
     }
 
-    public function writeProvider()
+    public function writeProvider(): array
     {
         $date = '2018-11-11T00:00:00+00:00';
 
@@ -279,7 +279,7 @@ class FileCacheTest extends TestCase
         );
     }
 
-    public function testInvalidate()
+    public function testInvalidate(): void
     {
         \touch(self::NOT_EXISTING_FILE_PATH);
         if (!\is_file(self::NOT_EXISTING_FILE_PATH)) {
@@ -293,7 +293,7 @@ class FileCacheTest extends TestCase
         $this->assertFileNotExists(self::NOT_EXISTING_FILE_PATH);
     }
 
-    public function testGetFilePath()
+    public function testGetFilePath(): void
     {
         $this->assertSame(self::VALID_FILE_PATH, $this->fileCache->getFilePath());
     }
@@ -303,7 +303,7 @@ class FileCacheTest extends TestCase
      *
      * @return FileCache
      */
-    private function getFileCache($filePath)
+    private function getFileCache(string $filePath): FileCache
     {
         $fileCache = new FileCache($filePath, $this->createMock(ResourcesCollection::class));
 

@@ -25,7 +25,7 @@ class CacheNotFreshEvent extends Event
     /**
      * @return FileCache
      */
-    public function getFileCache()
+    public function getFileCache(): FileCache
     {
         return $this->fileCache;
     }

@@ -2,7 +2,8 @@
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-function use_custom_service_page_bottom(array &$page_bottom) {
+function use_custom_service_page_bottom(array &$page_bottom): void
+{
     $container = \Drupal::getContainer();
     if (!$container instanceof ContainerInterface) {
         throw new \RuntimeException('The container should be set.');
