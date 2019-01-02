@@ -30,7 +30,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      * @param string              $cacheFilePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function __construct($cacheFilePath, ResourcesCollection $resourcesCollection)
+    public function __construct(string $cacheFilePath, ResourcesCollection $resourcesCollection)
     {
         $this->cacheFilePath = $cacheFilePath;
         $this->resourcesCollection = $resourcesCollection;
@@ -39,7 +39,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
     /**
      * @return string
      */
-    public function getCacheFilePath()
+    public function getCacheFilePath(): string
     {
         return $this->cacheFilePath;
     }
@@ -47,18 +47,18 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
     /**
      * @return ResourcesCollection
      */
-    public function getResourcesCollection()
+    public function getResourcesCollection(): ResourcesCollection
     {
         return $this->resourcesCollection;
     }
 
     /**
-     * @param array $enabledModules
-     * @param array $enabledThemes
+     * @param string[] $enabledModules
+     * @param string[] $enabledThemes
      *
      * @return ResourcesCollection
      */
-    public function getFilteredResourcesCollection(array $enabledModules, array $enabledThemes)
+    public function getFilteredResourcesCollection(array $enabledModules, array $enabledThemes): ResourcesCollection
     {
         return new ResourcesCollection(\array_filter($this->resourcesCollection->all(), function (SelfCheckingResourceInterface $resource) use ($enabledModules, $enabledThemes) {
             if (!$resource instanceof CustomExtensionFileResource) {
@@ -83,7 +83,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      *
      * @return AbstractFileBackendDependantOptions
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration)
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
         $defaultResources = array();
 
@@ -109,17 +109,17 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array();
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    protected static function getDefaultThemeFileResourceMasks()
+    protected static function getDefaultThemeFileResourceMasks(): array
     {
         return array();
     }
@@ -127,7 +127,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
     /**
      * @return string
      */
-    protected static function getDefaultCacheFileName()
+    protected static function getDefaultCacheFileName(): string
     {
         return \rtrim((new \ReflectionClass(static::class))->getShortName(), 'Action');
     }
@@ -138,7 +138,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      *
      * @return CustomExtensionFileResource[]
      */
-    private static function getDefaultResources(array $customModules, array $customThemes)
+    private static function getDefaultResources(array $customModules, array $customThemes): array
     {
         $resources = array();
 

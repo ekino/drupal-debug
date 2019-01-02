@@ -13,7 +13,7 @@ class SettingsHelper
      * @param string $propertyPath
      * @param mixed  $value
      */
-    public function override($propertyPath, $value)
+    public function override(string $propertyPath, $value): void
     {
         $settings = Settings::getInstance();
 

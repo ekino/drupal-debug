@@ -57,7 +57,7 @@ class ConfigurationManager
      */
     private static $substituteOriginalDrupalKernelConfiguration = null;
 
-    public static function initialize()
+    public static function initialize(): void
     {
         if (self::$initialized) {
             throw new \RuntimeException('The configuration should not be initialized twice.');
@@ -98,7 +98,7 @@ class ConfigurationManager
     /**
      * @return DefaultsConfiguration
      */
-    public static function getDefaultsConfiguration()
+    public static function getDefaultsConfiguration(): DefaultsConfiguration
     {
         if (!self::$defaultsConfiguration instanceof DefaultsConfiguration) {
             self::process();
@@ -112,7 +112,7 @@ class ConfigurationManager
     /**
      * @return SubstituteOriginalDrupalKernelConfiguration
      */
-    public static function getSubstituteOriginalDrupalKernelConfiguration()
+    public static function getSubstituteOriginalDrupalKernelConfiguration(): SubstituteOriginalDrupalKernelConfiguration
     {
         if (!self::$substituteOriginalDrupalKernelConfiguration instanceof SubstituteOriginalDrupalKernelConfiguration) {
             self::process();
@@ -126,7 +126,7 @@ class ConfigurationManager
     /**
      * @return array
      */
-    public static function getConfigurationFilePathInfo()
+    public static function getConfigurationFilePathInfo(): array
     {
         $possibleConfigurationFilePath = \getenv(self::CONFIGURATION_FILE_PATH_ENVIRONMENT_VARIABLE_NAME);
         if (false === $possibleConfigurationFilePath) {
@@ -172,7 +172,7 @@ class ConfigurationManager
         );
     }
 
-    private static function process()
+    private static function process(): void
     {
         if (!self::$initialized) {
             throw new \RuntimeException('The configuration has not been initialized.');
@@ -189,7 +189,7 @@ class ConfigurationManager
     /**
      * @return array
      */
-    private static function getConfigurationFileContent()
+    private static function getConfigurationFileContent(): array
     {
         list($configurationFilePath, $configurationFilePathExists) = self::$configurationFilePathInfo;
         if (!$configurationFilePathExists) {
@@ -210,7 +210,7 @@ class ConfigurationManager
      *
      * @return array
      */
-    private static function makeRelativePathsAbsolutes(array $processedConfigurations)
+    private static function makeRelativePathsAbsolutes(array $processedConfigurations): array
     {
         $filesystem = new Filesystem();
 

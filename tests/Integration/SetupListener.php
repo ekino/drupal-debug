@@ -50,7 +50,7 @@ class SetupListener implements TestListener
         $drupalInstallationsCount = 0;
 
         $process = new Process(\sprintf('%s %s/core/scripts/drupal install minimal', $phpBinary, $drupalDirectoryPath));
-        $process->mustRun(function ($type, $output) use (&$drupalInstallationsCount) {
+        $process->mustRun(function ($type, $output) use (&$drupalInstallationsCount): void {
             if (\is_int(\strpos($output, 'Congratulations, you installed Drupal!'))) {
                 ++$drupalInstallationsCount;
             }
@@ -81,6 +81,8 @@ class SetupListener implements TestListener
         if (!$this->supports($suite)) {
             return;
         }
+
+        // TODO : cleanup
     }
 
     /**
@@ -88,7 +90,7 @@ class SetupListener implements TestListener
      *
      * @return bool
      */
-    private function supports(TestSuite $suite)
+    private function supports(TestSuite $suite): bool
     {
         return 'integration' === $suite->getName();
     }

@@ -11,27 +11,27 @@ class WatchHooksImplementationsOptions extends AbstractFileBackendDependantOptio
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultModuleFileResourceMasks()
+    protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array(
-          '%machine_name%.module',
+            '%machine_name%.module',
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultThemeFileResourceMasks()
+    protected static function getDefaultThemeFileResourceMasks(): array
     {
         return array(
-          '%machine_name%.theme',
+            '%machine_name%.theme',
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultCacheFileName()
+    protected static function getDefaultCacheFileName(): string
     {
         return 'hooks.php';
     }

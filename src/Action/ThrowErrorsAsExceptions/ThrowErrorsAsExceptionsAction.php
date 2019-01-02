@@ -20,7 +20,7 @@ class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface, A
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_ENVIRONMENT_BOOT => 'process',
@@ -35,7 +35,7 @@ class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface, A
         $this->options = $options;
     }
 
-    public function process()
+    public function process(): void
     {
         $errorHandler = ErrorHandler::register();
 
@@ -51,7 +51,7 @@ class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface, A
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return ThrowErrorsAsExceptionsOptions::class;
     }

@@ -33,7 +33,7 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_ATTACH_SYNTHETIC => 'setLogger',
@@ -51,7 +51,7 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('event_dispatcher')) {
             throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
@@ -95,7 +95,7 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
     /**
      * @param AfterAttachSyntheticEvent $event
      */
-    public function setLogger(AfterAttachSyntheticEvent $event)
+    public function setLogger(AfterAttachSyntheticEvent $event): void
     {
         $container = $event->getContainer();
 
@@ -114,7 +114,7 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return DisplayPrettyExceptionsOptions::class;
     }

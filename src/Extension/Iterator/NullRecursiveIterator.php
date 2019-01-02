@@ -16,7 +16,7 @@ class NullRecursiveIterator implements \RecursiveIterator
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
     }
 
@@ -30,28 +30,28 @@ class NullRecursiveIterator implements \RecursiveIterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChildren()
+    public function getChildren(): \RecursiveIterator
     {
     }
 }

@@ -40,7 +40,7 @@ class ResourcesCollectionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resources = array(
             new FileResource(self::RESOURCE_1_FILE_PATH),
@@ -53,22 +53,22 @@ class ResourcesCollectionTest extends TestCase
         $this->serializedResourcesCollection = \sprintf('a:2:{i:0;C:46:"Symfony\Component\Config\Resource\FileResource":%s:{s:%s:"%s";}i:1;C:46:"Symfony\Component\Config\Resource\FileResource":%s:{s:%s:"%s";}}', ($resource1FilePathLength + \mb_strlen((string) $resource1FilePathLength) + 6), $resource1FilePathLength, self::RESOURCE_1_FILE_PATH, ($resource2FilePathLength + \mb_strlen((string) $resource2FilePathLength) + 6), $resource2FilePathLength, self::RESOURCE_2_FILE_PATH);
     }
 
-    public function testAll()
+    public function testAll(): void
     {
         $this->assertSame($this->resources, $this->resourcesCollection->all());
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertCount(2, $this->resourcesCollection);
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $this->assertSame($this->serializedResourcesCollection, $this->resourcesCollection->serialize());
     }
 
-    public function testUnserialize()
+    public function testUnserialize(): void
     {
         $resourcesCollection = new ResourcesCollection(array());
         $resourcesCollection->unserialize($this->serializedResourcesCollection);

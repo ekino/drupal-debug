@@ -17,17 +17,17 @@ class AbstractWithEnabledExtensionsEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->abstractWithEnabledExtensionsEvent = new TestAbstractWithEnabledExtensionsEvent(array('foo'), array('bar'));
     }
 
-    public function testGetEnabledModules()
+    public function testGetEnabledModules(): void
     {
         $this->assertSame(array('foo'), $this->abstractWithEnabledExtensionsEvent->getEnabledModules());
     }
 
-    public function testGetEnabledThemes()
+    public function testGetEnabledThemes(): void
     {
         $this->assertSame(array('bar'), $this->abstractWithEnabledExtensionsEvent->getEnabledThemes());
     }

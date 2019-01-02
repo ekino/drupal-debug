@@ -19,7 +19,7 @@ class EnableOriginalDrupalKernelSubstitutionCommand extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::NAME);
     }
@@ -27,8 +27,8 @@ class EnableOriginalDrupalKernelSubstitutionCommand extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        (new ManageConfigurationHelper($this->getComposer(), $this->getIO()))->toggleOriginalDrupalKernelSubstitution(true);
+        return (new ManageConfigurationHelper($this->getComposer(), $this->getIO()))->toggleOriginalDrupalKernelSubstitution(true) ? 0 : 1;
     }
 }

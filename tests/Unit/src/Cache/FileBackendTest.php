@@ -33,7 +33,7 @@ class FileBackendTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
@@ -42,7 +42,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend = new FileBackend($this->fileCache);
     }
 
-    public function testGetWithInvalidAllowInvalidArgument()
+    public function testGetWithInvalidAllowInvalidArgument(): void
     {
         $this->expectException(NotImplementedException::class);
         $this->expectExceptionMessage('$allow_invalid with true value is not implemented.');
@@ -50,7 +50,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend->get('foo', true);
     }
 
-    public function testGetWhenTheFileCacheIsNotFreshWithoutEventDispatcher()
+    public function testGetWhenTheFileCacheIsNotFreshWithoutEventDispatcher(): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -60,7 +60,7 @@ class FileBackendTest extends TestCase
         $this->assertFalse($this->fileBackend->get('foo'));
     }
 
-    public function testGetWhenTheFileCacheIsNotFreshWithEventDispatcher()
+    public function testGetWhenTheFileCacheIsNotFreshWithEventDispatcher(): void
     {
         $this->fileCache
           ->expects($this->atLeastOnce())
@@ -79,7 +79,7 @@ class FileBackendTest extends TestCase
     /**
      * @dataProvider getWhenTheFileCacheIsFreshProvider
      */
-    public function testGetWhenTheFileCacheIsFresh($expected, $data, $cid)
+    public function testGetWhenTheFileCacheIsFresh($expected, array $data, string $cid): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -94,7 +94,7 @@ class FileBackendTest extends TestCase
         $this->assertEquals($expected, $this->fileBackend->get($cid));
     }
 
-    public function getWhenTheFileCacheIsFreshProvider()
+    public function getWhenTheFileCacheIsFreshProvider(): array
     {
         $object = new \stdClass();
         $object->data = 'bar';
@@ -117,7 +117,7 @@ class FileBackendTest extends TestCase
         );
     }
 
-    public function testGetMultiple()
+    public function testGetMultiple(): void
     {
         $this->expectNotImplementedMethod('getMultiple');
 
@@ -125,7 +125,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend->getMultiple($cids);
     }
 
-    public function testSetWithInvalidExpireArgument()
+    public function testSetWithInvalidExpireArgument(): void
     {
         $this->expectException(NotImplementedException::class);
         $this->expectExceptionMessage('$expire argument with "3600" value is not implemented.');
@@ -133,7 +133,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend->set('foo', 'bar', 3600);
     }
 
-    public function testSetWithInvalidTagsArgument()
+    public function testSetWithInvalidTagsArgument(): void
     {
         $this->expectException(NotImplementedException::class);
         $this->expectExceptionMessage('Non empty $tags argument is not implemented.');
@@ -141,7 +141,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend->set('foo', 'bar', Cache::PERMANENT, array('tag'));
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -153,14 +153,14 @@ class FileBackendTest extends TestCase
         $this->fileBackend->set('foo', 'bar');
     }
 
-    public function testSetMultiple()
+    public function testSetMultiple(): void
     {
         $this->expectNotImplementedMethod('setMultiple');
 
         $this->fileBackend->setMultiple(array('item'));
     }
 
-    public function testDeleteWhenThereIsNotDataInTheFileCache()
+    public function testDeleteWhenThereIsNotDataInTheFileCache(): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -177,7 +177,7 @@ class FileBackendTest extends TestCase
     /**
      * @dataProvider deleteProvider
      */
-    public function testDelete(array $expected, array $currentData, $cid)
+    public function testDelete(array $expected, array $currentData, string $cid): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -194,7 +194,7 @@ class FileBackendTest extends TestCase
         $this->fileBackend->delete($cid);
     }
 
-    public function deleteProvider()
+    public function deleteProvider(): array
     {
         return array(
             array(
@@ -219,14 +219,14 @@ class FileBackendTest extends TestCase
         );
     }
 
-    public function testDeleteMultiple()
+    public function testDeleteMultiple(): void
     {
         $this->expectNotImplementedMethod('deleteMultiple');
 
         $this->fileBackend->deleteMultiple(array('cid'));
     }
 
-    public function testDeleteAll()
+    public function testDeleteAll(): void
     {
         $this->fileCache
             ->expects($this->atLeastOnce())
@@ -235,42 +235,42 @@ class FileBackendTest extends TestCase
         $this->fileBackend->deleteAll();
     }
 
-    public function testInvalidate()
+    public function testInvalidate(): void
     {
         $this->expectNotImplementedMethod('invalidate');
 
         $this->fileBackend->invalidate('cid');
     }
 
-    public function testInvalidateMultiple()
+    public function testInvalidateMultiple(): void
     {
         $this->expectNotImplementedMethod('invalidateMultiple');
 
         $this->fileBackend->invalidateMultiple(array('cid'));
     }
 
-    public function testInvalidateAll()
+    public function testInvalidateAll(): void
     {
         $this->expectNotImplementedMethod('invalidateAll');
 
         $this->fileBackend->invalidateAll();
     }
 
-    public function testGarbageCollection()
+    public function testGarbageCollection(): void
     {
         $this->expectNotImplementedMethod('garbageCollection');
 
         $this->fileBackend->garbageCollection();
     }
 
-    public function testRemoveBin()
+    public function testRemoveBin(): void
     {
         $this->expectNotImplementedMethod('removeBin');
 
         $this->fileBackend->removeBin();
     }
 
-    public function testSetEventDispatcher()
+    public function testSetEventDispatcher(): void
     {
         $this->fileBackend->setEventDispatcher($this->eventDispatcher);
 
@@ -280,7 +280,7 @@ class FileBackendTest extends TestCase
     /**
      * @param string $method
      */
-    private function expectNotImplementedMethod($method)
+    private function expectNotImplementedMethod(string $method): void
     {
         $this->expectException(NotImplementedException::class);
         $this->expectExceptionMessage(\sprintf('The %s() method is not implemented.', $method));

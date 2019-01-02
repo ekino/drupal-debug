@@ -27,7 +27,7 @@ class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->processedConfiguration['enabled'];
     }
@@ -35,7 +35,7 @@ class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
     /**
      * @return ClassLoader
      */
-    public function getClassLoader()
+    public function getClassLoader(): ClassLoader
     {
         if (!$this->classLoader instanceof ClassLoader) {
             if (!$this->isEnabled()) {
@@ -56,7 +56,7 @@ class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
     /**
      * @return string
      */
-    public function getCacheDirectory()
+    public function getCacheDirectory(): string
     {
         if (!$this->isEnabled()) {
             throw new \LogicException('The cache directory getter should not be called if the original DrupalKernel substitution is disabled.');
@@ -72,7 +72,7 @@ class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize(array(
             $this->processedConfiguration,
@@ -83,7 +83,7 @@ class SubstituteOriginalDrupalKernelConfiguration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->processedConfiguration, $this->classLoader) = \unserialize($serialized);
     }

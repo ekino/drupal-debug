@@ -12,7 +12,7 @@ class DisableCSSAggregationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestInitialBehaviorWithDrupalKernel(Client $client)
+    protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
         $this->assertSame(1, $this->countStylesheetLinks($client));
     }
@@ -20,7 +20,7 @@ class DisableCSSAggregationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
+    protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $this->assertGreaterThan(10, $this->countStylesheetLinks($client));
     }
@@ -28,7 +28,7 @@ class DisableCSSAggregationActionTest extends AbstractTestCase
     /**
      * @return int
      */
-    private function countStylesheetLinks(Client $client)
+    private function countStylesheetLinks(Client $client): int
     {
         return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::link[@rel="stylesheet"]'));
     }

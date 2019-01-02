@@ -14,5 +14,5 @@ interface OptionsInterface
      *
      * @return self
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration);
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): self;
 }

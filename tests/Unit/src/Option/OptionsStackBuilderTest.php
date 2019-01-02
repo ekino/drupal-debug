@@ -26,17 +26,17 @@ class OptionsStackBuilderTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->optionsStackBuilder = OptionsStackBuilder::create();
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->assertInstanceOf(OptionsStackBuilder::class, $this->optionsStackBuilder);
     }
 
-    public function testGetOptionsStack()
+    public function testGetOptionsStack(): void
     {
         $this->assertInstanceOf(OptionsStack::class, $this->optionsStackBuilder->getOptionsStack());
     }
@@ -44,7 +44,7 @@ class OptionsStackBuilderTest extends TestCase
     /**
      * @dataProvider setDisplayPrettyExceptionsOptionsProvider
      */
-    public function testSetDisplayPrettyExceptionsOptions($charset, $fileLinkFormat, LoggerInterface $logger = null)
+    public function testSetDisplayPrettyExceptionsOptions(?string $charset, ?string $fileLinkFormat, ?LoggerInterface $logger): void
     {
         $this->doTestOptions('setDisplayPrettyExceptionsOptions', array(
             $charset,
@@ -53,18 +53,18 @@ class OptionsStackBuilderTest extends TestCase
         ), DisplayPrettyExceptionsOptions::class);
     }
 
-    public function setDisplayPrettyExceptionsOptionsProvider()
+    public function setDisplayPrettyExceptionsOptionsProvider(): array
     {
         return array(
-          array(null, null, null),
-          array('UTF-8', 'foo', $this->createMock(LoggerInterface::class)),
+            array(null, null, null),
+            array('UTF-8', 'foo', $this->createMock(LoggerInterface::class)),
         );
     }
 
     /**
      * @dataProvider setDisplayPrettyExceptionsASAPOptionsProvider
      */
-    public function testSetDisplayPrettyExceptionsASAPOptions($charset, $fileLinkFormat)
+    public function testSetDisplayPrettyExceptionsASAPOptions(?string $charset, ?string $fileLinkFormat): void
     {
         $this->doTestOptions('setDisplayPrettyExceptionsASAPOptions', array(
             $charset,
@@ -72,18 +72,18 @@ class OptionsStackBuilderTest extends TestCase
         ), DisplayPrettyExceptionsASAPOptions::class);
     }
 
-    public function setDisplayPrettyExceptionsASAPOptionsProvider()
+    public function setDisplayPrettyExceptionsASAPOptionsProvider(): array
     {
         return array(
-          array(null, null),
-          array('UTF-8', 'foo'),
+            array(null, null),
+            array('UTF-8', 'foo'),
         );
     }
 
     /**
      * @dataProvider setThrowErrorsAsExceptionsOptionsProvider
      */
-    public function testSetThrowErrorsAsExceptionsOptions($levels, LoggerInterface $logger = null)
+    public function testSetThrowErrorsAsExceptionsOptions(int $levels, ?LoggerInterface $logger): void
     {
         $this->doTestOptions('setThrowErrorsAsExceptionsOptions', array(
             $levels,
@@ -91,25 +91,25 @@ class OptionsStackBuilderTest extends TestCase
         ), ThrowErrorsAsExceptionsOptions::class);
     }
 
-    public function setThrowErrorsAsExceptionsOptionsProvider()
+    public function setThrowErrorsAsExceptionsOptionsProvider(): array
     {
         return array(
-          array(E_ALL, null),
-          array(E_ALL, $this->createMock(LoggerInterface::class)),
+            array(E_ALL, null),
+            array(E_ALL, $this->createMock(LoggerInterface::class)),
         );
     }
 
-    public function testSetWatchContainerDefinitionsOptions()
+    public function testSetWatchContainerDefinitionsOptions(): void
     {
         $this->doTestWatchOptions('setWatchContainerDefinitionsOptions', WatchContainerDefinitionsOptions::class);
     }
 
-    public function testSetWatchHooksImplementationsOptions()
+    public function testSetWatchHooksImplementationsOptions(): void
     {
         $this->doTestWatchOptions('setWatchHooksImplementationsOptions', WatchHooksImplementationsOptions::class);
     }
 
-    public function testSetWatchRoutingDefinitionsOptions()
+    public function testSetWatchRoutingDefinitionsOptions(): void
     {
         $this->doTestWatchOptions('setWatchRoutingDefinitionsOptions', WatchRoutingDefinitionsOptions::class);
     }
@@ -118,7 +118,7 @@ class OptionsStackBuilderTest extends TestCase
      * @param string $method
      * @param string $class
      */
-    private function doTestWatchOptions($method, $class)
+    private function doTestWatchOptions(string $method, string $class): void
     {
         $this->doTestOptions($method, array(
             '/foo',
@@ -131,7 +131,7 @@ class OptionsStackBuilderTest extends TestCase
      * @param array  $args
      * @param string $class
      */
-    private function doTestOptions($method, array $args, $class)
+    private function doTestOptions(string $method, array $args, string $class): void
     {
         $this->optionsStackBuilder->{$method}(...$args);
 

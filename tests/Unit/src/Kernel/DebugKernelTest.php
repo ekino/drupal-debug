@@ -64,7 +64,7 @@ class DebugKernelTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         require self::TEST_ORIGINAL_DRUPAL_KERNEL_CLASS_FILE_PATH;
 
@@ -82,7 +82,7 @@ class DebugKernelTest extends TestCase
     /**
      * @dataProvider instantiationProvider
      */
-    public function testInstantiation($appRoot, OptionsStack $optionsStack = null)
+    public function testInstantiation(?string $appRoot, OptionsStack $optionsStack = null): void
     {
         new TestDebugKernelInstantiation('test', $this->createMock(ClassLoader::class), true, $appRoot, $optionsStack);
 
@@ -96,7 +96,7 @@ class DebugKernelTest extends TestCase
         ), TestDebugKernelInstantiation::$stack);
     }
 
-    public function instantiationProvider()
+    public function instantiationProvider(): array
     {
         return array(
             array(null, null),
@@ -106,7 +106,7 @@ class DebugKernelTest extends TestCase
         );
     }
 
-    public function testBootWhenTheSettingsWereNotInitializedWithTheDedicatedDrupalKernelMethod()
+    public function testBootWhenTheSettingsWereNotInitializedWithTheDedicatedDrupalKernelMethod(): void
     {
         $this->assertAfterSettingsInitialization(array(
             'boot',
@@ -115,7 +115,7 @@ class DebugKernelTest extends TestCase
         $this->assertAttributeSame(true, 'booted', $this->debugKernel);
     }
 
-    public function testBoot()
+    public function testBoot(): void
     {
         $this->callProtectedMethod('initializeSettings', array($this->createMock(Request::class)));
         $this->callProtectedMethod('boot');
@@ -123,7 +123,7 @@ class DebugKernelTest extends TestCase
         $this->assertAttributeSame(true, 'booted', $this->debugKernel);
     }
 
-    public function testPreHandle()
+    public function testPreHandle(): void
     {
         $this->setUpEnabledExtensions();
 
@@ -135,7 +135,7 @@ class DebugKernelTest extends TestCase
         $this->debugKernel->preHandle($this->createMock(Request::class));
     }
 
-    public function testGetKernelParameters()
+    public function testGetKernelParameters(): void
     {
         $kernelParameters = $this->callProtectedMethod('getKernelParameters');
 
@@ -143,7 +143,7 @@ class DebugKernelTest extends TestCase
         $this->assertTrue($kernelParameters['kernel.debug']);
     }
 
-    public function testInitializeContainer()
+    public function testInitializeContainer(): void
     {
         $this->setUpEnabledExtensions();
 
@@ -155,7 +155,7 @@ class DebugKernelTest extends TestCase
         $this->callProtectedMethod('initializeContainer');
     }
 
-    public function testInitializeSettings()
+    public function testInitializeSettings(): void
     {
         $this->setUpEnabledExtensions();
 
@@ -169,7 +169,7 @@ class DebugKernelTest extends TestCase
         $this->assertAttributeSame(true, 'settingsWereInitializedWithTheDedicatedDrupalKernelMethod', $this->debugKernel);
     }
 
-    public function testAttachSynthetic()
+    public function testAttachSynthetic(): void
     {
         $this->setUpEnabledExtensions();
 
@@ -183,7 +183,7 @@ class DebugKernelTest extends TestCase
         $this->assertSame($container, $this->callProtectedMethod('attachSynthetic', array($container)));
     }
 
-    public function testGetContainerBuilder()
+    public function testGetContainerBuilder(): void
     {
         $containerBuilder = new ContainerBuilder();
 
@@ -198,7 +198,7 @@ class DebugKernelTest extends TestCase
     /**
      * @return TestDebugKernel
      */
-    private function getDebugKernel()
+    private function getDebugKernel(): TestDebugKernel
     {
         $debugKernel = new TestDebugKernel('test', $this->createMock(ClassLoader::class));
 
@@ -218,7 +218,7 @@ class DebugKernelTest extends TestCase
         return $debugKernel;
     }
 
-    private function setUpEnabledExtensions()
+    private function setUpEnabledExtensions(): void
     {
         $properties = array(
             'enabledModules' => array('foo'),
@@ -238,7 +238,7 @@ class DebugKernelTest extends TestCase
      *
      * @return mixed
      */
-    private function callProtectedMethod($method, array $arguments = array())
+    private function callProtectedMethod(string $method, array $arguments = array())
     {
         $refl = new \ReflectionMethod($this->debugKernel, $method);
         $refl->setAccessible(true);
@@ -249,7 +249,7 @@ class DebugKernelTest extends TestCase
     /**
      * @param array $arguments
      */
-    private function assertAfterSettingsInitialization(array $arguments)
+    private function assertAfterSettingsInitialization(array $arguments): void
     {
         $this->eventDispatcher
             ->expects($this->atLeastOnce())

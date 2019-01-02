@@ -16,14 +16,14 @@ class RegisterCommandsPlugin implements PluginInterface, Capable
     /**
      * {@inheritdoc}
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCapabilities()
+    public function getCapabilities(): array
     {
         return array(
             CommandProviderCapability::class => CommandProvider::class,

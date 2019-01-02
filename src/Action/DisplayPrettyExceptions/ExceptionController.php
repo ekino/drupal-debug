@@ -28,7 +28,7 @@ class ExceptionController
      *
      * @return Response
      */
-    public function __invoke(FlattenException $exception)
+    public function __invoke(FlattenException $exception): Response
     {
         return new Response($this->exceptionHandler->getHtml($exception), $exception->getStatusCode());
     }

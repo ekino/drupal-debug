@@ -23,12 +23,12 @@ class SettingsHelperTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->settingsHelper = new SettingsHelper();
     }
 
-    public function testOverrideOnExistingKey()
+    public function testOverrideOnExistingKey(): void
     {
         new Settings(array(
             'foo' => 'bar',
@@ -52,7 +52,7 @@ class SettingsHelperTest extends TestCase
         ), Settings::get('one'));
     }
 
-    public function testOverrideOnNewKey()
+    public function testOverrideOnNewKey(): void
     {
         new Settings(array());
 

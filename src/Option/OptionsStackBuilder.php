@@ -28,7 +28,7 @@ class OptionsStackBuilder
     /**
      * @return OptionsStackBuilder
      */
-    public static function create()
+    public static function create(): self
     {
         return new self();
     }
@@ -36,7 +36,7 @@ class OptionsStackBuilder
     /**
      * @return OptionsStack
      */
-    public function getOptionsStack()
+    public function getOptionsStack(): OptionsStack
     {
         return OptionsStack::create($this->options);
     }
@@ -46,65 +46,63 @@ class OptionsStackBuilder
      * @param string|null          $fileLinkFormat
      * @param LoggerInterface|null $logger
      */
-    public function setDisplayPrettyExceptionsOptions($charset, $fileLinkFormat, LoggerInterface $logger = null)
+    public function setDisplayPrettyExceptionsOptions(?string $charset, ?string $fileLinkFormat, ?LoggerInterface $logger): self
     {
-        $this->set(new DisplayPrettyExceptionsOptions($charset, $fileLinkFormat, $logger));
-
-        return $this;
+        return $this->set(new DisplayPrettyExceptionsOptions($charset, $fileLinkFormat, $logger));
     }
 
     /**
      * @param string|null $charset
      * @param string|null $fileLinkFormat
      */
-    public function setDisplayPrettyExceptionsASAPOptions($charset, $fileLinkFormat)
+    public function setDisplayPrettyExceptionsASAPOptions(?string $charset, ?string $fileLinkFormat): self
     {
-        $this->set(new DisplayPrettyExceptionsASAPOptions($charset, $fileLinkFormat));
+        return $this->set(new DisplayPrettyExceptionsASAPOptions($charset, $fileLinkFormat));
     }
 
     /**
      * @param int                  $levels
      * @param LoggerInterface|null $logger
      */
-    public function setThrowErrorsAsExceptionsOptions($levels, LoggerInterface $logger = null)
+    public function setThrowErrorsAsExceptionsOptions(int $levels, ?LoggerInterface $logger): self
     {
-        $this->set(new ThrowErrorsAsExceptionsOptions($levels, $logger));
-
-        return $this;
+        return $this->set(new ThrowErrorsAsExceptionsOptions($levels, $logger));
     }
 
     /**
      * @param string              $cacheFilePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function setWatchContainerDefinitionsOptions($cacheFilePath, ResourcesCollection $resourcesCollection)
+    public function setWatchContainerDefinitionsOptions(string $cacheFilePath, ResourcesCollection $resourcesCollection): self
     {
-        $this->set(new WatchContainerDefinitionsOptions($cacheFilePath, $resourcesCollection));
+        return $this->set(new WatchContainerDefinitionsOptions($cacheFilePath, $resourcesCollection));
     }
 
     /**
      * @param string              $cacheFilePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function setWatchHooksImplementationsOptions($cacheFilePath, ResourcesCollection $resourcesCollection)
+    public function setWatchHooksImplementationsOptions(string $cacheFilePath, ResourcesCollection $resourcesCollection): self
     {
-        $this->set(new WatchHooksImplementationsOptions($cacheFilePath, $resourcesCollection));
+        return $this->set(new WatchHooksImplementationsOptions($cacheFilePath, $resourcesCollection));
     }
 
     /**
      * @param string              $cacheFilePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function setWatchRoutingDefinitionsOptions($cacheFilePath, ResourcesCollection $resourcesCollection)
+    public function setWatchRoutingDefinitionsOptions(string $cacheFilePath, ResourcesCollection $resourcesCollection): self
     {
-        $this->set(new WatchRoutingDefinitionsOptions($cacheFilePath, $resourcesCollection));
+        return $this->set(new WatchRoutingDefinitionsOptions($cacheFilePath, $resourcesCollection));
     }
 
     /**
      * @param OptionsInterface $options
      */
-    private function set(OptionsInterface $options)
+    private function set(OptionsInterface $options): self
     {
         $this->options[\get_class($options)] = $options;
+
+        return $this;
     }
 }

@@ -34,7 +34,7 @@ class ResourcesFreshnessChecker
      * @param string              $filePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function __construct($filePath, ResourcesCollection $resourcesCollection)
+    public function __construct(string $filePath, ResourcesCollection $resourcesCollection)
     {
         $this->filePath = $filePath;
         $this->resourcesCollection = $resourcesCollection;
@@ -45,7 +45,7 @@ class ResourcesFreshnessChecker
     /**
      * @return ResourcesCollection
      */
-    public function getCurrentResourcesCollection()
+    public function getCurrentResourcesCollection(): ResourcesCollection
     {
         if (!$this->currentResourcesCollection instanceof ResourcesCollection) {
             if (\is_file($this->filePath)) {
@@ -69,7 +69,7 @@ class ResourcesFreshnessChecker
     /**
      * @return bool
      */
-    public function isFresh()
+    public function isFresh(): bool
     {
         if (!\is_file($this->filePath)) {
             return false;
@@ -94,7 +94,7 @@ class ResourcesFreshnessChecker
         return true;
     }
 
-    public function commit()
+    public function commit(): void
     {
         $umask = \umask();
         $filesystem = new Filesystem();
@@ -115,7 +115,7 @@ class ResourcesFreshnessChecker
     /**
      * @return bool
      */
-    private function didTheResourcesChanged()
+    private function didTheResourcesChanged(): bool
     {
         $currentResourcesCollection = $this->getCurrentResourcesCollection();
 
@@ -137,7 +137,7 @@ class ResourcesFreshnessChecker
      *
      * @return string[]
      */
-    private function getResourcesUniqueRepresentation(ResourcesCollection $resourcesCollection)
+    private function getResourcesUniqueRepresentation(ResourcesCollection $resourcesCollection): array
     {
         return \array_map(function (SelfCheckingResourceInterface $resource) {
             return \sprintf('%s:%s', \get_class($resource), $resource->__toString());

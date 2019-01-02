@@ -24,14 +24,14 @@ class CacheNotFreshEventTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fileCache = $this->createMock(FileCache::class);
 
         $this->cacheNotFreshEvent = new CacheNotFreshEvent($this->fileCache);
     }
 
-    public function testGetFileCache()
+    public function testGetFileCache(): void
     {
         $this->assertSame($this->fileCache, $this->cacheNotFreshEvent->getFileCache());
     }

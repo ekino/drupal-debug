@@ -31,7 +31,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     /**
      * {@inheritdoc}
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
         $this->manageConfigurationHelper = new ManageConfigurationHelper($composer, $io);
     }
@@ -39,7 +39,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             PackageEvents::POST_PACKAGE_UPDATE => 'onPostPackageUpdate',
@@ -50,7 +50,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     /**
      * @param PackageEvent $event
      */
-    public function onPostPackageUpdate(PackageEvent $event)
+    public function onPostPackageUpdate(PackageEvent $event): void
     {
         if ($this->shouldProcess($event)) {
             $this->manageConfigurationHelper->warnAboutPotentialConfigurationChanges();
@@ -60,7 +60,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     /**
      * @param PackageEvent $event
      */
-    public function onPostPackageUninstall(PackageEvent $event)
+    public function onPostPackageUninstall(PackageEvent $event): void
     {
         if ($this->shouldProcess($event)) {
             $this->manageConfigurationHelper->askForConfigurationFileDeletion();
@@ -72,7 +72,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
      *
      * @return bool
      */
-    private function shouldProcess(PackageEvent $event)
+    private function shouldProcess(PackageEvent $event): bool
     {
         if ($event->isPropagationStopped()) {
             return false;

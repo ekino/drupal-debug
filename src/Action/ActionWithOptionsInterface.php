@@ -9,5 +9,5 @@ interface ActionWithOptionsInterface extends ActionInterface
     /**
      * @return string
      */
-    public static function getOptionsClass();
+    public static function getOptionsClass(): string;
 }

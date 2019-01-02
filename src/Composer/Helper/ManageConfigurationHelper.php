@@ -37,7 +37,7 @@ class ManageConfigurationHelper
         $this->IO = $IO;
     }
 
-    public function dumpReferenceConfigurationFile()
+    public function dumpReferenceConfigurationFile(): bool
     {
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
         if ($configurationFilePathExists) {
@@ -53,21 +53,21 @@ class ManageConfigurationHelper
                     "<info>OK, let's keep it like this then!</info>",
                 ));
 
-                return;
+                return true;
             }
 
             $this->IO->write('');
         }
 
-        $this->dumpConfigurationFile($configurationFilePath, $this->getReferenceConfigurationContent(), $configurationFilePathExists);
+        return $this->dumpConfigurationFile($configurationFilePath, $this->getReferenceConfigurationContent(), $configurationFilePathExists);
     }
 
     // TODO : a real configuration update path
-    public function warnAboutPotentialConfigurationChanges()
+    public function warnAboutPotentialConfigurationChanges(): bool
     {
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
         if (!$configurationFilePathExists) {
-            return;
+            return true;
         }
 
         $this->IO->write(array(
@@ -80,13 +80,15 @@ class ManageConfigurationHelper
             '',
             \sprintf('<comment>You can alternatively dump the reference configuration file with the dedicated command "%s"</comment>', DumpReferenceConfigurationFileCommand::NAME),
         ));
+
+        return true;
     }
 
-    public function askForConfigurationFileDeletion()
+    public function askForConfigurationFileDeletion(): bool
     {
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
         if (!$configurationFilePathExists) {
-            return;
+            return true;
         }
 
         $this->IO->write(array(
@@ -103,7 +105,7 @@ class ManageConfigurationHelper
                 "<info>OK, let's keep it!</info>",
             ));
 
-            return;
+            return true;
         }
 
         $this->IO->write('');
@@ -111,16 +113,18 @@ class ManageConfigurationHelper
         if (!\unlink($configurationFilePath)) {
             $this->IO->writeError('<error>The file file could not be deleted.</error>');
 
-            return;
+            return false;
         }
 
         $this->IO->write('<info>The file has been successfully deleted.</info>');
+
+        return true;
     }
 
     /**
      * @param bool $enabled
      */
-    public function toggleOriginalDrupalKernelSubstitution($enabled)
+    public function toggleOriginalDrupalKernelSubstitution(bool $enabled): bool
     {
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
         if ($configurationFilePathExists) {
@@ -148,13 +152,13 @@ class ManageConfigurationHelper
             );
         }
 
-        $this->dumpConfigurationFile($configurationFilePath, $configurationFileContent, $configurationFilePathExists);
+        return $this->dumpConfigurationFile($configurationFilePath, $configurationFileContent, $configurationFilePathExists);
     }
 
     /**
      * @return array
      */
-    private function getReferenceConfigurationContent()
+    private function getReferenceConfigurationContent(): array
     {
         return (new Parser())->parse((new YamlReferenceDumper())->dump(new Configuration()));
     }
@@ -164,7 +168,7 @@ class ManageConfigurationHelper
      *
      * @return mixed
      */
-    private function getCurrentConfigurationContent($configurationFilePath)
+    private function getCurrentConfigurationContent(string $configurationFilePath)
     {
         return (new Parser())->parseFile($configurationFilePath);
     }
@@ -174,14 +178,14 @@ class ManageConfigurationHelper
      * @param array  $configurationFileContent
      * @param bool   $displayLocation
      */
-    private function dumpConfigurationFile($configurationFilePath, array $configurationFileContent, $displayLocation)
+    private function dumpConfigurationFile(string $configurationFilePath, array $configurationFileContent, bool $displayLocation): bool
     {
         try {
             (new Filesystem())->dumpFile($configurationFilePath, (new Dumper())->dump($configurationFileContent, 4));
         } catch (IOException $e) {
             $this->IO->writeError('<error>The drupal-debug configuration file could not be dumped.</error>');
 
-            return;
+            return false;
         }
 
         if ($displayLocation) {
@@ -192,5 +196,7 @@ class ManageConfigurationHelper
         } else {
             $this->IO->write('<info>The drupal-debug configuration file has been successfully dumped.</info>');
         }
+
+        return true;
     }
 }

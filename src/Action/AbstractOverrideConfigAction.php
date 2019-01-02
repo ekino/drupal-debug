@@ -12,14 +12,14 @@ abstract class AbstractOverrideConfigAction implements EventSubscriberActionInte
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION => 'process',
         );
     }
 
-    public function process()
+    public function process(): void
     {
         global $config;
 
@@ -32,5 +32,5 @@ abstract class AbstractOverrideConfigAction implements EventSubscriberActionInte
     /**
      * @return array
      */
-    abstract protected function getOverrides();
+    abstract protected function getOverrides(): array;
 }

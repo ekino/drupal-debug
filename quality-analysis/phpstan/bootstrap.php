@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('opcache_invalidate')) {
-    function opcache_invalidate($script, $force = false)
+    function opcache_invalidate(string $script, bool $force = false): bool
     {
         return true;
     }

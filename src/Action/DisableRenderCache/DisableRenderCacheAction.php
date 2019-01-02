@@ -11,7 +11,7 @@ class DisableRenderCacheAction extends AbstractDisableDrupalCacheAction
     /**
      * {@inheritdoc}
      */
-    protected function getBin()
+    protected function getBin(): string
     {
         return 'render';
     }

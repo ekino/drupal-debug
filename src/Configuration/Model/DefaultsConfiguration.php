@@ -15,7 +15,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     private $logger;
 
     /**
-     * @param array $processedConfiguration
+     * {@inheritdoc}
      */
     public function __construct(array $processedConfiguration)
     {
@@ -27,7 +27,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * @return string
      */
-    public function getCacheDirectory()
+    public function getCacheDirectory(): string
     {
         return $this->processedConfiguration['cache_directory'];
     }
@@ -35,7 +35,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * @return Logger|null
      */
-    public function getLogger()
+    public function getLogger(): ?Logger
     {
         if (false === $this->logger) {
             $loggerProcessedConfiguration = $this->processedConfiguration['logger'];
@@ -51,7 +51,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * @return string|null
      */
-    public function getCharset()
+    public function getCharset(): ?string
     {
         return $this->processedConfiguration['charset'];
     }
@@ -59,7 +59,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * @return string|null
      */
-    public function getFileLinkFormat()
+    public function getFileLinkFormat(): ?string
     {
         return $this->processedConfiguration['file_link_format'];
     }
@@ -67,7 +67,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize(array(
             $this->processedConfiguration,
@@ -78,7 +78,7 @@ class DefaultsConfiguration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->processedConfiguration, $this->logger) = \unserialize($serialized);
     }

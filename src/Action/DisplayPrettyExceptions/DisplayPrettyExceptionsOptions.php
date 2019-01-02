@@ -30,7 +30,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
      * @param string|null          $fileLinkFormat
      * @param LoggerInterface|null $logger
      */
-    public function __construct($charset, $fileLinkFormat, LoggerInterface $logger = null)
+    public function __construct(?string $charset, ?string $fileLinkFormat, ?LoggerInterface $logger)
     {
         $this->charset = $charset;
         $this->fileLinkFormat = $fileLinkFormat;
@@ -40,7 +40,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     /**
      * @return string|null
      */
-    public function getCharset()
+    public function getCharset(): ?string
     {
         return $this->charset;
     }
@@ -48,7 +48,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     /**
      * @return string|null
      */
-    public function getFileLinkFormat()
+    public function getFileLinkFormat(): ?string
     {
         return $this->fileLinkFormat;
     }
@@ -56,7 +56,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
     /**
      * @return LoggerInterface|null
      */
-    public function getLogger()
+    public function getLogger(): ?LoggerInterface
     {
         return $this->logger;
     }
@@ -67,7 +67,7 @@ class DisplayPrettyExceptionsOptions implements OptionsInterface
      *
      * @return DisplayPrettyExceptionsOptions
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration)
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
         return new self($defaultsConfiguration->getCharset(), $defaultsConfiguration->getFileLinkFormat(), $defaultsConfiguration->getLogger());
     }

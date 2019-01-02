@@ -12,7 +12,7 @@ class DisableCSSAggregationAction extends AbstractOverrideConfigAction
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_SETTINGS_INITIALIZATION => 'process',
@@ -22,7 +22,7 @@ class DisableCSSAggregationAction extends AbstractOverrideConfigAction
     /**
      * {@inheritdoc}
      */
-    protected function getOverrides()
+    protected function getOverrides(): array
     {
         return array(
             '[system.performance][css][preprocess]' => false,

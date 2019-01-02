@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         /** @var ArrayNodeDefinition $rootNode */
@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition
      */
-    private function getDefaultsConfigNode()
+    private function getDefaultsConfigNode(): ArrayNodeDefinition
     {
         return (new ArrayNodeDefinition('defaults'))
             ->info('The defaults values are common values that are reused by different actions.')
@@ -67,7 +67,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition
      */
-    private function getSubstituteOriginalDrupalKernelConfigNode()
+    private function getSubstituteOriginalDrupalKernelConfigNode(): ArrayNodeDefinition
     {
         return (new ArrayNodeDefinition('substitute_original_drupal_kernel'))
             ->info("It is recommended to disable the original DrupalKernel substitution to run your tests.\nTo programmatically toggle it, use the two dedicated composer commands.")

@@ -12,7 +12,7 @@ class UseCustomServiceServiceProvider implements ServiceModifierInterface
     /**
      * {@inheritdoc}
      */
-    public function alter(ContainerBuilder $container)
+    public function alter(ContainerBuilder $container): void
     {
         $container->hasDefinition('use_custom_service.service.foo') ?
             $container->getDefinition('use_custom_service.service.foo')->replaceArgument(0, '%message%') :

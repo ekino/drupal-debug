@@ -22,7 +22,7 @@ class WatchRoutingDefinitionsAction implements EventSubscriberActionInterface, A
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             DebugKernelEvents::AFTER_REQUEST_PRE_HANDLE => 'process',
@@ -40,7 +40,7 @@ class WatchRoutingDefinitionsAction implements EventSubscriberActionInterface, A
     /**
      * @param AfterRequestPreHandleEvent $event
      */
-    public function process(AfterRequestPreHandleEvent $event)
+    public function process(AfterRequestPreHandleEvent $event): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker($this->options->getCacheFilePath(), $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes()));
         if ($resourcesFreshnessChecker->isFresh()) {
@@ -65,7 +65,7 @@ class WatchRoutingDefinitionsAction implements EventSubscriberActionInterface, A
     /**
      * {@inheritdoc}
      */
-    public static function getOptionsClass()
+    public static function getOptionsClass(): string
     {
         return WatchRoutingDefinitionsOptions::class;
     }

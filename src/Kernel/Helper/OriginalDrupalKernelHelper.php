@@ -34,7 +34,7 @@ class OriginalDrupalKernelHelper
      * @param ClassLoader $classLoader
      * @param string      $cacheDirectory
      */
-    public static function substitute(ClassLoader $classLoader, $cacheDirectory)
+    public static function substitute(ClassLoader $classLoader, string $cacheDirectory): void
     {
         $originalDrupalKernelFilePath = $classLoader->findFile('Drupal\Core\DrupalKernel');
         if (!\is_string($originalDrupalKernelFilePath)) {
@@ -68,7 +68,7 @@ class OriginalDrupalKernelHelper
      * @param string $originalDrupalKernelFilePath
      * @param string $originalDrupalKernelSubstituteFilePath
      */
-    private static function createOriginalDrupalKernelSubstitute($originalDrupalKernelFilePath, $originalDrupalKernelSubstituteFilePath)
+    private static function createOriginalDrupalKernelSubstitute(string $originalDrupalKernelFilePath, string $originalDrupalKernelSubstituteFilePath): void
     {
         $content = @\file_get_contents($originalDrupalKernelFilePath);
         if (false === $content) {

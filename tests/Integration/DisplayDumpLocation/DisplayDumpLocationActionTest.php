@@ -12,7 +12,7 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestInitialBehaviorWithDrupalKernel(Client $client)
+    protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
         $this->assertSame("\"fcy\"\n", $this->getDumpText($client));
     }
@@ -20,10 +20,10 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doTestTargetedBehaviorWithDebugKernel(Client $client)
+    protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $this->assertThat($this->getDumpText($client), $this->logicalOr(
-            $this->identicalTo("add_dump_die.module on line 4:\n\"fcy\"\n"),
+            $this->identicalTo("add_dump_die.module on line 5:\n\"fcy\"\n"),
             $this->identicalTo("\"fcy\"\n")
         ));
     }
@@ -33,7 +33,7 @@ class DisplayDumpLocationActionTest extends AbstractTestCase
      *
      * @return string
      */
-    private function getDumpText(Client $client)
+    private function getDumpText(Client $client): string
     {
         return $client->request('GET', '/')->filterXPath('descendant-or-self::pre[@class="sf-dump"]')->text();
     }

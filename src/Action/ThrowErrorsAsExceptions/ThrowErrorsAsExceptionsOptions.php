@@ -24,7 +24,7 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
      * @param int                  $levels
      * @param LoggerInterface|null $logger
      */
-    public function __construct($levels, LoggerInterface $logger = null)
+    public function __construct(int $levels, ?LoggerInterface $logger)
     {
         $this->levels = $levels;
         $this->logger = $logger;
@@ -33,7 +33,7 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
     /**
      * @return int
      */
-    public function getLevels()
+    public function getLevels(): int
     {
         return $this->levels;
     }
@@ -41,7 +41,7 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
     /**
      * @return LoggerInterface|null
      */
-    public function getLogger()
+    public function getLogger(): ?LoggerInterface
     {
         return $this->logger;
     }
@@ -52,7 +52,7 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
      *
      * @return ThrowErrorsAsExceptionsOptions
      */
-    public static function getDefault($appRoot, DefaultsConfiguration $defaultsConfiguration)
+    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
         return new self(E_ALL, $defaultsConfiguration->getLogger());
     }

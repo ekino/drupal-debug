@@ -42,7 +42,7 @@ class ActionManager
      * @param string       $appRoot
      * @param OptionsStack $optionsStack
      */
-    public function __construct($appRoot, OptionsStack $optionsStack)
+    public function __construct(string $appRoot, OptionsStack $optionsStack)
     {
         $this->eventSubscriberActions = array();
         $this->compilerPassActions = array();
@@ -61,7 +61,7 @@ class ActionManager
     /**
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function addEventSubscriberActionsToEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    public function addEventSubscriberActionsToEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
         foreach ($this->eventSubscriberActions as $eventSubscriberAction) {
             $eventDispatcher->addSubscriber($eventSubscriberAction);
@@ -71,7 +71,7 @@ class ActionManager
     /**
      * @param ContainerBuilder $containerBuilder
      */
-    public function addCompilerPassActionsToContainerBuilder(ContainerBuilder $containerBuilder)
+    public function addCompilerPassActionsToContainerBuilder(ContainerBuilder $containerBuilder): void
     {
         foreach ($this->compilerPassActions as $compilerPassAction) {
             $containerBuilder->addCompilerPass($compilerPassAction);
@@ -84,7 +84,7 @@ class ActionManager
      *
      * @return ActionInterface[]
      */
-    private function getActions($appRoot, OptionsStack $optionsStack)
+    private function getActions(string $appRoot, OptionsStack $optionsStack): array
     {
         $actionsClasses = array(
             DisableCSSAggregationAction::class,

@@ -62,7 +62,7 @@ abstract class AbstractTestCase extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $filesystem = new Filesystem();
 
@@ -79,7 +79,7 @@ abstract class AbstractTestCase extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->webServerManager instanceof WebServerManager) {
             $this->webServerManager->quit();
@@ -91,7 +91,7 @@ abstract class AbstractTestCase extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (\extension_loaded('xdebug')) {
             \xdebug_stop_code_coverage(0);
@@ -117,19 +117,19 @@ abstract class AbstractTestCase extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (\extension_loaded('xdebug')) {
             \xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
         }
     }
 
-    public function testInitialBehaviorWithDrupalKernel()
+    public function testInitialBehaviorWithDrupalKernel(): void
     {
         $this->doTestInitialBehaviorWithDrupalKernel($this->getClient(9966));
     }
 
-    public function testTargetedBehaviorWithDebugKernel()
+    public function testTargetedBehaviorWithDebugKernel(): void
     {
         $_ENV['DRUPAL_DEBUG_TESTS_FORCE_INITIALIZATION'] = '1';
         $_ENV[ConfigurationManager::CONFIGURATION_FILE_PATH_ENVIRONMENT_VARIABLE_NAME] = self::DEFAULT_CONFIGURATION_FILE_PATH;
@@ -141,7 +141,7 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string[] $names
      */
-    private function installModules(array $names)
+    private function installModules(array $names): void
     {
         $currentWorkingDirectory = \getcwd();
         if (!\is_string($currentWorkingDirectory)) {
@@ -168,7 +168,7 @@ abstract class AbstractTestCase extends TestCase
         \chdir($currentWorkingDirectory);
     }
 
-    private function clearCache()
+    private function clearCache(): void
     {
         (new Filesystem())->remove(Finder::create()->in(self::CACHE_DIRECTORY_PATH));
     }
@@ -190,7 +190,7 @@ abstract class AbstractTestCase extends TestCase
         return $goutteClient;
     }
 
-    abstract protected function doTestInitialBehaviorWithDrupalKernel(BrowserKitClient $client);
+    abstract protected function doTestInitialBehaviorWithDrupalKernel(BrowserKitClient $client): void;
 
-    abstract protected function doTestTargetedBehaviorWithDebugKernel(BrowserKitClient $client);
+    abstract protected function doTestTargetedBehaviorWithDebugKernel(BrowserKitClient $client): void;
 }
