@@ -2,6 +2,15 @@
 
 use PhpCsFixer\Config;
 
+$header = <<<EOF
+This file is part of the ekino Drupal Debug project.
+
+(c) ekino
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+EOF;
+
 return Config::create()
     ->setRules(array(
         '@Symfony' => true,
@@ -10,6 +19,9 @@ return Config::create()
             'syntax' => 'long'
         ),
         'declare_strict_types' => true,
+        'header_comment' => array(
+            'header' => $header,
+        ),
         'native_function_invocation' => array(
             'include' => array('@all'),
         ),
