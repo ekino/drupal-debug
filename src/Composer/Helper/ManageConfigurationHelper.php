@@ -47,7 +47,7 @@ class ManageConfigurationHelper
                 '',
             ));
 
-            if (!$this->IO->askConfirmation('<question>Would you like to overwrite it?</question> ')) {
+            if (!$this->IO->askConfirmation('<question>Would you like to overwrite it?</question>')) {
                 $this->IO->write(array(
                     '',
                     "<info>OK, let's keep it like this then!</info>",
@@ -92,7 +92,7 @@ class ManageConfigurationHelper
         }
 
         $this->IO->write(array(
-            '<comment>The drupal-debug configuration file is now useless : it should be deleted.</comment>',
+            '<comment>The drupal-debug configuration file is going to be useless : it should be deleted.</comment>',
             '',
             '<info>It has been found at the following location :</info>',
             \sprintf('<info>--> "%s"</info>', \realpath($configurationFilePath)),
@@ -111,12 +111,12 @@ class ManageConfigurationHelper
         $this->IO->write('');
 
         if (!\unlink($configurationFilePath)) {
-            $this->IO->writeError('<error>The file file could not be deleted.</error>');
+            $this->IO->writeError('<error>The drupal-debug configuration file could not be deleted.</error>');
 
             return false;
         }
 
-        $this->IO->write('<info>The file has been successfully deleted.</info>');
+        $this->IO->write('<info>The drupal-debug configuration file has been successfully deleted.</info>');
 
         return true;
     }

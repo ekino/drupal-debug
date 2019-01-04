@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Composer\Plugin;
 
 use Composer\Composer;
-use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -43,7 +42,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     {
         return array(
             PackageEvents::POST_PACKAGE_UPDATE => 'onPostPackageUpdate',
-            PackageEvents::POST_PACKAGE_UNINSTALL => 'onPostPackageUninstall',
+            PackageEvents::PRE_PACKAGE_UNINSTALL => 'onPrePackageUninstall',
         );
     }
 
@@ -60,7 +59,7 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
     /**
      * @param PackageEvent $event
      */
-    public function onPostPackageUninstall(PackageEvent $event): void
+    public function onPrePackageUninstall(PackageEvent $event): void
     {
         if ($this->shouldProcess($event)) {
             $this->manageConfigurationHelper->askForConfigurationFileDeletion();
@@ -80,15 +79,14 @@ class ManageConfigurationPlugin implements PluginInterface, EventSubscriberInter
 
         $operation = $event->getOperation();
         switch (\get_class($operation)) {
-            case InstallOperation::class:
-            case UninstallOperation::class:
-                /** @var InstallOperation|UninstallOperation $operation */
-                $package = $operation->getPackage();
-
-                break;
             case UpdateOperation::class:
                 /** @var UpdateOperation $operation */
                 $package = $operation->getTargetPackage();
+
+                break;
+            case UninstallOperation::class:
+                /** @var UninstallOperation $operation */
+                $package = $operation->getPackage();
 
                 break;
             default:
