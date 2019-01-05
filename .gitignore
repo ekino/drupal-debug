@@ -1,7 +1,10 @@
-vendor/
-composer.lock
-.php_cs.cache
-tests/**/reference/**
-tests/**/cache/**
-tests/**/fixtures/__*
+/vendor/
+/composer.lock
+/.php_cs.cache
+/tests/**/reference/**
+!/tests/**/reference/.gitkeep
+/tests/**/cache/**
+!/tests/**/cache/.gitkeep
+/tests/**/fixtures/__*
 /cache/
+/drupal-debug.yml
