@@ -32,9 +32,6 @@ install:
       else
           composer update --prefer-dist --no-progress --no-suggest --ansi;
       fi
-    - if [[ $lint = '1' ]]; then
-          composer require friendsofphp/php-cs-fixer --prefer-dist --no-progress --no-suggest --ansi;
-      fi
 
 script:
     - if [[ $coverage = '1' ]]; then
