@@ -53,12 +53,12 @@ class CustomExtensionFileResourceTest extends TestCase
     {
         \touch(self::EXISTING_FILE_PATH);
         if (!\is_file(self::EXISTING_FILE_PATH)) {
-            $this->markTestIncomplete(\sprintf('File "%s" could not be created.', self::EXISTING_FILE_PATH));
+            $this->fail(\sprintf('File "%s" could not be created.', self::EXISTING_FILE_PATH));
         }
 
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->markTestIncomplete(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
+                $this->fail(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -109,7 +109,7 @@ class CustomExtensionFileResourceTest extends TestCase
         if (\is_int($filemtime)) {
             $filePath = $customExtensionFileResource->getFilePath();
             if (!\touch($filePath, $filemtime)) {
-                $this->markTestIncomplete(\sprintf('File "%s" could not be touched.', $filePath));
+                $this->fail(\sprintf('File "%s" could not be touched.', $filePath));
             }
 
             \clearstatcache();
@@ -183,12 +183,12 @@ class CustomExtensionFileResourceTest extends TestCase
         if (!$existed && $existsNow) {
             \touch($filePath);
             if (!\is_file($filePath)) {
-                $this->markTestIncomplete(\sprintf('File "%s" could not be created.', $filePath));
+                $this->fail(\sprintf('File "%s" could not be created.', $filePath));
             }
         } elseif ($existed && !$existsNow) {
             \unlink($filePath);
             if (\is_file($filePath)) {
-                $this->markTestIncomplete(\sprintf('File "%s" could not be deleted.', $filePath));
+                $this->fail(\sprintf('File "%s" could not be deleted.', $filePath));
             }
         }
 

@@ -80,7 +80,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
 
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->markTestIncomplete(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
+                $this->fail(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
             }
         }
     }
@@ -230,7 +230,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $nowTs = Carbon::now()->getTimestamp();
         foreach ($resourcesFilePaths as $resourceFilePath) {
             if (!\touch($resourceFilePath, $nowTs)) {
-                $this->markTestIncomplete(\sprintf('File "%s" could not be touched.', $resourceFilePath));
+                $this->fail(\sprintf('File "%s" could not be touched.', $resourceFilePath));
             }
         }
 

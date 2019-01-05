@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Tests\Traits;
 
-use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\AssertionFailedError;
 
 trait FileHelperTrait
 {
@@ -25,7 +25,7 @@ trait FileHelperTrait
     {
         if (\is_file($path)) {
             if (!\unlink($path) && $mandatory) {
-                throw new IncompleteTestError(\sprintf('The file "%s" should not exist and could not be deleted.', $path));
+                throw new AssertionFailedError(\sprintf('The file "%s" should not exist and could not be deleted.', $path));
             }
         }
     }
@@ -39,7 +39,7 @@ trait FileHelperTrait
     {
         $content = \file_get_contents($path);
         if (!\is_string($content)) {
-            throw new IncompleteTestError(\sprintf('The content of the file "%s" could not be gotten.', $path));
+            throw new AssertionFailedError(\sprintf('The content of the file "%s" could not be gotten.', $path));
         }
 
         return $content;
@@ -51,8 +51,8 @@ trait FileHelperTrait
      */
     private static function writeFile(string $path, string $content): void
     {
-        if (!\file_put_contents($path, $content)) {
-            throw new IncompleteTestError(\sprintf('The file "%s" content could not be written.', $path));
+        if (false === \file_put_contents($path, $content)) {
+            throw new AssertionFailedError(\sprintf('The file "%s" content could not be written.', $path));
         }
     }
 
@@ -63,9 +63,20 @@ trait FileHelperTrait
     private static function touch(string $path, int $timestamp): void
     {
         if (!\touch($path, $timestamp)) {
-            throw new IncompleteTestError(\sprintf('The file "%s" could not be touched.', $path));
+            throw new AssertionFailedError(\sprintf('The file "%s" could not be touched.', $path));
         }
 
         \clearstatcache();
+    }
+
+    private static function setNotWriteable(string $path): void
+    {
+        if (!\is_writable($path)) {
+            return;
+        }
+
+        if (!\chmod($path, 0555)) {
+            throw new AssertionFailedError(\sprintf('The path "%s" could not be made not writeable.', $path));
+        }
     }
 }

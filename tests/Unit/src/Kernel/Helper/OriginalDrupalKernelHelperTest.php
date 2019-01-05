@@ -215,7 +215,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         if ('original' === $filePath) {
             $filePath = \realpath(\sprintf('%s/../../../../../vendor/drupal/core/lib/Drupal/Core/DrupalKernel.php', __DIR__));
             if (!\is_string($filePath)) {
-                $this->markTestIncomplete(\sprintf('The original DrupalKernel class file could not be found.'));
+                $this->fail(\sprintf('The original DrupalKernel class file could not be found.'));
             }
         }
 
@@ -240,16 +240,16 @@ class OriginalDrupalKernelHelperTest extends TestCase
             )));
             $resourcesFreshnessChecker->commit();
             if (!$resourcesFreshnessChecker->isFresh()) {
-                $this->markTestIncomplete('The substitute should be fresh.');
+                $this->fail('The substitute should be fresh.');
             }
 
             if (!\is_int($this->inOneYearTimestamp)) {
-                $this->markTestIncomplete('The timestamp should be set.');
+                $this->fail('The timestamp should be set.');
             }
 
             foreach (array(self::SUBSTITUTE_FILE_PATH, self::SUBSTITUTE_FRESHNESS_META_FILE_PATH) as $filePath) {
                 if (!\touch($filePath, $this->inOneYearTimestamp)) {
-                    $this->markTestIncomplete(\sprintf('The file "%s" could not be touched.', $filePath));
+                    $this->fail(\sprintf('The file "%s" could not be touched.', $filePath));
                 }
             }
 
@@ -257,7 +257,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         } else {
             if (\is_file(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
                 if (!\unlink(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
-                    $this->markTestIncomplete(\sprintf('The file "%s" should not exist and could not be deleted.', self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
+                    $this->fail(\sprintf('The file "%s" should not exist and could not be deleted.', self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
                 }
             }
         }
