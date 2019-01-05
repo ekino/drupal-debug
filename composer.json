@@ -46,6 +46,7 @@
         "composer/composer": "^1.7",
         "drupal-composer/drupal-scaffold": "^2.5",
         "fabpot/goutte": "^3.2.3",
+        "friendsofphp/php-cs-fixer": "^2.14",
         "guzzlehttp/guzzle": "^6.3",
         "phpstan/phpstan": "^0.10",
         "phpstan/phpstan-phpunit": "^0.10",
