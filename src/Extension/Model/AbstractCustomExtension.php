@@ -29,7 +29,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
      * @param string $rootPath
      * @param string $machineName
      */
-    public function __construct($rootPath, $machineName)
+    public function __construct(string $rootPath, string $machineName)
     {
         $this->rootPath = $rootPath;
         $this->machineName = $machineName;
@@ -38,7 +38,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
     /**
      * @return string
      */
-    public function getRootPath()
+    public function getRootPath(): string
     {
         return $this->rootPath;
     }
@@ -46,7 +46,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
     /**
      * @return string
      */
-    public function getMachineName()
+    public function getMachineName(): string
     {
         return $this->machineName;
     }
@@ -54,7 +54,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize(array(
             $this->rootPath,
@@ -65,7 +65,7 @@ abstract class AbstractCustomExtension implements CustomExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->rootPath, $this->machineName) = \unserialize($serialized);
     }

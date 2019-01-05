@@ -18,10 +18,10 @@ interface CustomExtensionInterface extends \Serializable
     /**
      * @return string
      */
-    public function getRootPath();
+    public function getRootPath(): string;
 
     /**
      * @return string
      */
-    public function getMachineName();
+    public function getMachineName(): string;
 }

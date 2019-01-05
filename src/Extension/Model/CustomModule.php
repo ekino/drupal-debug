@@ -25,7 +25,7 @@ class CustomModule extends AbstractCustomExtension
     /**
      * {@inheritdoc}
      */
-    public function __construct($rootPath, $machineName)
+    public function __construct(string $rootPath, string $machineName)
     {
         parent::__construct($rootPath, $machineName);
 
@@ -36,7 +36,7 @@ class CustomModule extends AbstractCustomExtension
     /**
      * @return string
      */
-    public function getCamelCaseMachineName()
+    public function getCamelCaseMachineName(): string
     {
         return $this->camelCaseMachineName;
     }
@@ -44,7 +44,7 @@ class CustomModule extends AbstractCustomExtension
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return \serialize(array(
             $this->rootPath,
@@ -56,7 +56,7 @@ class CustomModule extends AbstractCustomExtension
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->rootPath, $this->machineName, $this->camelCaseMachineName) = \unserialize($serialized);
     }

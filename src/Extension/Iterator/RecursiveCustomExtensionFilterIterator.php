@@ -48,19 +48,19 @@ class RecursiveCustomExtensionFilterIterator extends \RecursiveFilterIterator
             return false;
         }
 
-        $fileName = $current->getFilename();
-        if ('.' === $fileName[0]) {
+        $filename = $current->getFilename();
+        if ('.' === $filename[0]) {
             return false;
         }
 
         if (!$this->isDir()) {
-            return '.info.yml' === \substr($fileName, -9);
+            return '.info.yml' === \substr($filename, -9);
         }
 
-        if ('config' === $fileName) {
+        if ('config' === $filename) {
             return 'modules/config' === \substr($current->getPathname(), -14);
         }
 
-        return !\in_array($fileName, $this->blacklist, true);
+        return !\in_array($filename, $this->blacklist, true);
     }
 }
