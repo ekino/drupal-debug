@@ -51,7 +51,7 @@ class ManageConfigurationHelper
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
         if ($configurationFilePathExists) {
             $this->IO->write(array(
-                '<comment>An existing drupal-debug configuration file has been found at the following location :</comment>',
+                '<comment>An existing drupal-debug configuration file has been found at the following location:</comment>',
                 \sprintf('<comment>--> "%s"</comment>', \realpath($configurationFilePath)),
                 '',
             ));
@@ -68,10 +68,10 @@ class ManageConfigurationHelper
             $this->IO->write('');
         }
 
-        return $this->dumpConfigurationFile($configurationFilePath, $this->getReferenceConfigurationContent(), $configurationFilePathExists);
+        return $this->dumpConfigurationFile($configurationFilePath, $this->getReferenceConfigurationContent(), !$configurationFilePathExists);
     }
 
-    // TODO : a real configuration update path
+    // TODO: a real configuration update path
     public function warnAboutPotentialConfigurationChanges(): bool
     {
         list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
@@ -80,14 +80,14 @@ class ManageConfigurationHelper
         }
 
         $this->IO->write(array(
-            '<comment>A custom drupal-debug configuration file has been found at the following location :</comment>',
+            '<comment>A custom drupal-debug configuration file has been found at the following location:</comment>',
             \sprintf('<comment>--> "%s"</comment>', \realpath($configurationFilePath)),
             '',
             '<comment>The drupal-debug configuration might have change in the freshly updated code.</comment>',
             '',
             '<comment>If you encounter any problem after this update, it will surely be related to configuration. Please refer to the documentation and the release changelog to fix it.</comment>',
             '',
-            \sprintf('<comment>You can alternatively dump the reference configuration file with the dedicated command "%s"</comment>', DumpReferenceConfigurationFileCommand::NAME),
+            \sprintf('<comment>You can alternatively dump the reference configuration file with the dedicated command "%s".</comment>', DumpReferenceConfigurationFileCommand::NAME),
         ));
 
         return true;
@@ -101,9 +101,9 @@ class ManageConfigurationHelper
         }
 
         $this->IO->write(array(
-            '<comment>The drupal-debug configuration file is going to be useless : it should be deleted.</comment>',
+            '<comment>The drupal-debug configuration file is going to be useless: it should be deleted.</comment>',
             '',
-            '<info>It has been found at the following location :</info>',
+            '<info>It has been found at the following location:</info>',
             \sprintf('<info>--> "%s"</info>', \realpath($configurationFilePath)),
             '',
         ));
@@ -119,7 +119,7 @@ class ManageConfigurationHelper
 
         $this->IO->write('');
 
-        if (!\unlink($configurationFilePath)) {
+        if (!@\unlink($configurationFilePath)) {
             $this->IO->writeError('<error>The drupal-debug configuration file could not be deleted.</error>');
 
             return false;
@@ -139,7 +139,7 @@ class ManageConfigurationHelper
         if ($configurationFilePathExists) {
             $configurationFileContent = $this->getCurrentConfigurationContent($configurationFilePath);
             if (\is_array($configurationFileContent) && isset($configurationFileContent['drupal-debug'])) {
-                if (isset($configurationFileContent['drupal-debug']['substitute_original_drupal_kernel'])) {
+                if (isset($configurationFileContent['drupal-debug']['substitute_original_drupal_kernel']) && \is_array($configurationFileContent['drupal-debug']['substitute_original_drupal_kernel'])) {
                     $configurationFileContent['drupal-debug']['substitute_original_drupal_kernel']['enabled'] = $enabled;
                 } else {
                     $configurationFileContent['drupal-debug']['substitute_original_drupal_kernel'] = array(
@@ -161,7 +161,7 @@ class ManageConfigurationHelper
             );
         }
 
-        return $this->dumpConfigurationFile($configurationFilePath, $configurationFileContent, $configurationFilePathExists);
+        return $this->dumpConfigurationFile($configurationFilePath, $configurationFileContent, true);
     }
 
     /**
@@ -199,7 +199,7 @@ class ManageConfigurationHelper
 
         if ($displayLocation) {
             $this->IO->write(array(
-                '<info>The drupal-debug configuration file has been successfully dumped at the following location :</info>',
+                '<info>The drupal-debug configuration file has been successfully dumped at the following location:</info>',
                 \sprintf('<info>--> "%s"</info>', \realpath($configurationFilePath)),
             ));
         } else {

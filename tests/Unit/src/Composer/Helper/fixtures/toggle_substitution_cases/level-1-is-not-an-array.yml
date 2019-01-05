@@ -1,0 +1,2 @@
+drupal-debug:
+    substitute_original_drupal_kernel: fcy

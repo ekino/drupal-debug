@@ -91,7 +91,7 @@ class DebugKernelTest extends TestCase
     /**
      * @dataProvider instantiationProvider
      */
-    public function testInstantiation(?string $appRoot, OptionsStack $optionsStack = null): void
+    public function testInstantiation(?string $appRoot, ?OptionsStack $optionsStack = null): void
     {
         new TestDebugKernelInstantiation('test', $this->createMock(ClassLoader::class), true, $appRoot, $optionsStack);
 

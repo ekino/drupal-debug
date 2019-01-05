@@ -154,7 +154,7 @@ abstract class AbstractTestCase extends TestCase
     {
         $currentWorkingDirectory = \getcwd();
         if (!\is_string($currentWorkingDirectory)) {
-            $this->markTestIncomplete('The current working directory could not be determined.');
+            $this->fail('The current working directory could not be determined.');
         }
 
         \chdir(self::DRUPAL_DIRECTORY_PATH);
@@ -167,11 +167,11 @@ abstract class AbstractTestCase extends TestCase
         /** @var ModuleInstallerInterface $moduleInstaller */
         $moduleInstaller = $kernel->getContainer()->get('module_installer');
         if (!$moduleInstaller instanceof ModuleInstallerInterface) {
-            $this->markTestIncomplete('The module installer service is not the expected one.');
+            $this->fail('The module installer service is not the expected one.');
         }
 
         if (!$moduleInstaller->install($names)) {
-            $this->markTestIncomplete(\sprintf('The module(s) "%s" could not be installed.', \implode(', ', $names)));
+            $this->fail(\sprintf('The module(s) "%s" could not be installed.', \implode(', ', $names)));
         }
 
         \chdir($currentWorkingDirectory);

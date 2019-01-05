@@ -64,7 +64,7 @@ class FileCacheTest extends TestCase
     {
         if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
             if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->markTestIncomplete(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
+                $this->fail(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -197,7 +197,7 @@ class FileCacheTest extends TestCase
     {
         if (\is_array($currentData)) {
             if (!\file_put_contents(self::NOT_EXISTING_FILE_PATH, '<?php return '.\var_export($currentData, true).';')) {
-                $this->markTestIncomplete(\sprintf('File "%s" content could not be initialized.', self::NOT_EXISTING_FILE_PATH));
+                $this->fail(\sprintf('File "%s" content could not be initialized.', self::NOT_EXISTING_FILE_PATH));
             }
         }
 
@@ -292,7 +292,7 @@ class FileCacheTest extends TestCase
     {
         \touch(self::NOT_EXISTING_FILE_PATH);
         if (!\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            $this->markTestIncomplete(\sprintf('File "%s" could not be created.', self::NOT_EXISTING_FILE_PATH));
+            $this->fail(\sprintf('File "%s" could not be created.', self::NOT_EXISTING_FILE_PATH));
         }
 
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);

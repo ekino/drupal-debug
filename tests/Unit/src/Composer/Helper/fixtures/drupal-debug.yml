@@ -1,0 +1,13 @@
+drupal-debug:
+    defaults:
+        cache_directory: cache
+        logger:
+            enabled: true
+            channel: drupal-debug
+            file_path: logs/drupal-debug.log
+        charset: null
+        file_link_format: null
+    substitute_original_drupal_kernel:
+        enabled: true
+        composer_autoload_file_path: vendor/autoload.php
+        cache_directory: null
