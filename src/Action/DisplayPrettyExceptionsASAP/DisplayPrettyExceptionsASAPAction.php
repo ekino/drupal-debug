@@ -46,7 +46,7 @@ class DisplayPrettyExceptionsASAPAction implements EventSubscriberActionInterfac
 
     public function process(): void
     {
-        // https://github.com/symfony/symfony/pull/28954
+        // TODO: https://github.com/symfony/symfony/pull/28954
         \set_exception_handler(function (\Throwable $exception): void {
             if (!$exception instanceof \Exception) {
                 $exception = new FatalThrowableError($exception);

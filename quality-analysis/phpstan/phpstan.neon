@@ -20,8 +20,12 @@ parameters:
         # Intentional errors
         - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
         - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelInstantiationActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
-        # Intentional ignores
+        # Intentional ignores that are hard and useless to fix
         - '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
         - '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
-        # Error in the code of xdebug
+        - "#^Call to method PHPUnit\\\\Framework\\\\Assert::assertInstanceOf\\(\\) with 'Symfony\\\\\\\\Component…' and 'fcyccc' will always evaluate to false\\.$#"
+        # Undocumented arg type in xdebug functions
         - '#^Parameter \#1 \$cleanup of function xdebug_stop_code_coverage expects bool, int given\.$#'
+        # Undocumented arg type in PHP core functions
+        - '#^Parameter \#1 \$error_handler of function set_error_handler expects callable, null given\.$#'
+        - '#^Parameter \#1 \$exception_handler of function set_exception_handler expects callable, null given\.$#'

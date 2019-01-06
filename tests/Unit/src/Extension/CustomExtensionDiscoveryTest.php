@@ -24,7 +24,7 @@ class CustomExtensionDiscoveryTest extends TestCase
     /**
      * @var string
      */
-    private const CUSTOM_EXTENSIONS_DIRECTORY_PATH = __DIR__.'/fixtures/custom_extensions/';
+    private const CUSTOM_EXTENSIONS_DIRECTORY_PATH = __DIR__.'/fixtures/custom_extensions';
 
     /**
      * @var CustomExtensionDiscovery

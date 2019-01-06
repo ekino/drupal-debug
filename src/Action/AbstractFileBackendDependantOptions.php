@@ -69,7 +69,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      */
     public function getFilteredResourcesCollection(array $enabledModules, array $enabledThemes): ResourcesCollection
     {
-        return new ResourcesCollection(\array_filter($this->resourcesCollection->all(), function (SelfCheckingResourceInterface $resource) use ($enabledModules, $enabledThemes) {
+        return new ResourcesCollection(\array_filter($this->resourcesCollection->all(), function (SelfCheckingResourceInterface $resource) use ($enabledModules, $enabledThemes): bool {
             if (!$resource instanceof CustomExtensionFileResource) {
                 return true;
             }
@@ -81,7 +81,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
                 case CustomTheme::class:
                     return \in_array($customExtension->getMachineName(), $enabledThemes);
                 default:
-                    throw new NotImplementedException(\sprintf('The behavior for the "%s" custom extension class is not implemented.', \get_class($customExtension)));
+                    throw new NotImplementedException(\sprintf('The behavior for the "%s" custom extension file resource class is not implemented.', \get_class($customExtension)));
             }
         }));
     }
