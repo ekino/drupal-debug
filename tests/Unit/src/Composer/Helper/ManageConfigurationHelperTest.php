@@ -51,7 +51,7 @@ class ManageConfigurationHelperTest extends TestCase
     /**
      * @var string
      */
-    private const TOGGLE_SUBSTITUTION_CONFIGURATION_FILES_DIRECTORY_PATH = __DIR__.'/fixtures/toggle_substitution_cases/';
+    private const TOGGLE_SUBSTITUTION_CONFIGURATION_FILES_DIRECTORY_PATH = __DIR__.'/fixtures/toggle_substitution_cases';
 
     /**
      * {@inheritdoc}

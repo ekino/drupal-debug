@@ -62,7 +62,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('module_handler')) {
+        if (!$container->hasDefinition('module_handler')) {
             throw new NotSupportedException('The "module_handler" service should already be set in the container.');
         }
 
@@ -71,7 +71,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
             throw new NotSupportedException(\sprintf('The "module_handler" service class should be "%s".', ModuleHandler::class));
         }
 
-        if (!$container->has('event_dispatcher')) {
+        if (!$container->hasDefinition('event_dispatcher')) {
             throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
         }
 
@@ -82,7 +82,7 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
         }
 
         if (!(new \ReflectionClass($eventDispatcherClass))->implementsInterface(EventDispatcherInterface::class)) {
-            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface', EventDispatcherInterface::class));
+            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface.', EventDispatcherInterface::class));
         }
 
         $resourcesDefinition = new Definition();
