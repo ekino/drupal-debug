@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Kernel;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\OriginalDrupalKernel;
 use Ekino\Drupal\Debug\Action\ActionManager;
 use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
@@ -62,7 +60,7 @@ class DebugKernel extends OriginalDrupalKernel
      * @param string|null       $appRoot
      * @param OptionsStack|null $optionsStack
      */
-    public function __construct(string $environment, $classLoader, bool $allowDumping = true, ?string $appRoot = null, ?OptionsStack $optionsStack = null)
+    public function __construct($environment, $classLoader, $allowDumping = true, $appRoot = null, OptionsStack $optionsStack = null)
     {
         $this->eventDispatcher = $this->getEventDispatcher();
 
@@ -90,7 +88,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * @return DebugKernel
      */
-    public function boot(): DrupalKernelInterface
+    public function boot()
     {
         // The kernel cannot be booted without settings.
         //
@@ -112,7 +110,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    public function preHandle(Request $request): void
+    public function preHandle(Request $request)
     {
         parent::preHandle($request);
 
@@ -122,7 +120,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function getKernelParameters(): array
+    protected function getKernelParameters()
     {
         return \array_merge(parent::getKernelParameters(), array(
             'kernel.debug' => true,
@@ -132,7 +130,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function initializeContainer(): ContainerInterface
+    protected function initializeContainer()
     {
         $container = parent::initializeContainer();
 
@@ -144,7 +142,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function initializeSettings(Request $request): void
+    protected function initializeSettings(Request $request)
     {
         parent::initializeSettings($request);
 
@@ -156,7 +154,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function attachSynthetic(ContainerInterface $container): ContainerInterface
+    protected function attachSynthetic(ContainerInterface $container)
     {
         $container = parent::attachSynthetic($container);
 
@@ -168,7 +166,7 @@ class DebugKernel extends OriginalDrupalKernel
     /**
      * {@inheritdoc}
      */
-    protected function getContainerBuilder(): ContainerBuilder
+    protected function getContainerBuilder()
     {
         $containerBuilder = parent::getContainerBuilder();
 
