@@ -60,7 +60,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     {
     }
 
-    public function boot(): DrupalKernelInterface
+    public function boot()
     {
         $this->booted = true;
 
@@ -70,7 +70,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     /**
      * @param Request $request
      */
-    public function preHandle(Request $request): void
+    public function preHandle(Request $request)
     {
         $this->container = new Container();
     }
@@ -78,7 +78,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     /**
      * @return array
      */
-    protected function getKernelParameters(): array
+    protected function getKernelParameters()
     {
         return array('foo');
     }
@@ -86,7 +86,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     /**
      * @return Container
      */
-    protected function initializeContainer(): ContainerInterface
+    protected function initializeContainer()
     {
         return new Container();
     }
@@ -94,7 +94,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     /**
      * @param Request $request
      */
-    protected function initializeSettings(Request $request): void
+    protected function initializeSettings(Request $request)
     {
         $this->settingsInitialized = true;
     }
@@ -104,7 +104,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
      *
      * @return ContainerInterface
      */
-    protected function attachSynthetic(ContainerInterface $container): ContainerInterface
+    protected function attachSynthetic(ContainerInterface $container)
     {
         return $container;
     }
@@ -112,7 +112,7 @@ class TestOriginalDrupalKernel implements DrupalKernelInterface
     /**
      * @return ContainerBuilder
      */
-    protected function getContainerBuilder(): ContainerBuilder
+    protected function getContainerBuilder()
     {
         return new ContainerBuilder();
     }
