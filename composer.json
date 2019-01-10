@@ -2,7 +2,7 @@
     "name": "ekino/drupal-debug",
     "license": "MIT",
     "type": "composer-plugin",
-    "description": "Provides an alternative Debug Kernel for Drupal 8 to improve the Developer eXperience.",
+    "description": "Provides an alternative Kernel for Drupal 8 to improve the Developer eXperience.",
     "autoload": {
         "psr-4": {
             "Ekino\\Drupal\\Debug\\": "src/"
@@ -17,7 +17,8 @@
             "Ekino\\Drupal\\Debug\\Tests\\Traits\\": "tests/Traits/",
             "Ekino\\Drupal\\Debug\\Tests\\Unit\\": "tests/Unit/src/",
             "Drupal\\use_custom_route\\": "tests/Integration/WatchRoutingDefinitions/fixtures/modules/use_custom_route/src/",
-            "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service/src/"
+            "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service/src/",
+            "Drupal\\use_invalid_class_name\\": "tests/Integration/EnableDebugClassLoader/fixtures/modules/use_invalid_class_name/src/"
         },
         "classmap": [
             "tests/Unit/src/Kernel/test_classes/"

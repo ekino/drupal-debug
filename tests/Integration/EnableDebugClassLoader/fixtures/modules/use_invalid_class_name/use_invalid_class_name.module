@@ -1,0 +1,8 @@
+<?php
+
+use Drupal\use_invalid_class_name\Service\BarService;
+
+function use_invalid_class_name_form_user_login_form_alter(): void
+{
+    new BarService();
+}
