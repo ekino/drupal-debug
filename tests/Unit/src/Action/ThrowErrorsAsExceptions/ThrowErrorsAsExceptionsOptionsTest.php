@@ -53,6 +53,6 @@ class ThrowErrorsAsExceptionsOptionsTest extends TestCase
             ->method('getLogger')
             ->willReturn(null);
 
-        $this->assertEquals(new ThrowErrorsAsExceptionsOptions(E_ALL, null), ThrowErrorsAsExceptionsOptions::getDefault('/foo', $defaultsConfiguration));
+        $this->assertEquals(new ThrowErrorsAsExceptionsOptions(E_ALL & ~E_WARNING & ~E_USER_WARNING, null), ThrowErrorsAsExceptionsOptions::getDefault('/foo', $defaultsConfiguration));
     }
 }
