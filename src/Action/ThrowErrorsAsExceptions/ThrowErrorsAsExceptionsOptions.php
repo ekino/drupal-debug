@@ -63,6 +63,6 @@ class ThrowErrorsAsExceptionsOptions implements OptionsInterface
      */
     public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
     {
-        return new self(E_ALL, $defaultsConfiguration->getLogger());
+        return new self(E_ALL & ~E_WARNING & ~E_USER_WARNING, $defaultsConfiguration->getLogger());
     }
 }
