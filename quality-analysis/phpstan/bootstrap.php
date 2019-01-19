@@ -23,4 +23,7 @@ require sprintf('%s/../../vendor/autoload.php', __DIR__);
 // However, we still want PHPStan to analyze this file.
 require sprintf('%s/../../tests/Integration/WatchContainerDefinitions/fixtures/ServiceProviderTemplate.php', __DIR__);
 
+// Those template classes must not be loaded in integration tests.
+// However, we still want PHPStan to analyze these files.
 require sprintf('%s/../../tests/Integration/DisableDynamicPageCache/fixtures/ControllerTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/DisableRenderCache/fixtures/ControllerTemplate.php', __DIR__);
