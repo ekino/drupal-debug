@@ -1,0 +1,13 @@
+use_twig_template.bar:
+  path: '/bar'
+  defaults:
+    _controller: '\Drupal\use_twig_template\Controller\FooController::bar'
+  requirements:
+    _access: 'TRUE'
+
+use_twig_template.ccc:
+  path: '/ccc'
+  defaults:
+    _controller: '\Drupal\use_twig_template\Controller\FooController::ccc'
+  requirements:
+    _access: 'TRUE'
