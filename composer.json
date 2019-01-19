@@ -16,6 +16,7 @@
             "Ekino\\Drupal\\Debug\\Tests\\Integration\\": "tests/Integration/",
             "Ekino\\Drupal\\Debug\\Tests\\Traits\\": "tests/Traits/",
             "Ekino\\Drupal\\Debug\\Tests\\Unit\\": "tests/Unit/src/",
+            "Drupal\\hit_dynamic_page_cache\\": "tests/Integration/DisableDynamicPageCache/fixtures/modules/hit_dynamic_page_cache/src/",
             "Drupal\\use_custom_route\\": "tests/Integration/WatchRoutingDefinitions/fixtures/modules/use_custom_route/src/",
             "Drupal\\use_custom_service\\": "tests/Integration/WatchContainerDefinitions/fixtures/modules/use_custom_service/src/",
             "Drupal\\use_twig_template\\": "tests/Integration/DisableTwigCache/fixtures/modules/use_twig_template/src/"

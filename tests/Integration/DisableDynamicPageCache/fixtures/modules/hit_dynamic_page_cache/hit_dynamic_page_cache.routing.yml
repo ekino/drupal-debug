@@ -1,0 +1,6 @@
+hit_dynamic_page_cache.foo:
+  path: '/foo'
+  defaults:
+    _controller: '\Drupal\hit_dynamic_page_cache\Controller\__FooController::action'
+  requirements:
+    _access: 'TRUE'

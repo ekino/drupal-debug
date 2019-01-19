@@ -1,0 +1,3 @@
+type: module
+core: 8.x
+name: DisableDynamicPageCache::hit_dynamic_page_cache

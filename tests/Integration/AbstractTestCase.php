@@ -102,10 +102,6 @@ abstract class AbstractTestCase extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        if (\extension_loaded('xdebug')) {
-            \xdebug_stop_code_coverage(0);
-        }
-
         $testCaseFilename = (new \ReflectionClass(static::class))->getFileName();
         if (!\is_string($testCaseFilename)) {
             self::markTestIncomplete('The test case filename could not be determined.');
@@ -120,16 +116,6 @@ abstract class AbstractTestCase extends TestCase
             }, \iterator_to_array(Finder::create()->directories()->depth(0)->in($fixturesModulesDirectoryPath))));
 
             $filesystem->symlink($fixturesModulesDirectoryPath, \sprintf('%s/modules', self::DRUPAL_DIRECTORY_PATH));
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        if (\extension_loaded('xdebug')) {
-            \xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
         }
     }
 
@@ -150,8 +136,23 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string[] $names
      */
+    protected function uninstallModules(array $names): void
+    {
+        $this->useModuleInstaller('uninstall', $names);
+    }
+
+    /**
+     * @param string[] $names
+     */
     private function installModules(array $names): void
     {
+        $this->useModuleInstaller('install', $names);
+    }
+
+    private function useModuleInstaller(string $action, array $names): void
+    {
+        $this->stopCodeCoverage();
+
         $currentWorkingDirectory = \getcwd();
         if (!\is_string($currentWorkingDirectory)) {
             $this->fail('The current working directory could not be determined.');
@@ -170,11 +171,13 @@ abstract class AbstractTestCase extends TestCase
             $this->fail('The module installer service is not the expected one.');
         }
 
-        if (!$moduleInstaller->install($names)) {
-            $this->fail(\sprintf('The module(s) "%s" could not be installed.', \implode(', ', $names)));
+        if (!$moduleInstaller->{$action}($names)) {
+            $this->fail(\sprintf('The module(s) "%s" could not be %sed.', \implode(', ', $names), $action));
         }
 
         \chdir($currentWorkingDirectory);
+
+        $this->startCodeCoverage();
     }
 
     private function clearCache(): void
@@ -197,6 +200,20 @@ abstract class AbstractTestCase extends TestCase
         )));
 
         return $goutteClient;
+    }
+
+    private function stopCodeCoverage(): void
+    {
+        if (\extension_loaded('xdebug')) {
+            \xdebug_stop_code_coverage(0);
+        }
+    }
+
+    private function startCodeCoverage(): void
+    {
+        if (\extension_loaded('xdebug')) {
+            \xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+        }
     }
 
     abstract protected function doTestInitialBehaviorWithDrupalKernel(BrowserKitClient $client): void;

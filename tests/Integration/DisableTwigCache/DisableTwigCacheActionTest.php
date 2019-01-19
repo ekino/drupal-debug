@@ -17,14 +17,14 @@ use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class DisableTwigCacheTest extends AbstractTestCase
+class DisableTwigCacheActionTest extends AbstractTestCase
 {
     use FileHelperTrait;
 
     /**
      * @var string
      */
-    private const PARTIAL_FILE_PATH = __DIR__.'/fixtures/modules/use_twig_template/templates/--partial.html.twig';
+    private const MODULE_PARTIAL_FILE_PATH = __DIR__.'/fixtures/modules/use_twig_template/templates/--partial.html.twig';
 
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class DisableTwigCacheTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->deletePartialFile();
+        $this->deletePartialFile(true);
     }
 
     /**
@@ -51,10 +51,12 @@ class DisableTwigCacheTest extends AbstractTestCase
      */
     protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
-        foreach ($this->executeScenario($client) as $result) {
-            $this->assertContains('I love to eat apples!', $result);
-            $this->assertNotContains('I prefer pears.', $result);
-        }
+        $results = $this->executeScenario($client);
+
+        $this->assertContains('I love to eat apples!', $results[0]);
+
+        $this->assertContains('I love to eat apples!', $results[1]);
+        $this->assertNotContains('I prefer pears.', $results[1]);
     }
 
     /**
@@ -65,7 +67,6 @@ class DisableTwigCacheTest extends AbstractTestCase
         $results = $this->executeScenario($client);
 
         $this->assertContains('I love to eat apples!', $results[0]);
-        $this->assertNotContains('I prefer pears.', $results[0]);
 
         $this->assertContains('I prefer pears.', $results[1]);
         $this->assertNotContains('I love to eat apples!', $results[1]);
@@ -79,7 +80,7 @@ class DisableTwigCacheTest extends AbstractTestCase
             '/bar' => 'I love to eat apples!',
             '/ccc' => 'I prefer pears.',
         ) as $uri => $content) {
-            self::writeFile(self::PARTIAL_FILE_PATH, $content);
+            self::writeFile(self::MODULE_PARTIAL_FILE_PATH, $content);
 
             $results[] = $client->request('GET', $uri)->text();
         }
@@ -87,8 +88,8 @@ class DisableTwigCacheTest extends AbstractTestCase
         return $results;
     }
 
-    private function deletePartialFile(bool $mandatory = true): void
+    private function deletePartialFile(bool $mandatory): void
     {
-        self::deleteFile(self::PARTIAL_FILE_PATH, $mandatory);
+        self::deleteFile(self::MODULE_PARTIAL_FILE_PATH, $mandatory);
     }
 }
