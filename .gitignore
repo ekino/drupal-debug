@@ -5,7 +5,7 @@
 !/tests/**/reference/.gitkeep
 /tests/**/cache/**
 !/tests/**/cache/.gitkeep
-/tests/**/fixtures/__*
-/tests/**/templates/--*
+/tests/**/fixtures/**/__*
+/tests/**/fixtures/**/--*
 /cache/
 /drupal-debug.yml

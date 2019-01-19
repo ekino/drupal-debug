@@ -22,3 +22,5 @@ require sprintf('%s/../../vendor/autoload.php', __DIR__);
 // to write the WatchContainerDefinitionsTest if it's not autoloaded.
 // However, we still want PHPStan to analyze this file.
 require sprintf('%s/../../tests/Integration/WatchContainerDefinitions/fixtures/ServiceProviderTemplate.php', __DIR__);
+
+require sprintf('%s/../../tests/Integration/DisableDynamicPageCache/fixtures/ControllerTemplate.php', __DIR__);
