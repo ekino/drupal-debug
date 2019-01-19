@@ -6,5 +6,6 @@
 /tests/**/cache/**
 !/tests/**/cache/.gitkeep
 /tests/**/fixtures/__*
+/tests/**/templates/--*
 /cache/
 /drupal-debug.yml
