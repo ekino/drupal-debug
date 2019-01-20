@@ -55,7 +55,7 @@ Here is the list of the current available actions and how they help you:
 | Disable Render Cache             | Disable [Drupal Render Cache](https://www.drupal.org/docs/8/api/render-api/cacheability-of-render-arrays)                                                              |
 | Disable Twig Cache               | Disable Twig Cache                                                                                                                                                     |
 | Display Dump Location            | Display location when you use the `dump()` function of the Symfony VarDumper component                                                                                 |
-| Display Pretty Exceptions        | Display a better looking exception page and log exceptions (active once the `Request` was handled by the Kernel)                                                       |
+| Display Pretty Exceptions        | Display a better looking exception page and log exceptions (active when the `Request` is handled by the Kernel and if the exceptions are caught)                                                       |
 | Display Pretty Exceptions ASAP   | Display a better looking exception page (active as soon as the Kernel is instantiated)                                                                                 |
 | Enable Debug Class Loader        | Enable the `DebugClassLoader` of the Symfony Debug component                                                                                                           |
 | Enable Twig Debug                | Enable Twig Debug mode                                                                                                                                                 |
