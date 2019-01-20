@@ -26,4 +26,5 @@ require sprintf('%s/../../tests/Integration/WatchContainerDefinitions/fixtures/S
 // Those template classes must not be loaded in integration tests.
 // However, we still want PHPStan to analyze these files.
 require sprintf('%s/../../tests/Integration/DisableDynamicPageCache/fixtures/ControllerTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/DisableInternalPageCache/fixtures/ControllerTemplate.php', __DIR__);
 require sprintf('%s/../../tests/Integration/DisableRenderCache/fixtures/ControllerTemplate.php', __DIR__);
