@@ -57,7 +57,7 @@
         "phpunit/phpunit": "^7.5",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/finder": "^3.4 || ^4.0",
-        "symfony/panther": "^0.2",
+        "symfony/panther": "1.0.x-dev",
         "symfony/process": "^3.4.2 || ^4.0.2"
     },
     "extra": {
@@ -68,5 +68,7 @@
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

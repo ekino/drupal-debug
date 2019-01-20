@@ -1,0 +1,6 @@
+<?php
+
+function throw_uncaught_exception_form_user_login_form_alter(): void
+{
+    throw new \Exception('My custom exception message is great!');
+}

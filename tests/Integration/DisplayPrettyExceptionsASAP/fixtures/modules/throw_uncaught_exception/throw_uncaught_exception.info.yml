@@ -1,0 +1,3 @@
+type: module
+core: 8.x
+name: DisplayPrettyExceptionASAP::throw_uncaught_exception

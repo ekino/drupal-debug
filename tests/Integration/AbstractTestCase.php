@@ -54,6 +54,11 @@ abstract class AbstractTestCase extends TestCase
     const CONFIGURATION_FILE_PATH = __DIR__.'/fixtures/drupal-debug.yml';
 
     /**
+     * @var string
+     */
+    protected static $router = 'index.php';
+
+    /**
      * @var bool
      */
     protected $runTestInSeparateProcess = true;
@@ -191,7 +196,7 @@ abstract class AbstractTestCase extends TestCase
             $this->webServerManager->quit();
         }
 
-        $this->webServerManager = new WebServerManager(self::DRUPAL_DIRECTORY_PATH, 'localhost', $port);
+        $this->webServerManager = new WebServerManager(self::DRUPAL_DIRECTORY_PATH, 'localhost', $port, static::$router);
         $this->webServerManager->start();
 
         $goutteClient = new GoutteClient();
