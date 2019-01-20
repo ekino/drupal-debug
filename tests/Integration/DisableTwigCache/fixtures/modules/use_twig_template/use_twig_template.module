@@ -3,6 +3,8 @@
 function use_twig_template_theme(): array
 {
     return [
-        '__partial' => [],
+        '__partial' => [
+            'variables' => [],
+        ],
     ];
 }
