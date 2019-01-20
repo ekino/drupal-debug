@@ -1,0 +1,6 @@
+<?php
+
+function trigger_error_form_user_login_form_alter(): void
+{
+    @trigger_error('Mon esprit glisse ailleurs.', E_USER_ERROR);
+}
