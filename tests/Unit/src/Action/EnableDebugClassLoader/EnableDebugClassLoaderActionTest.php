@@ -32,11 +32,15 @@ class EnableDebugClassLoaderActionTest extends TestCase
 
         $splAutoloadFunctions = \spl_autoload_functions();
         if (!\is_array($splAutoloadFunctions) || empty($splAutoloadFunctions)) {
-            $this->fail('There should be registered __autoload() functions.');
+            self::fail('There should be registered __autoload() functions.');
         }
 
         foreach ($splAutoloadFunctions as $callable) {
-            $this->assertInstanceOf(DebugClassLoader::class, $callable[0]);
+            $instance = $callable[0];
+            $this->assertInstanceOf(DebugClassLoader::class, $instance);
+            $this->assertTrue(\method_exists($instance, 'findFile'));
         }
+
+        DebugClassLoader::disable();
     }
 }
