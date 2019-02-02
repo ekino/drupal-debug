@@ -63,11 +63,11 @@ class ManageConfigurationHelperTest extends TestCase
         $this->assertFileIsWritable(self::EXISTING_AND_WRITEABLE_CONFIGURATION_FILE_PATH);
         $this->assertDirectoryIsWritable(\dirname(self::NOT_EXISTING_AND_WRITEABLE_CONFIGURATION_FILE_PATH));
 
-        self::setNotWriteable(self::EXISTING_AND_NOT_WRITEABLE_CONFIGURATION_FILE_PATH);
+        self::setFileNotWriteable(self::EXISTING_AND_NOT_WRITEABLE_CONFIGURATION_FILE_PATH);
         $this->assertFileNotIsWritable(self::EXISTING_AND_NOT_WRITEABLE_CONFIGURATION_FILE_PATH);
 
         $notExistingAndNotWriteableDirectoryPath = \dirname(self::NOT_EXISTING_AND_NOT_WRITEABLE_CONFIGURATION_FILE_PATH);
-        self::setNotWriteable($notExistingAndNotWriteableDirectoryPath);
+        self::setFileNotWriteable($notExistingAndNotWriteableDirectoryPath);
         $this->assertDirectoryNotIsWritable($notExistingAndNotWriteableDirectoryPath);
     }
 

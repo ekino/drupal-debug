@@ -17,10 +17,6 @@ use PHPUnit\Framework\AssertionFailedError;
 
 trait FileHelperTrait
 {
-    /**
-     * @param string $path
-     * @param bool   $mandatory
-     */
     private static function deleteFile(string $path, bool $mandatory = false): void
     {
         if (\is_file($path)) {
@@ -30,11 +26,6 @@ trait FileHelperTrait
         }
     }
 
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
     private static function getFileContent(string $path): string
     {
         $content = \file_get_contents($path);
@@ -45,22 +36,14 @@ trait FileHelperTrait
         return $content;
     }
 
-    /**
-     * @param string $path
-     * @param string $content
-     */
-    private static function writeFile(string $path, string $content): void
+    private static function writeFile(string $path, string $content, bool $append = false): void
     {
-        if (false === \file_put_contents($path, $content)) {
+        if (false === \file_put_contents($path, $content, $append ? FILE_APPEND : 0)) {
             throw new AssertionFailedError(\sprintf('The file "%s" content could not be written.', $path));
         }
     }
 
-    /**
-     * @param string $path
-     * @param int    $timestamp
-     */
-    private static function touch(string $path, int $timestamp): void
+    private static function touchFile(string $path, int $timestamp): void
     {
         if (!\touch($path, $timestamp)) {
             throw new AssertionFailedError(\sprintf('The file "%s" could not be touched.', $path));
@@ -69,7 +52,7 @@ trait FileHelperTrait
         \clearstatcache();
     }
 
-    private static function setNotWriteable(string $path): void
+    private static function setFileNotWriteable(string $path): void
     {
         if (!\is_writable($path)) {
             return;
@@ -77,6 +60,13 @@ trait FileHelperTrait
 
         if (!\chmod($path, 0555)) {
             throw new AssertionFailedError(\sprintf('The path "%s" could not be made not writeable.', $path));
+        }
+    }
+
+    private static function copyFile(string $source, string $dest): void
+    {
+        if (!\copy($source, $dest)) {
+            throw new AssertionFailedError(\sprintf('The file "%s" could not be copied to "%s".', $source, $dest));
         }
     }
 }

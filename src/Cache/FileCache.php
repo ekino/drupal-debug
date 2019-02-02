@@ -127,11 +127,13 @@ class FileCache
         }
     }
 
-    /**
-     * @return string
-     */
     public function getFilePath(): string
     {
         return $this->filePath;
+    }
+
+    public function getCurrentResourcesCollection(): ResourcesCollection
+    {
+        return $this->resourcesFreshnessChecker->getCurrentResourcesCollection();
     }
 }

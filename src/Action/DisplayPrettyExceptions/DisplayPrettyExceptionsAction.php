@@ -16,7 +16,7 @@ namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptions;
 use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\CompilerPassActionInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
-use Ekino\Drupal\Debug\Exception\NotSupportedException;
+use Ekino\Drupal\Debug\Action\ValidateContainerDefinitionTrait;
 use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Psr\Log\LoggerInterface;
@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 
 class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, EventSubscriberActionInterface, ActionWithOptionsInterface
 {
+    use ValidateContainerDefinitionTrait;
+
     /**
      * @var string
      */
@@ -62,19 +64,7 @@ class DisplayPrettyExceptionsAction implements CompilerPassActionInterface, Even
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('event_dispatcher')) {
-            throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
-        }
-
-        $eventDispatcherDefinition = $container->getDefinition('event_dispatcher');
-        $eventDispatcherClass = $eventDispatcherDefinition->getClass();
-        if (!\is_string($eventDispatcherClass)) {
-            throw new NotSupportedException('The "event_dispatcher" service class should be a string.');
-        }
-
-        if (!(new \ReflectionClass($eventDispatcherClass))->implementsInterface(EventDispatcherInterface::class)) {
-            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface', EventDispatcherInterface::class));
-        }
+        $eventDispatcherDefinition = $this->validateContainerDefinitionClassImplements($container, 'event_dispatcher', EventDispatcherInterface::class);
 
         $loggerReference = null;
         if ($this->options->getLogger() instanceof LoggerInterface) {

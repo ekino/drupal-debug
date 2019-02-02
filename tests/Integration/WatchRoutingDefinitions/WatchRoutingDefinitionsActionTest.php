@@ -116,7 +116,7 @@ class WatchRoutingDefinitionsActionTest extends AbstractTestCase
         )));
 
         if ($touch) {
-            self::touch(self::MODULE_ROUTING_FILE_PATH, Carbon::now()->addSecond()->getTimestamp());
+            self::touchFile(self::MODULE_ROUTING_FILE_PATH, Carbon::now()->addSecond()->getTimestamp());
         }
     }
 

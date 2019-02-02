@@ -24,10 +24,9 @@ use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsAct
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP\DisplayPrettyExceptionsASAPAction;
 use Ekino\Drupal\Debug\Action\EnableDebugClassLoader\EnableDebugClassLoaderAction;
 use Ekino\Drupal\Debug\Action\EnableTwigDebug\EnableTwigDebugAction;
-use Ekino\Drupal\Debug\Action\EnableTwigStrictVariables\EnableTwigStrictVariablesAction;
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsAction;
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsAction;
-use Ekino\Drupal\Debug\Action\WatchHooksImplementations\WatchHooksImplementationsAction;
+use Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations\WatchModulesHooksImplementationsAction;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsAction;
 use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Option\OptionsInterface;
@@ -112,7 +111,7 @@ class ActionManager
             //EnableTwigStrictVariablesAction::class,
             ThrowErrorsAsExceptionsAction::class,
             WatchContainerDefinitionsAction::class,
-            WatchHooksImplementationsAction::class,
+            WatchModulesHooksImplementationsAction::class,
             WatchRoutingDefinitionsAction::class,
         );
 

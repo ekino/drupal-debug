@@ -17,7 +17,7 @@ use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsOpt
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP\DisplayPrettyExceptionsASAPOptions;
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsOptions;
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsOptions;
-use Ekino\Drupal\Debug\Action\WatchHooksImplementations\WatchHooksImplementationsOptions;
+use Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations\WatchModulesHooksImplementationsOptions;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsOptions;
 use Ekino\Drupal\Debug\Option\OptionsStack;
 use Ekino\Drupal\Debug\Option\OptionsStackBuilder;
@@ -113,9 +113,9 @@ class OptionsStackBuilderTest extends TestCase
         $this->doTestWatchOptions('setWatchContainerDefinitionsOptions', WatchContainerDefinitionsOptions::class);
     }
 
-    public function testSetWatchHooksImplementationsOptions(): void
+    public function testSetWatchModulesHooksImplementationsOptions(): void
     {
-        $this->doTestWatchOptions('setWatchHooksImplementationsOptions', WatchHooksImplementationsOptions::class);
+        $this->doTestWatchOptions('setWatchModulesHooksImplementationsOptions', WatchModulesHooksImplementationsOptions::class);
     }
 
     public function testSetWatchRoutingDefinitionsOptions(): void
