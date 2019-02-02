@@ -1,0 +1,8 @@
+<?php
+
+function implement_hook_page_bottom(&$page_bottom): void
+{
+    $page_bottom[] = array(
+        '#markup' => 'Find a subtle way out',
+    );
+}

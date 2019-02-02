@@ -15,11 +15,13 @@ namespace Ekino\Drupal\Debug\Tests\Integration;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Goutte\Client as GoutteClient;
 use GuzzleHttp\Client as GuzzleClient;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\Client as BrowserKitClient;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -31,27 +33,27 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @var string
      */
-    const DRUPAL_DIRECTORY_PATH = __DIR__.'/../../vendor/drupal';
+    public const DRUPAL_DIRECTORY_PATH = __DIR__.'/../../vendor/drupal';
 
     /**
      * @var string
      */
-    const DRUPAL_FILES_DIRECTORY_PATH = self::DRUPAL_DIRECTORY_PATH.'/sites/default/files';
+    public const DRUPAL_FILES_DIRECTORY_PATH = self::DRUPAL_DIRECTORY_PATH.'/sites/default/files';
 
     /**
      * @var string
      */
-    const REFERENCE_FILES_DIRECTORY_PATH = __DIR__.'/reference/files';
+    public const REFERENCE_FILES_DIRECTORY_PATH = __DIR__.'/reference/files';
 
     /**
      * @var string
      */
-    const CACHE_DIRECTORY_PATH = __DIR__.'/cache';
+    private const CACHE_DIRECTORY_PATH = __DIR__.'/cache';
 
     /**
      * @var string
      */
-    const CONFIGURATION_FILE_PATH = __DIR__.'/fixtures/drupal-debug.yml';
+    private const CONFIGURATION_FILE_PATH = __DIR__.'/fixtures/drupal-debug.yml';
 
     /**
      * @var string
@@ -69,9 +71,12 @@ abstract class AbstractTestCase extends TestCase
     private $webServerManager = null;
 
     /**
-     * @var string[]
+     * @var mixed[]
      */
-    private static $modulesToInstall = array();
+    private static $extensionsToInstall = array(
+        'modules' => array(),
+        'themes' => array(),
+    );
 
     /**
      * {@inheritdoc}
@@ -85,8 +90,10 @@ abstract class AbstractTestCase extends TestCase
 
         $this->clearCache();
 
-        if (!empty(self::$modulesToInstall)) {
-            $this->installModules(self::$modulesToInstall);
+        foreach (self::$extensionsToInstall as $type => $names) {
+            if (!empty($names)) {
+                $this->installExtensions($type, $names);
+            }
         }
     }
 
@@ -112,15 +119,20 @@ abstract class AbstractTestCase extends TestCase
             self::markTestIncomplete('The test case filename could not be determined.');
         }
 
-        $fixturesModulesDirectoryPath = \sprintf('%s/fixtures/modules', \dirname($testCaseFilename));
         $filesystem = new Filesystem();
 
-        if ($filesystem->exists($fixturesModulesDirectoryPath)) {
-            self::$modulesToInstall = \array_values(\array_map(function (SplFileInfo $splFileInfo) {
-                return $splFileInfo->getBasename();
-            }, \iterator_to_array(Finder::create()->directories()->depth(0)->in($fixturesModulesDirectoryPath))));
+        foreach (\array_keys(self::$extensionsToInstall) as $extensionType) {
+            $fixturesExtensionsDirectoryPath = \sprintf('%s/fixtures/%s', \dirname($testCaseFilename), $extensionType);
 
-            $filesystem->symlink($fixturesModulesDirectoryPath, \sprintf('%s/modules', self::DRUPAL_DIRECTORY_PATH));
+            if (!$filesystem->exists($fixturesExtensionsDirectoryPath)) {
+                continue;
+            }
+
+            self::$extensionsToInstall[$extensionType] = \array_values(\array_map(function (SplFileInfo $splFileInfo) {
+                return $splFileInfo->getBasename();
+            }, \iterator_to_array(Finder::create()->directories()->depth(0)->in($fixturesExtensionsDirectoryPath))));
+
+            $filesystem->symlink($fixturesExtensionsDirectoryPath, \sprintf('%s/%s', self::DRUPAL_DIRECTORY_PATH, $extensionType));
         }
     }
 
@@ -143,24 +155,21 @@ abstract class AbstractTestCase extends TestCase
      */
     protected function uninstallModules(array $names): void
     {
-        $this->useModuleInstaller('uninstall', $names);
+        $this->useExtensionInstaller('modules', 'uninstall', $names);
     }
 
-    /**
-     * @param string[] $names
-     */
-    private function installModules(array $names): void
+    private function installExtensions(string $type, array $names): void
     {
-        $this->useModuleInstaller('install', $names);
+        $this->useExtensionInstaller($type, 'install', $names);
     }
 
-    private function useModuleInstaller(string $action, array $names): void
+    private function useExtensionInstaller(string $type, string $action, array $names): void
     {
         $this->stopCodeCoverage();
 
         $currentWorkingDirectory = \getcwd();
         if (!\is_string($currentWorkingDirectory)) {
-            $this->fail('The current working directory could not be determined.');
+            self::fail('The current working directory could not be determined.');
         }
 
         \chdir(self::DRUPAL_DIRECTORY_PATH);
@@ -170,19 +179,60 @@ abstract class AbstractTestCase extends TestCase
 
         $kernel = DrupalKernel::createFromRequest($request, $classLoader, 'test');
         $kernel->prepareLegacyRequest($request);
-        /** @var ModuleInstallerInterface $moduleInstaller */
-        $moduleInstaller = $kernel->getContainer()->get('module_installer');
-        if (!$moduleInstaller instanceof ModuleInstallerInterface) {
-            $this->fail('The module installer service is not the expected one.');
-        }
 
-        if (!$moduleInstaller->{$action}($names)) {
-            $this->fail(\sprintf('The module(s) "%s" could not be %sed.', \implode(', ', $names), $action));
+        switch ($type) {
+            case 'modules':
+                $this->useModuleInstaller($kernel->getContainer(), $action, $names);
+
+                break;
+
+            case 'themes':
+                $this->useThemeInstaller($kernel->getContainer(), $action, $names);
+
+                break;
+
+            default:
+                self::fail(\sprintf('The type "%s" is not supported.', $type));
         }
 
         \chdir($currentWorkingDirectory);
 
         $this->startCodeCoverage();
+    }
+
+    private function useModuleInstaller(ContainerInterface $container, string $action, array $names): void
+    {
+        if (!\in_array($action, array(
+            'install',
+            'uninstall',
+        ))) {
+            self::fail('The action "%s" is not supported.');
+        }
+
+        $moduleInstaller = $container->get('module_installer');
+        if (!$moduleInstaller instanceof ModuleInstallerInterface) {
+            self::fail('The module installer service is not the expected one.');
+        }
+
+        if (!$moduleInstaller->{$action}($names)) {
+            self::fail(\sprintf('The module(s) "%s" could not be %sed.', \implode(', ', $names), $action));
+        }
+    }
+
+    private function useThemeInstaller(ContainerInterface $container, string $action, array $names): void
+    {
+        if ('install' !== $action) {
+            self::fail('The action "%s" is not supported.');
+        }
+
+        $themeInstaller = $container->get('theme_installer');
+        if (!$themeInstaller instanceof ThemeInstallerInterface) {
+            self::fail('The theme installer service is not the expected one.');
+        }
+
+        if (!$themeInstaller->install($names)) {
+            self::fail(\sprintf('The theme(s) "%s" could not be installed.', \implode(', ', $names)));
+        }
     }
 
     private function clearCache(): void
