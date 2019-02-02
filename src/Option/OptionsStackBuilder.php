@@ -17,7 +17,7 @@ use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsOpt
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP\DisplayPrettyExceptionsASAPOptions;
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsOptions;
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsOptions;
-use Ekino\Drupal\Debug\Action\WatchHooksImplementations\WatchHooksImplementationsOptions;
+use Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations\WatchModulesHooksImplementationsOptions;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsOptions;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Psr\Log\LoggerInterface;
@@ -91,9 +91,9 @@ class OptionsStackBuilder
      * @param string              $cacheFilePath
      * @param ResourcesCollection $resourcesCollection
      */
-    public function setWatchHooksImplementationsOptions(string $cacheFilePath, ResourcesCollection $resourcesCollection): self
+    public function setWatchModulesHooksImplementationsOptions(string $cacheFilePath, ResourcesCollection $resourcesCollection): self
     {
-        return $this->set(new WatchHooksImplementationsOptions($cacheFilePath, $resourcesCollection));
+        return $this->set(new WatchModulesHooksImplementationsOptions($cacheFilePath, $resourcesCollection));
     }
 
     /**

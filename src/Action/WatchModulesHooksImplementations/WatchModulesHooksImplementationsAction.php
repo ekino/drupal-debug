@@ -11,31 +11,35 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Action\WatchHooksImplementations;
+namespace Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations;
 
 use Drupal\Core\Extension\ModuleHandler;
 use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\CompilerPassActionInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
+use Ekino\Drupal\Debug\Action\ValidateContainerDefinitionTrait;
+use Ekino\Drupal\Debug\Cache\Event\FileBackendEvents;
 use Ekino\Drupal\Debug\Cache\FileBackend;
 use Ekino\Drupal\Debug\Cache\FileCache;
-use Ekino\Drupal\Debug\Exception\NotSupportedException;
 use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class WatchHooksImplementationsAction implements CompilerPassActionInterface, EventSubscriberActionInterface, ActionWithOptionsInterface
+class WatchModulesHooksImplementationsAction implements CompilerPassActionInterface, EventSubscriberActionInterface, ActionWithOptionsInterface
 {
+    use ValidateContainerDefinitionTrait;
+
     /**
      * @var string
      */
-    const RESOURCES_SERVICE_ID = 'ekino.drupal.debug.action.watch_hooks_implementations.resources';
+    private const RESOURCES_SERVICE_ID = 'ekino.drupal.debug.action.watch_modules_hooks_implementations.resources';
 
     /**
-     * @var WatchHooksImplementationsOptions
+     * @var WatchModulesHooksImplementationsOptions
      */
     private $options;
 
@@ -50,9 +54,9 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
     }
 
     /**
-     * @param WatchHooksImplementationsOptions $options
+     * @param WatchModulesHooksImplementationsOptions $options
      */
-    public function __construct(WatchHooksImplementationsOptions $options)
+    public function __construct(WatchModulesHooksImplementationsOptions $options)
     {
         $this->options = $options;
     }
@@ -62,28 +66,9 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('module_handler')) {
-            throw new NotSupportedException('The "module_handler" service should already be set in the container.');
-        }
-
-        $moduleHandlerDefinition = $container->getDefinition('module_handler');
-        if (ModuleHandler::class !== $moduleHandlerDefinition->getClass()) {
-            throw new NotSupportedException(\sprintf('The "module_handler" service class should be "%s".', ModuleHandler::class));
-        }
-
-        if (!$container->hasDefinition('event_dispatcher')) {
-            throw new NotSupportedException('The "event_dispatcher" service should already be set in the container.');
-        }
-
-        $eventDispatcherDefinition = $container->getDefinition('event_dispatcher');
-        $eventDispatcherClass = $eventDispatcherDefinition->getClass();
-        if (!\is_string($eventDispatcherClass)) {
-            throw new NotSupportedException('The "event_dispatcher" service class should be a string.');
-        }
-
-        if (!(new \ReflectionClass($eventDispatcherClass))->implementsInterface(EventDispatcherInterface::class)) {
-            throw new NotSupportedException(\sprintf('The "event_dispatcher" service class should implement the "%s" interface.', EventDispatcherInterface::class));
-        }
+        $moduleHandlerDefinition = $this->validateContainerDefinitionClassIs($container, 'module_handler', ModuleHandler::class);
+        $eventDispatcherDefinition = $this->validateContainerDefinitionClassImplements($container, 'event_dispatcher', EventDispatcherInterface::class);
+        $this->validateContainerDefinitionClassImplements($container, 'kernel', HttpKernelInterface::class);
 
         $resourcesDefinition = new Definition();
         $resourcesDefinition->setSynthetic(true);
@@ -100,6 +85,15 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
         ));
 
         $moduleHandlerDefinition->replaceArgument(2, $fileBackendDefinition);
+
+        $eventDispatcherDefinition
+            ->addMethodCall('addListener', array(
+                FileBackendEvents::ON_CACHE_NOT_FRESH,
+                new Definition(LoadNewModuleFile::class, array(
+                    new Reference('module_handler'),
+                    new Reference('kernel'),
+                )),
+          ));
     }
 
     /**
@@ -115,6 +109,6 @@ class WatchHooksImplementationsAction implements CompilerPassActionInterface, Ev
      */
     public static function getOptionsClass(): string
     {
-        return WatchHooksImplementationsOptions::class;
+        return WatchModulesHooksImplementationsOptions::class;
     }
 }

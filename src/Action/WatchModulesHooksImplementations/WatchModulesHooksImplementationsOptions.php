@@ -11,11 +11,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Action\WatchHooksImplementations;
+namespace Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations;
 
 use Ekino\Drupal\Debug\Action\AbstractFileBackendDependantOptions;
 
-class WatchHooksImplementationsOptions extends AbstractFileBackendDependantOptions
+class WatchModulesHooksImplementationsOptions extends AbstractFileBackendDependantOptions
 {
     /**
      * {@inheritdoc}

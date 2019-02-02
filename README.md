@@ -14,7 +14,7 @@ This Debug Kernel extends (but substitutes entirely by default) the original Dru
 It is done for one reason: help you develop better and faster!
 
 Once this library is installed, you will be able to experience a « debug mode » during the development process.
-For example, you will not need to manually clear the cache anymore when you add or remove a custom service, a route or a hook implementation.
+For example, you will not need to manually clear the cache anymore when you add or remove a custom service, a route or a module hook implementation.
 
 # Requirements
 
@@ -46,24 +46,24 @@ Also, you cannot provide your own custom actions yet but this is planned for the
 
 Here is the list of the current available actions and how they help you:
 
-| Name                             | Description                                                                                                                                                            |
-| ---------------------------------| -----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Disable CSS Aggregation          | Disable CSS files aggregation                                                                                                                                          |
-| Disable Dynamic Page Cache       | Disable [Drupal Dynamic Page Cache](https://www.drupal.org/docs/8/core/modules/dynamic-page-cache)                                                                     |
-| Disable Internal Page Cache      | Disable [Drupal Internal Page Cache](https://www.drupal.org/docs/8/administering-a-drupal-8-site/internal-page-cache)                                                  |
-| Disable JS Aggregation           | Disable JS files aggregation                                                                                                                                           |
-| Disable Render Cache             | Disable [Drupal Render Cache](https://www.drupal.org/docs/8/api/render-api/cacheability-of-render-arrays)                                                              |
-| Disable Twig Cache               | Disable Twig Cache                                                                                                                                                     |
-| Display Dump Location            | Display location when you use the `dump()` function of the Symfony VarDumper component                                                                                 |
-| Display Pretty Exceptions        | Display a better looking exception page and log exceptions (active when the `Request` is handled by the Kernel and if the exceptions are caught)                                                       |
-| Display Pretty Exceptions ASAP   | Display a better looking exception page (active as soon as the Kernel is instantiated)                                                                                 |
-| Enable Debug Class Loader        | Enable the `DebugClassLoader` of the Symfony Debug component                                                                                                           |
-| Enable Twig Debug                | Enable Twig Debug mode                                                                                                                                                 |
-| ~~Enable Twig Strict Variables~~ | ~~Enable Twig `strict_variables` option~~ (disabled at the moment because the [Drupal core is not ready](https://www.drupal.org/project/drupal/issues/2445705) at all) |
-| Throw Errors As Exceptions       | Throw PHP errors as exceptions                                                                                                                                         |
-| Watch Container Definitions      | Watch services definitions and service providers files to automatically invalidate the container definition                                                            |
-| Watch Hooks Implementations      | Watch `.module` and `.theme` files to automatically refresh the hooks implementations                                                                                  |
-| Watch Routing Definitions        | Watch routing definitions files to automatically rebuild the routes                                                                                                    |
+| Name                               | Description                                                                                                                                                            |
+| ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Disable CSS Aggregation            | Disable CSS files aggregation                                                                                                                                          |
+| Disable Dynamic Page Cache         | Disable [Drupal Dynamic Page Cache](https://www.drupal.org/docs/8/core/modules/dynamic-page-cache)                                                                     |
+| Disable Internal Page Cache        | Disable [Drupal Internal Page Cache](https://www.drupal.org/docs/8/administering-a-drupal-8-site/internal-page-cache)                                                  |
+| Disable JS Aggregation             | Disable JS files aggregation                                                                                                                                           |
+| Disable Render Cache               | Disable [Drupal Render Cache](https://www.drupal.org/docs/8/api/render-api/cacheability-of-render-arrays)                                                              |
+| Disable Twig Cache                 | Disable Twig Cache                                                                                                                                                     |
+| Display Dump Location              | Display location when you use the `dump()` function of the Symfony VarDumper component                                                                                 |
+| Display Pretty Exceptions          | Display a better looking exception page and log exceptions (active when the `Request` is handled by the Kernel and if the exceptions are caught)                       |
+| Display Pretty Exceptions ASAP     | Display a better looking exception page (active as soon as the Kernel is instantiated)                                                                                 |
+| Enable Debug Class Loader          | Enable the `DebugClassLoader` of the Symfony Debug component                                                                                                           |
+| Enable Twig Debug                  | Enable Twig Debug mode                                                                                                                                                 |
+| ~~Enable Twig Strict Variables~~   | ~~Enable Twig `strict_variables` option~~ (disabled at the moment because the [Drupal core is not ready](https://www.drupal.org/project/drupal/issues/2445705) at all) |
+| Throw Errors As Exceptions         | Throw PHP errors as exceptions                                                                                                                                         |
+| Watch Container Definitions        | Watch services definitions and service providers files to automatically invalidate the container definition                                                            |
+| Watch Modules Hooks Implementations| Watch `.module` files to automatically refresh the modules hooks implementations                                                                                       |
+| Watch Routing Definitions          | Watch routing definitions files to automatically rebuild the routes                                                                                                    |
 
 And more to come!
 
@@ -127,9 +127,9 @@ Here is the list of all the actions that have options :
 * cacheFilePath: Required. The location of the cached container definition file.
 * resourcesCollection: Required. An `ResourcesCollection` instance (the resources to watch).
 
-#### Watch Hooks Implementations
-* cacheFilePath: Required. The location of the cached hooks implementations file.
-* resourcesCollection: Required .An `ResourcesCollection` instance (the resources to watch).
+#### Watch Modules Hooks Implementations
+* cacheFilePath: Required. The location of the cached modules hooks implementations file.
+* resourcesCollection: Required. An `ResourcesCollection` instance (the resources to watch).
 
 #### Watch Routing Definitions
 * cacheFilePath: Required. The location of the cached routing file.

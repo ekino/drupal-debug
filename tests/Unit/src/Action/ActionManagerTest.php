@@ -27,7 +27,7 @@ use Ekino\Drupal\Debug\Action\EnableDebugClassLoader\EnableDebugClassLoaderActio
 use Ekino\Drupal\Debug\Action\EnableTwigDebug\EnableTwigDebugAction;
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsAction;
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsAction;
-use Ekino\Drupal\Debug\Action\WatchHooksImplementations\WatchHooksImplementationsAction;
+use Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations\WatchModulesHooksImplementationsAction;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsAction;
 use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Option\OptionsStack;
@@ -106,7 +106,7 @@ class ActionManagerTest extends TestCase
                 array($this->isInstanceOf(EnableDebugClassLoaderAction::class)),
                 array($this->isInstanceOf(ThrowErrorsAsExceptionsAction::class)),
                 array($this->isInstanceOf(WatchContainerDefinitionsAction::class)),
-                array($this->isInstanceOf(WatchHooksImplementationsAction::class)),
+                array($this->isInstanceOf(WatchModulesHooksImplementationsAction::class)),
                 array($this->isInstanceOf(WatchRoutingDefinitionsAction::class))
             );
 
@@ -123,7 +123,7 @@ class ActionManagerTest extends TestCase
                 array($this->isInstanceOf(DisableTwigCacheAction::class)),
                 array($this->isInstanceOf(DisplayPrettyExceptionsAction::class)),
                 array($this->isInstanceOf(EnableTwigDebugAction::class)),
-                array($this->isInstanceOf(WatchHooksImplementationsAction::class))
+                array($this->isInstanceOf(WatchModulesHooksImplementationsAction::class))
             );
 
         $this->actionManager->addCompilerPassActionsToContainerBuilder($containerBuilder);

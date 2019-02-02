@@ -179,7 +179,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
             new CustomExtensionFileResource(self::RESOURCE_2_FILE_PATH, $this->getCustomExtension()),
         )));
 
-        $this->touch(self::RESOURCE_1_FILE_PATH, Carbon::now()->addSecond()->getTimestamp());
+        $this->touchFile(self::RESOURCE_1_FILE_PATH, Carbon::now()->addSecond()->getTimestamp());
 
         $this->assertFalse($resourcesFreshnessChecker->isFresh());
     }

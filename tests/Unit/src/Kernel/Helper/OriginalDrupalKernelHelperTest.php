@@ -22,6 +22,7 @@ use Ekino\Drupal\Debug\Kernel\DebugKernel;
 use Ekino\Drupal\Debug\Kernel\Helper\OriginalDrupalKernelHelper;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
+use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\FileExistenceResource;
@@ -30,6 +31,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class OriginalDrupalKernelHelperTest extends TestCase
 {
+    use FileHelperTrait;
+
     /**
      * @var string
      */
@@ -231,7 +234,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
         }
 
         if ($fresh) {
-            (new Filesystem())->copy(self::ORIGINAL_DRUPAL_KERNEL_FILE_PATH, self::SUBSTITUTE_FILE_PATH);
+            self::copyFile(self::ORIGINAL_DRUPAL_KERNEL_FILE_PATH, self::SUBSTITUTE_FILE_PATH);
 
             $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH, new ResourcesCollection(array(
                 new FileExistenceResource(self::SUBSTITUTE_FILE_PATH),

@@ -17,7 +17,6 @@ use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
-use Symfony\Component\Filesystem\Filesystem;
 
 class DisplayPrettyExceptionsASAPActionTest extends AbstractTestCase
 {
@@ -26,7 +25,7 @@ class DisplayPrettyExceptionsASAPActionTest extends AbstractTestCase
     /**
      * @var string
      */
-    private const FIXTURE_FRONT_CONTROLLER_FILE_PATH = __DIR__.'/fixtures/index.php';
+    private const FRONT_CONTROLLER_FILE_PATH = __DIR__.'/fixtures/index.php';
 
     /**
      * @var string
@@ -49,7 +48,7 @@ class DisplayPrettyExceptionsASAPActionTest extends AbstractTestCase
 
         self::deleteFile(self::$targetFrontControllerFilePath);
 
-        (new Filesystem())->copy(self::FIXTURE_FRONT_CONTROLLER_FILE_PATH, self::$targetFrontControllerFilePath);
+        self::copyFile(self::FRONT_CONTROLLER_FILE_PATH, self::$targetFrontControllerFilePath);
     }
 
     /**

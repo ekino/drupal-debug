@@ -143,7 +143,7 @@ class WatchContainerDefinitionsActionTest extends AbstractTestCase
         )));
 
         if ($touch) {
-            self::touch($path, Carbon::now()->addSecond()->getTimestamp());
+            self::touchFile($path, Carbon::now()->addSecond()->getTimestamp());
         }
     }
 
