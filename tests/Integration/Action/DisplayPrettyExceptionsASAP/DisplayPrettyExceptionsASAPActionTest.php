@@ -11,14 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisplayPrettyExceptionsASAP;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisplayPrettyExceptionsASAP;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class DisplayPrettyExceptionsASAPActionTest extends AbstractTestCase
+class DisplayPrettyExceptionsASAPActionTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 

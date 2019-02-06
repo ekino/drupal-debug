@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\EnableTwigDebug;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\EnableTwigDebug;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class EnableTwigDebugActionTest extends AbstractTestCase
+class EnableTwigDebugActionTest extends AbstractActionTestCase
 {
     /**
      * {@inheritdoc}

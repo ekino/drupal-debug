@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisableTwigCache;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisableTwigCache;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class DisableTwigCacheActionTest extends AbstractTestCase
+class DisableTwigCacheActionTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 

@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisableInternalPageCache;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisableInternalPageCache;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class DisableInternalPageCacheActionTest extends AbstractTestCase
+class DisableInternalPageCacheActionTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 

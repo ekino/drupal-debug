@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisplayPrettyExceptions;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisplayPrettyExceptions;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class DisplayPrettyExceptionsActionTest extends AbstractTestCase
+class DisplayPrettyExceptionsActionTest extends AbstractActionTestCase
 {
     /**
      * {@inheritdoc}

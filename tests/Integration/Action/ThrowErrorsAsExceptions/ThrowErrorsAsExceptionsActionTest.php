@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\ThrowErrorsAsExceptions;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\ThrowErrorsAsExceptions;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class ThrowErrorsAsExceptionsActionTest extends AbstractTestCase
+class ThrowErrorsAsExceptionsActionTest extends AbstractActionTestCase
 {
     /**
      * {@inheritdoc}
