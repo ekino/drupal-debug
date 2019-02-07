@@ -17,6 +17,7 @@ use Ekino\Drupal\Debug\Action\ActionWithOptionsInterface;
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Debug\ErrorHandler;
 
 class ThrowErrorsAsExceptionsAction implements EventSubscriberActionInterface, ActionWithOptionsInterface
 {

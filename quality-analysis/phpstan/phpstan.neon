@@ -24,8 +24,6 @@ parameters:
         - '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
         - '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
         - "#^Call to method PHPUnit\\\\Framework\\\\Assert::assertInstanceOf\\(\\) with 'Symfony\\\\\\\\Component…' and 'fcyccc' will always evaluate to false\\.$#"
-        - "#^Call to function method_exists\\(\\) with 'Symfony\\\\\\\\Component…' and 'findFile' will always evaluate to false\\.$#"
-        - '#^Cannot access offset 0 on callable\.$#'
         # Undocumented arg type in xdebug functions
         - '#^Parameter \#1 \$cleanup of function xdebug_stop_code_coverage expects bool, int given\.$#'
         # Undocumented arg type in PHP core functions
