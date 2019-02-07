@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Unit\Action\WatchHooksImplementations;
+namespace Ekino\Drupal\Debug\Tests\Unit\Action\WatchModulesHooksImplementations;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernelInterface;

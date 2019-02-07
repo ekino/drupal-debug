@@ -18,7 +18,7 @@ use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class WatchModulesHooksImplementationsTest extends AbstractTestCase
+class WatchModulesHooksImplementationsActionTest extends AbstractTestCase
 {
     use FileHelperTrait;
 
