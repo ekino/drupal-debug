@@ -15,7 +15,7 @@ namespace Ekino\Drupal\Debug\Action\EnableDebugClassLoader;
 
 use Ekino\Drupal\Debug\Action\EventSubscriberActionInterface;
 use Ekino\Drupal\Debug\Kernel\Event\DebugKernelEvents;
-use Symfony\Component\Debug\DebugClassLoader as SymfonyDebugClassLoader;
+use Symfony\Component\Debug\DebugClassLoader;
 
 class EnableDebugClassLoaderAction implements EventSubscriberActionInterface
 {
@@ -31,6 +31,6 @@ class EnableDebugClassLoaderAction implements EventSubscriberActionInterface
 
     public function process(): void
     {
-        \method_exists(SymfonyDebugClassLoader::class, 'findFile') ? SymfonyDebugClassLoader::enable() : DebugClassLoader::enable();
+        DebugClassLoader::enable();
     }
 }
