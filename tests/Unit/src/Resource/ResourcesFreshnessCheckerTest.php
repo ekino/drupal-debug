@@ -95,14 +95,14 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $this->deleteFile(self::CANNOT_BE_READ_FILE_PATH);
     }
 
-    public function testGetCurrentResourcesWhenThereIsNone(): void
+    public function testGetCurrentResourcesCollectionWhenThereIsNone(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::NOT_EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
         $this->assertEquals(new ResourcesCollection(), $resourcesFreshnessChecker->getCurrentResourcesCollection());
     }
 
-    public function testGetCurrentResourcesWhenTheFileCannotBeRead(): void
+    public function testGetCurrentResourcesCollectionWhenTheFileCannotBeRead(): void
     {
         $filesystem = new Filesystem();
         $filesystem->dumpFile(self::CANNOT_BE_READ_FILE_PATH, '');
@@ -118,7 +118,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $resourcesFreshnessChecker->getCurrentResourcesCollection();
     }
 
-    public function testGetCurrentResourcesWhenTheUnserializedContentIsNotTheExpectedOne(): void
+    public function testGetCurrentResourcesCollectionWhenTheUnserializedContentIsNotTheExpectedOne(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::UNEXPECTED_CONTENT_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
@@ -128,7 +128,7 @@ class ResourcesFreshnessCheckerTest extends TestCase
         $resourcesFreshnessChecker->getCurrentResourcesCollection();
     }
 
-    public function testGetCurrentResources(): void
+    public function testGetCurrentResourcesCollection(): void
     {
         $resourcesFreshnessChecker = new ResourcesFreshnessChecker(self::EXISTING_FILE_PATH, $this->createMock(ResourcesCollection::class));
 
