@@ -96,9 +96,7 @@ class OriginalDrupalKernelHelperTest extends TestCase
             self::SUBSTITUTE_FRESHNESS_META_FILE_PATH,
             self::CANNOT_BE_READ_FILE_PATH,
         ) as $filePath) {
-            if (\is_file($filePath)) {
-                \unlink($filePath);
-            }
+            self::deleteFile($filePath);
         }
     }
 
@@ -251,18 +249,10 @@ class OriginalDrupalKernelHelperTest extends TestCase
             }
 
             foreach (array(self::SUBSTITUTE_FILE_PATH, self::SUBSTITUTE_FRESHNESS_META_FILE_PATH) as $filePath) {
-                if (!\touch($filePath, $this->inOneYearTimestamp)) {
-                    $this->fail(\sprintf('The file "%s" could not be touched.', $filePath));
-                }
+                self::touchFile($filePath, $this->inOneYearTimestamp);
             }
-
-            \clearstatcache();
         } else {
-            if (\is_file(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
-                if (!\unlink(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH)) {
-                    $this->fail(\sprintf('The file "%s" should not exist and could not be deleted.', self::SUBSTITUTE_FRESHNESS_META_FILE_PATH));
-                }
-            }
+            self::deleteFile(self::SUBSTITUTE_FRESHNESS_META_FILE_PATH, true);
         }
     }
 
