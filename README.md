@@ -139,11 +139,11 @@ Here is the list of all the actions that have options :
 
 Here is the list of the provided Composer commands that help you manage the configuration file:
 
-| Command                                                           | Description                                                                     |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| composer drupal-debug:dump-reference-configuration-file           | Dump the reference configuration file                                           |
-| composer drupal-debug:disable-original-drupal-kernel-substitution | Alter the configuration file to disable the original Drupal Kernel substitution |
-| composer drupal-debug:enable-original-drupal-kernel-substitution  | Alter the configuration file to enable the original Drupal Kernel substitution  |
+| Command                                                           | Alias                         | Description                                                                     |
+| ----------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------- |
+| composer drupal-debug:dump-reference-configuration-file           | None                          | Dump the reference configuration file                                           |
+| composer drupal-debug:disable-original-drupal-kernel-substitution | composer drupal-debug:disable | Alter the configuration file to disable the original Drupal Kernel substitution |
+| composer drupal-debug:enable-original-drupal-kernel-substitution  | composer drupal-debug:enable  | Alter the configuration file to enable the original Drupal Kernel substitution  |
 
 # Original Drupal Kernel substitution
 

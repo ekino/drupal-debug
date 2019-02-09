@@ -26,11 +26,18 @@ class EnableOriginalDrupalKernelSubstitutionCommand extends BaseCommand
     const NAME = 'drupal-debug:enable-original-drupal-kernel-substitution';
 
     /**
+     * @var string
+     */
+    const ALIASES = array('drupal-debug:enable');
+
+    /**
      * {@inheritdoc}
      */
     protected function configure(): void
     {
-        $this->setName(self::NAME);
+        $this
+            ->setName(self::NAME)
+            ->setAliases(self::ALIASES);
     }
 
     /**
