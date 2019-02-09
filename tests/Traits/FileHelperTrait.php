@@ -43,9 +43,14 @@ trait FileHelperTrait
         }
     }
 
-    private static function touchFile(string $path, int $timestamp): void
+    private static function touchFile(string $path, ?int $timestamp = null): void
     {
-        if (!\touch($path, $timestamp)) {
+        $arguments = array($path);
+        if (\is_int($timestamp)) {
+            $arguments[] = $timestamp;
+        }
+
+        if (false === \call_user_func_array('touch', $arguments)) {
             throw new AssertionFailedError(\sprintf('The file "%s" could not be touched.', $path));
         }
 

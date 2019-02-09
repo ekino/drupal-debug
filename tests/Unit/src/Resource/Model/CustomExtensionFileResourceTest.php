@@ -17,10 +17,13 @@ use Carbon\Carbon;
 use Ekino\Drupal\Debug\Extension\Model\CustomExtensionInterface;
 use Ekino\Drupal\Debug\Extension\Model\CustomTheme;
 use Ekino\Drupal\Debug\Resource\Model\CustomExtensionFileResource;
+use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use PHPUnit\Framework\TestCase;
 
 class CustomExtensionFileResourceTest extends TestCase
 {
+    use FileHelperTrait;
+
     /**
      * @var string
      */
@@ -51,16 +54,9 @@ class CustomExtensionFileResourceTest extends TestCase
      */
     protected function setUp(): void
     {
-        \touch(self::EXISTING_FILE_PATH);
-        if (!\is_file(self::EXISTING_FILE_PATH)) {
-            $this->fail(\sprintf('File "%s" could not be created.', self::EXISTING_FILE_PATH));
-        }
+        self::touchFile(self::EXISTING_FILE_PATH);
 
-        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->fail(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
-            }
-        }
+        self::deleteFile(self::NOT_EXISTING_FILE_PATH, true);
 
         $this->customExtension = new CustomTheme('/foo', 'bar');
 
@@ -75,13 +71,8 @@ class CustomExtensionFileResourceTest extends TestCase
      */
     protected function tearDown(): void
     {
-        if (\is_file(self::EXISTING_FILE_PATH)) {
-            \unlink(self::EXISTING_FILE_PATH);
-        }
-
-        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            \unlink(self::NOT_EXISTING_FILE_PATH);
-        }
+        self::deleteFile(self::EXISTING_FILE_PATH);
+        self::deleteFile(self::NOT_EXISTING_FILE_PATH);
     }
 
     public function testToString(): void
@@ -107,12 +98,7 @@ class CustomExtensionFileResourceTest extends TestCase
         $customExtensionFileResource = $this->getContextualCustomExtensionFileResource($existsNow, $existed);
 
         if (\is_int($filemtime)) {
-            $filePath = $customExtensionFileResource->getFilePath();
-            if (!\touch($filePath, $filemtime)) {
-                $this->fail(\sprintf('File "%s" could not be touched.', $filePath));
-            }
-
-            \clearstatcache();
+            self::touchFile($customExtensionFileResource->getFilePath(), $filemtime);
         }
 
         $this->assertSame($expected, $customExtensionFileResource->isFresh(\is_int($timestamp) ? $timestamp : 0));
@@ -181,15 +167,9 @@ class CustomExtensionFileResourceTest extends TestCase
         $customExtensionFileResource = new CustomExtensionFileResource($filePath, $this->customExtension);
 
         if (!$existed && $existsNow) {
-            \touch($filePath);
-            if (!\is_file($filePath)) {
-                $this->fail(\sprintf('File "%s" could not be created.', $filePath));
-            }
+            self::touchFile($filePath);
         } elseif ($existed && !$existsNow) {
-            \unlink($filePath);
-            if (\is_file($filePath)) {
-                $this->fail(\sprintf('File "%s" could not be deleted.', $filePath));
-            }
+            self::deleteFile($filePath, true);
         }
 
         return $customExtensionFileResource;

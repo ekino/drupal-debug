@@ -17,11 +17,14 @@ use Carbon\Carbon;
 use Ekino\Drupal\Debug\Cache\FileCache;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
 use Ekino\Drupal\Debug\Resource\ResourcesFreshnessChecker;
+use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class FileCacheTest extends TestCase
 {
+    use FileHelperTrait;
+
     /**
      * @var string
      */
@@ -62,11 +65,7 @@ class FileCacheTest extends TestCase
      */
     protected function setUp(): void
     {
-        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            if (!\unlink(self::NOT_EXISTING_FILE_PATH)) {
-                $this->fail(\sprintf('File "%s" should not exists and could not be deleted.', self::NOT_EXISTING_FILE_PATH));
-            }
-        }
+        self::deleteFile(self::NOT_EXISTING_FILE_PATH, true);
 
         $this->fileCache = $this->getFileCache(self::VALID_FILE_PATH);
     }
@@ -76,9 +75,7 @@ class FileCacheTest extends TestCase
      */
     protected function tearDown(): void
     {
-        if (\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            \unlink(self::NOT_EXISTING_FILE_PATH);
-        }
+        self::deleteFile(self::NOT_EXISTING_FILE_PATH);
     }
 
     /**
@@ -127,10 +124,6 @@ class FileCacheTest extends TestCase
 
     public function testGetWhenTheFileIsInvalid(): void
     {
-        if (\PHP_VERSION_ID <= 70000) {
-            $this->markTestSkipped('Requires PHP 7.');
-        }
-
         $fileCache = $this->getFileCache(self::INVALID_FILE_PATH);
 
         $this->assertFalse($fileCache->get());
@@ -193,12 +186,10 @@ class FileCacheTest extends TestCase
     /**
      * @dataProvider writeProvider
      */
-    public function testWrite(array $expected, array $currentData = null, array $dataToWrite): void
+    public function testWrite(array $expected, ?array $currentData, array $dataToWrite): void
     {
         if (\is_array($currentData)) {
-            if (!\file_put_contents(self::NOT_EXISTING_FILE_PATH, '<?php return '.\var_export($currentData, true).';')) {
-                $this->fail(\sprintf('File "%s" content could not be initialized.', self::NOT_EXISTING_FILE_PATH));
-            }
+            self::writeFile(self::NOT_EXISTING_FILE_PATH, '<?php return '.\var_export($currentData, true).';');
         }
 
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);
@@ -290,10 +281,7 @@ class FileCacheTest extends TestCase
 
     public function testInvalidate(): void
     {
-        \touch(self::NOT_EXISTING_FILE_PATH);
-        if (!\is_file(self::NOT_EXISTING_FILE_PATH)) {
-            $this->fail(\sprintf('File "%s" could not be created.', self::NOT_EXISTING_FILE_PATH));
-        }
+        self::touchFile(self::NOT_EXISTING_FILE_PATH);
 
         $fileCache = $this->getFileCache(self::NOT_EXISTING_FILE_PATH);
 
