@@ -30,18 +30,8 @@ class WatchModulesHooksImplementationsOptions extends AbstractFileBackendDependa
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultThemeFileResourceMasks(): array
-    {
-        return array(
-            '%machine_name%.theme',
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected static function getDefaultCacheFileName(): string
     {
-        return 'hooks.php';
+        return 'modules_hooks.php';
     }
 }
