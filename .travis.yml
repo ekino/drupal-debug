@@ -38,10 +38,12 @@ script:
     - if [[ $coverage = '1' ]]; then
           vendor/bin/phpunit --dump-xdebug-filter xdebug_filter.php;
           vendor/bin/phpunit --coverage-clover=coverage.clover --prepend=xdebug_filter.php;
-          wget https://scrutinizer-ci.com/ocular.phar;
-          php ocular.phar code-coverage:upload --format=php-clover --revision=$TRAVIS_PULL_REQUEST_SHA coverage.clover;
       else
           vendor/bin/phpunit --no-coverage;
+      fi
+    - if [[ $coverage = '1' ]]; then
+          wget https://scrutinizer-ci.com/ocular.phar;
+          php ocular.phar code-coverage:upload --format=php-clover --revision=$TRAVIS_PULL_REQUEST_SHA coverage.clover;
       fi
     - if [[ $lint = '1' ]]; then
           vendor/bin/php-cs-fixer fix --dry-run --diff --no-ansi;
