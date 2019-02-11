@@ -32,7 +32,7 @@ class LoadNewModuleFile
      */
     private $kernel;
 
-    public function __construct(ModuleHandler $moduleHandler, HttpKernelInterface $kernel)
+    public function __construct(ModuleHandler $moduleHandler, DrupalKernelInterface $kernel)
     {
         $this->moduleHandler = $moduleHandler;
         $this->kernel = $kernel;
