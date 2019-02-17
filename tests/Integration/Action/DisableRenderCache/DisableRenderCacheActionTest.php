@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisableDynamicPageCache;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisableRenderCache;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class DisableDynamicPageCacheActionTest extends AbstractTestCase
+class DisableRenderCacheActionTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 
@@ -29,7 +29,7 @@ class DisableDynamicPageCacheActionTest extends AbstractTestCase
     /**
      * @var string
      */
-    private const MODULE_CONTROLLER_FILE_PATH = __DIR__.'/fixtures/modules/hit_dynamic_page_cache/src/Controller/__FooController.php';
+    private const MODULE_CONTROLLER_FILE_PATH = __DIR__.'/fixtures/modules/hit_render_cache/src/Controller/__FooController.php';
 
     /**
      * @var string|null
@@ -47,6 +47,7 @@ class DisableDynamicPageCacheActionTest extends AbstractTestCase
 
         $this->uninstallModules(array(
             'page_cache',
+            'dynamic_page_cache',
         ));
 
         $this->deleteControllerFile(true);
@@ -79,10 +80,10 @@ class DisableDynamicPageCacheActionTest extends AbstractTestCase
     {
         $results = $this->executeScenario($client);
 
-        $this->assertContains('Pristine, untraced by the world outside you', $results[0]);
+        $this->assertContains('That is not what I meant to say at all', $results[0]);
 
-        $this->assertContains('Pristine, untraced by the world outside you', $results[1]);
-        $this->assertNotContains('Anyways, I will never get real', $results[1]);
+        $this->assertContains('That is not what I meant to say at all', $results[1]);
+        $this->assertNotContains('Is it the chorus yet?', $results[1]);
     }
 
     /**
@@ -92,10 +93,10 @@ class DisableDynamicPageCacheActionTest extends AbstractTestCase
     {
         $results = $this->executeScenario($client);
 
-        $this->assertContains('Pristine, untraced by the world outside you', $results[0]);
+        $this->assertContains('That is not what I meant to say at all', $results[0]);
 
-        $this->assertContains('Anyways, I will never get real', $results[1]);
-        $this->assertNotContains('Pristine, untraced by the world outside you', $results[1]);
+        $this->assertContains('Is it the chorus yet?', $results[1]);
+        $this->assertNotContains('That is not what I meant to say at all', $results[1]);
     }
 
     private function executeScenario(Client $client): array
@@ -103,8 +104,8 @@ class DisableDynamicPageCacheActionTest extends AbstractTestCase
         $results = array();
 
         foreach (array(
-            'Pristine, untraced by the world outside you',
-            'Anyways, I will never get real',
+            'That is not what I meant to say at all',
+            'Is it the chorus yet?',
         ) as $markup) {
             $this->writeControllerFile($markup);
             $results[] = $client->request('GET', '/foo')->text();

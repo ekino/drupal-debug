@@ -11,14 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\WatchModulesHooksImplementations;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\WatchModulesHooksImplementations;
 
 use Carbon\Carbon;
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 
-class WatchModulesHooksImplementationsActionTest extends AbstractTestCase
+class WatchModulesHooksImplementationsTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 

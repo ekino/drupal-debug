@@ -11,15 +11,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\WatchRoutingDefinitions;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\WatchRoutingDefinitions;
 
 use Carbon\Carbon;
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Ekino\Drupal\Debug\Tests\Traits\FileHelperTrait;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class WatchRoutingDefinitionsActionTest extends AbstractTestCase
+class WatchRoutingDefinitionsActionTest extends AbstractActionTestCase
 {
     use FileHelperTrait;
 

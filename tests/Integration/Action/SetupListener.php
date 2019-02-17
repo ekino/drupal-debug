@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action;
 
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestListenerDefaultImplementation;
@@ -33,12 +33,12 @@ class SetupListener implements TestListener
             return;
         }
 
-        $drupalDirectoryPath = \realpath(AbstractTestCase::DRUPAL_DIRECTORY_PATH);
+        $drupalDirectoryPath = \realpath(AbstractActionTestCase::DRUPAL_DIRECTORY_PATH);
         if (!\is_string($drupalDirectoryPath)) {
             throw new \RuntimeException('The Drupal directory path was not found.');
         }
 
-        $defaultSitesDirectoryPath = \sprintf('%s/sites/default', AbstractTestCase::DRUPAL_DIRECTORY_PATH);
+        $defaultSitesDirectoryPath = \sprintf('%s/sites/default', AbstractActionTestCase::DRUPAL_DIRECTORY_PATH);
         $settingsFilePath = \sprintf('%s/settings.php', $defaultSitesDirectoryPath);
 
         $filesystem = new Filesystem();
@@ -48,7 +48,7 @@ class SetupListener implements TestListener
             $filesystem->chmod($settingsFilePath, 0777);
             $filesystem->remove($settingsFilePath);
 
-            $filesystem->remove(AbstractTestCase::DRUPAL_FILES_DIRECTORY_PATH);
+            $filesystem->remove(AbstractActionTestCase::DRUPAL_FILES_DIRECTORY_PATH);
         }
 
         $phpBinary = (new PhpExecutableFinder())->find();
@@ -75,11 +75,11 @@ class SetupListener implements TestListener
         $filesystem->chmod($defaultSitesDirectoryPath, 0777);
         $filesystem->chmod($settingsFilePath, 0777);
 
-        if ($filesystem->exists(AbstractTestCase::REFERENCE_FILES_DIRECTORY_PATH)) {
-            $filesystem->remove(AbstractTestCase::REFERENCE_FILES_DIRECTORY_PATH);
+        if ($filesystem->exists(AbstractActionTestCase::REFERENCE_FILES_DIRECTORY_PATH)) {
+            $filesystem->remove(AbstractActionTestCase::REFERENCE_FILES_DIRECTORY_PATH);
         }
 
-        $filesystem->rename(AbstractTestCase::DRUPAL_FILES_DIRECTORY_PATH, AbstractTestCase::REFERENCE_FILES_DIRECTORY_PATH);
+        $filesystem->rename(AbstractActionTestCase::DRUPAL_FILES_DIRECTORY_PATH, AbstractActionTestCase::REFERENCE_FILES_DIRECTORY_PATH);
     }
 
     /**
@@ -101,6 +101,6 @@ class SetupListener implements TestListener
      */
     private function supports(TestSuite $suite): bool
     {
-        return 'integration' === $suite->getName();
+        return 'integration/action' === $suite->getName();
     }
 }

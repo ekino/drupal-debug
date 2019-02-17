@@ -21,10 +21,10 @@ require sprintf('%s/../../vendor/autoload.php', __DIR__);
 // discovers services providers, it actually does a "class_exists". It is easier
 // to write the WatchContainerDefinitionsTest if it's not autoloaded.
 // However, we still want PHPStan to analyze this file.
-require sprintf('%s/../../tests/Integration/WatchContainerDefinitions/fixtures/ServiceProviderTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/Action/WatchContainerDefinitions/fixtures/ServiceProviderTemplate.php', __DIR__);
 
-// Those template classes must not be loaded in integration tests.
+// Those template classes must not be loaded in actions integration tests.
 // However, we still want PHPStan to analyze these files.
-require sprintf('%s/../../tests/Integration/DisableDynamicPageCache/fixtures/ControllerTemplate.php', __DIR__);
-require sprintf('%s/../../tests/Integration/DisableInternalPageCache/fixtures/ControllerTemplate.php', __DIR__);
-require sprintf('%s/../../tests/Integration/DisableRenderCache/fixtures/ControllerTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/Action/DisableDynamicPageCache/fixtures/ControllerTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/Action/DisableInternalPageCache/fixtures/ControllerTemplate.php', __DIR__);
+require sprintf('%s/../../tests/Integration/Action/DisableRenderCache/fixtures/ControllerTemplate.php', __DIR__);

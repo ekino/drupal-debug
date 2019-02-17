@@ -11,19 +11,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ekino\Drupal\Debug\Tests\Integration\DisableCSSAggregation;
+namespace Ekino\Drupal\Debug\Tests\Integration\Action\DisableJSAggregation;
 
-use Ekino\Drupal\Debug\Tests\Integration\AbstractTestCase;
+use Ekino\Drupal\Debug\Tests\Integration\Action\AbstractActionTestCase;
 use Symfony\Component\BrowserKit\Client;
 
-class DisableCSSAggregationActionTest extends AbstractTestCase
+class DisableJSAggregationActionTest extends AbstractActionTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function doTestInitialBehaviorWithDrupalKernel(Client $client): void
     {
-        $this->assertSame(1, $this->countStylesheetLinks($client));
+        $this->assertSame(1, $this->countScripts($client));
     }
 
     /**
@@ -31,14 +31,14 @@ class DisableCSSAggregationActionTest extends AbstractTestCase
      */
     protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
-        $this->assertGreaterThan(10, $this->countStylesheetLinks($client));
+        $this->assertSame(2, $this->countScripts($client));
     }
 
     /**
      * @return int
      */
-    private function countStylesheetLinks(Client $client): int
+    private function countScripts(Client $client): int
     {
-        return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::link[@rel="stylesheet"]'));
+        return \iterator_count($client->request('GET', '/')->filterXPath('descendant-or-self::script'));
     }
 }
