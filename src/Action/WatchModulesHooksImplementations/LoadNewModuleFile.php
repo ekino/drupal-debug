@@ -18,7 +18,6 @@ use Drupal\Core\Extension\ModuleHandler;
 use Ekino\Drupal\Debug\Cache\Event\CacheNotFreshEvent;
 use Ekino\Drupal\Debug\Extension\Model\CustomModule;
 use Ekino\Drupal\Debug\Resource\Model\CustomExtensionFileResource;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class LoadNewModuleFile
 {
@@ -28,14 +27,14 @@ class LoadNewModuleFile
     private $moduleHandler;
 
     /**
-     * @var HttpKernelInterface
+     * @var DrupalKernelInterface
      */
-    private $kernel;
+    private $drupalKernel;
 
-    public function __construct(ModuleHandler $moduleHandler, DrupalKernelInterface $kernel)
+    public function __construct(ModuleHandler $moduleHandler, DrupalKernelInterface $drupalKernel)
     {
         $this->moduleHandler = $moduleHandler;
-        $this->kernel = $kernel;
+        $this->drupalKernel = $drupalKernel;
     }
 
     public function __invoke(CacheNotFreshEvent $event): void
@@ -70,9 +69,7 @@ class LoadNewModuleFile
             $this->moduleHandler->addModule($name, $module->getPath());
             $this->moduleHandler->getModule($name)->load();
 
-            if ($this->kernel instanceof DrupalKernelInterface) {
-                $this->kernel->invalidateContainer();
-            }
+            $this->drupalKernel->invalidateContainer();
         }
     }
 }
