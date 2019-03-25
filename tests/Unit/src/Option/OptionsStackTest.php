@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Tests\Unit\Option;
 
+use Ekino\Drupal\Debug\Configuration\Model\ActionConfiguration;
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use Ekino\Drupal\Debug\Option\OptionsInterface;
 use Ekino\Drupal\Debug\Option\OptionsStack;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 class OptionsStackTest extends TestCase
 {
@@ -97,7 +99,14 @@ class TestOptions implements OptionsInterface
     /**
      * {@inheritdoc}
      */
-    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
+    public static function addConfiguration(NodeBuilder $nodeBuilder, DefaultsConfiguration $defaultsConfiguration): void
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getOptions(string $appRoot, ActionConfiguration $actionConfiguration): OptionsInterface
     {
     }
 }

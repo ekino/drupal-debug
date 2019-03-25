@@ -14,54 +14,22 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Unit\Configuration\Model;
 
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
 class DefaultsConfigurationTest extends TestCase
 {
-    public function testGetCacheDirectory(): void
+    public function testGetCacheDirectoryPath(): void
     {
         $this->assertSame('/foo/cache', (new DefaultsConfiguration(array(
-            'cache_directory' => '/foo/cache',
-        )))->getCacheDirectory());
+            'cache_directory_path' => '/foo/cache',
+        )))->getCacheDirectoryPath());
     }
 
-    /**
-     * @dataProvider getLoggerProvider
-     */
-    public function testGetLogger(?Logger $expected, array $loggerProcessedConfiguration): void
+    public function testGetLogger(): void
     {
-        $defaultsConfiguration = new DefaultsConfiguration(array(
-            'logger' => $loggerProcessedConfiguration,
-        ));
-
-        $logger = $defaultsConfiguration->getLogger();
-
-        $this->assertEquals($expected, $logger);
-        $this->assertSame($logger, $defaultsConfiguration->getLogger());
-    }
-
-    public function getLoggerProvider(): array
-    {
-        return array(
-            array(
-                null,
-                array(
-                    'enabled' => false,
-                ),
-            ),
-            array(
-                new Logger('my-custom-channel', array(
-                    new StreamHandler('/foo/bar/fcy.log'),
-                )),
-                array(
-                    'enabled' => true,
-                    'channel' => 'my-custom-channel',
-                    'file_path' => '/foo/bar/fcy.log',
-                ),
-            ),
-        );
+        $this->assertSame(array('foo'), (new DefaultsConfiguration(array(
+            'logger' => array('foo'),
+        )))->getLogger());
     }
 
     /**
@@ -100,64 +68,26 @@ class DefaultsConfigurationTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider serializeProvider
-     */
-    public function testSerialize(string $expected, $loggerValue): void
+    public function testSerialize(): void
     {
-        $defaultsConfiguration = new DefaultsConfiguration(array(
+        $this->assertSame('a:1:{i:0;a:2:{s:3:"foo";s:3:"bar";s:4:"deep";a:1:{s:2:"is";s:2:"ok";}}}', (new DefaultsConfiguration(array(
             'foo' => 'bar',
             'deep' => array(
                 'is' => 'ok',
             ),
-        ));
-
-        $refl = new \ReflectionProperty($defaultsConfiguration, 'logger');
-        $refl->setAccessible(true);
-        $refl->setValue($defaultsConfiguration, $loggerValue);
-
-        $this->assertSame($expected, $defaultsConfiguration->serialize());
+        )))->serialize());
     }
 
-    public function serializeProvider(): array
-    {
-        return array(
-            array('a:2:{i:0;a:2:{s:3:"foo";s:3:"bar";s:4:"deep";a:1:{s:2:"is";s:2:"ok";}}i:1;N;}', null),
-            array('a:2:{i:0;a:2:{s:3:"foo";s:3:"bar";s:4:"deep";a:1:{s:2:"is";s:2:"ok";}}i:1;b:0;}', false),
-            array('a:2:{i:0;a:2:{s:3:"foo";s:3:"bar";s:4:"deep";a:1:{s:2:"is";s:2:"ok";}}i:1;b:0;}', $this->createMock(Logger::class)),
-        );
-    }
-
-    /**
-     * @dataProvider unserializeProvider
-     */
-    public function testUnserialize(array $expectedProcessedConfiguration, $expectedLogger, string $serialized): void
+    public function testUnserialize(): void
     {
         $defaultsConfiguration = new DefaultsConfiguration(array());
-        $defaultsConfiguration->unserialize($serialized);
+        $defaultsConfiguration->unserialize('a:1:{i:0;a:2:{s:3:"ccc";s:3:"fcy";s:5:"array";a:1:{s:2:"is";b:0;}}}');
 
-        $this->assertAttributeSame($expectedProcessedConfiguration, 'processedConfiguration', $defaultsConfiguration);
-        $this->assertAttributeSame($expectedLogger, 'logger', $defaultsConfiguration);
-    }
-
-    public function unserializeProvider(): array
-    {
-        return array(
-            array(
-                array(
-                    'ccc' => 'fcy',
-                    'array' => array(
-                        'is' => false,
-                    ),
-                ),
-                null,
-                'a:2:{i:0;a:2:{s:3:"ccc";s:3:"fcy";s:5:"array";a:1:{s:2:"is";b:0;}}i:1;N;}',
+        $this->assertAttributeSame(array(
+            'ccc' => 'fcy',
+            'array' => array(
+                'is' => false,
             ),
-            array(
-                array(),
-                false,
-                'a:2:{i:0;a:0:{}i:1;b:0;}',
-            ),
-        );
+        ), 'processedConfiguration', $defaultsConfiguration);
     }
 }

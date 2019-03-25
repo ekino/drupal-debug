@@ -122,7 +122,7 @@ class CustomExtensionDiscovery
                 throw new \LogicException('The type should be "module" or "theme".');
         }
 
-        return \array_filter(\array_map(function ($possibleRootPath) {
+        return \array_filter(\array_map(function ($possibleRootPath): string {
             return \sprintf('%s/%s', $this->appRoot, $possibleRootPath);
         }, $possibleRootPaths), 'is_dir');
     }

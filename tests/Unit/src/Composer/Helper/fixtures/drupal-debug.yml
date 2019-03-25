@@ -1,13 +1,68 @@
 drupal-debug:
     defaults:
-        cache_directory: cache
+        cache_directory_path: cache
         logger:
             enabled: true
             channel: drupal-debug
             file_path: logs/drupal-debug.log
         charset: null
         file_link_format: null
+    actions:
+        disable_css_aggregation:
+            enabled: true
+        disable_dynamic_page_cache:
+            enabled: true
+        disable_internal_page_cache:
+            enabled: true
+        disable_js_aggregation:
+            enabled: true
+        disable_render_cache:
+            enabled: true
+        disable_twig_cache:
+            enabled: true
+        display_dump_location:
+            enabled: true
+        display_pretty_exceptions:
+            enabled: true
+            charset: null
+            file_link_format: null
+            logger:
+                enabled: true
+                channel: drupal-debug
+                file_path: logs/drupal-debug.log
+        display_pretty_exceptions_asap:
+            enabled: true
+            charset: null
+            file_link_format: null
+        enable_debug_class_loader:
+            enabled: true
+        enable_twig_debug:
+            enabled: true
+        enable_twig_strict_variables:
+            enabled: true
+        throw_errors_as_exceptions:
+            enabled: true
+            levels: 32253
+            logger:
+                enabled: true
+                channel: drupal-debug
+                file_path: logs/drupal-debug.log
+        watch_container_definitions:
+            enabled: true
+            include_defaults: true
+            custom_file_resource_masks: {  }
+            cache_directory_path: cache
+        watch_modules_hooks_implementations:
+            enabled: true
+            include_defaults: true
+            custom_file_resource_masks: {  }
+            cache_directory_path: cache
+        watch_routing_definitions:
+            enabled: true
+            include_defaults: true
+            custom_file_resource_masks: {  }
+            cache_directory_path: cache
     substitute_original_drupal_kernel:
         enabled: true
         composer_autoload_file_path: vendor/autoload.php
-        cache_directory: null
+        cache_directory_path: cache

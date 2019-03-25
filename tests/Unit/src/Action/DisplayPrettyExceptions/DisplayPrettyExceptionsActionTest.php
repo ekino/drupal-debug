@@ -272,7 +272,7 @@ class DisplayPrettyExceptionsActionTest extends TestCase
         $this->setUpDisplayPrettyExceptionsOptions(false, false, $logger);
 
         return array(
-            new AfterAttachSyntheticEvent($container, array(), array()),
+            new AfterAttachSyntheticEvent(false, $container, array(), array()),
             $container,
             $logger,
         );

@@ -1,6 +1,6 @@
 drupal-debug:
     defaults:
-        cache_directory: ../cache
+        cache_directory_path: ../cache
         logger:
             file_path: ../cache/logs/drupal-debug.log
     substitute_original_drupal_kernel:

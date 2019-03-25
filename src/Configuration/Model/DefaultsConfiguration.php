@@ -13,48 +13,19 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Configuration\Model;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-
 class DefaultsConfiguration extends AbstractConfiguration
 {
     /**
-     * @var false|Logger|null
-     */
-    private $logger;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(array $processedConfiguration)
-    {
-        parent::__construct($processedConfiguration);
-
-        $this->logger = false;
-    }
-
-    /**
      * @return string
      */
-    public function getCacheDirectory(): string
+    public function getCacheDirectoryPath(): string
     {
-        return $this->processedConfiguration['cache_directory'];
+        return $this->processedConfiguration['cache_directory_path'];
     }
 
-    /**
-     * @return Logger|null
-     */
-    public function getLogger(): ?Logger
+    public function getLogger(): array
     {
-        if (false === $this->logger) {
-            $loggerProcessedConfiguration = $this->processedConfiguration['logger'];
-
-            $this->logger = $loggerProcessedConfiguration['enabled'] ? new Logger($loggerProcessedConfiguration['channel'], array(
-                new StreamHandler($loggerProcessedConfiguration['file_path']),
-            )) : null;
-        }
-
-        return $this->logger;
+        return $this->processedConfiguration['logger'];
     }
 
     /**
@@ -80,7 +51,6 @@ class DefaultsConfiguration extends AbstractConfiguration
     {
         return \serialize(array(
             $this->processedConfiguration,
-            null === $this->logger ? null : false,
         ));
     }
 
@@ -89,6 +59,6 @@ class DefaultsConfiguration extends AbstractConfiguration
      */
     public function unserialize($serialized): void
     {
-        list($this->processedConfiguration, $this->logger) = \unserialize($serialized);
+        list($this->processedConfiguration) = \unserialize($serialized);
     }
 }

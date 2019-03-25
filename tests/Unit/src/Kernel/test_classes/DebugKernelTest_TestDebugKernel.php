@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\test_classes;
 
 use Drupal\Core\Config\StorageInterface;
-use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Action\ActionRegistrar;
+use Ekino\Drupal\Debug\ActionMetadata\ActionMetadataManager;
+use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Exception\NotImplementedException;
 use Ekino\Drupal\Debug\Kernel\DebugKernel;
 use Ekino\Drupal\Debug\Option\OptionsStack;
@@ -140,7 +142,7 @@ class TestConfigStorage implements StorageInterface
     }
 }
 
-class TestDebugKernelActionManager extends ActionManager
+class TestDebugKernelActionRegistrar extends ActionRegistrar
 {
     /**
      * {@inheritdoc}
@@ -170,8 +172,8 @@ class TestDebugKernel extends DebugKernel
     /**
      * {@inheritdoc}
      */
-    protected function getActionManager(string $appRoot, OptionsStack $optionsStack): ActionManager
+    protected function getActionRegistrar(string $appRoot, ActionMetadataManager $actionMetadataManager, ConfigurationManager $configurationManager, OptionsStack $optionsStack): ActionRegistrar
     {
-        return new TestDebugKernelActionManager();
+        return new TestDebugKernelActionRegistrar();
     }
 }

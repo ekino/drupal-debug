@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Action;
 
+use Ekino\Drupal\Debug\Configuration\CacheDirectoryPathConfigurationTrait;
+use Ekino\Drupal\Debug\Configuration\Model\ActionConfiguration;
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use Ekino\Drupal\Debug\Exception\NotImplementedException;
 use Ekino\Drupal\Debug\Extension\CustomExtensionDiscovery;
@@ -21,10 +23,13 @@ use Ekino\Drupal\Debug\Extension\Model\CustomTheme;
 use Ekino\Drupal\Debug\Option\OptionsInterface;
 use Ekino\Drupal\Debug\Resource\Model\CustomExtensionFileResource;
 use Ekino\Drupal\Debug\Resource\Model\ResourcesCollection;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 abstract class AbstractFileBackendDependantOptions implements OptionsInterface
 {
+    use CacheDirectoryPathConfigurationTrait;
+
     /**
      * @var string
      */
@@ -34,6 +39,11 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      * @var ResourcesCollection
      */
     private $resourcesCollection;
+
+    /**
+     * @var bool|null
+     */
+    private static $canHaveBothExtensionTypeFileResourceMasks;
 
     /**
      * @param string              $cacheFilePath
@@ -69,7 +79,7 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
      */
     public function getFilteredResourcesCollection(array $enabledModules, array $enabledThemes): ResourcesCollection
     {
-        return new ResourcesCollection(\array_filter($this->resourcesCollection->all(), function (SelfCheckingResourceInterface $resource) use ($enabledModules, $enabledThemes): bool {
+        return new ResourcesCollection(\array_filter($this->resourcesCollection->all(), static function (SelfCheckingResourceInterface $resource) use ($enabledModules, $enabledThemes): bool {
             if (!$resource instanceof CustomExtensionFileResource) {
                 return true;
             }
@@ -87,34 +97,73 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
     }
 
     /**
-     * @param string                $appRoot
-     * @param DefaultsConfiguration $defaultsConfiguration
-     *
-     * @return AbstractFileBackendDependantOptions
+     * {@inheritdoc}
      */
-    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
+    public static function addConfiguration(NodeBuilder $nodeBuilder, DefaultsConfiguration $defaultsConfiguration): void
     {
-        $defaultResources = array();
+        $childrenNodeBuilders = array($nodeBuilder);
 
-        $defaultModuleFileResourceMasks = static::getDefaultModuleFileResourceMasks();
-        $defaultThemeFileResourceMasks = static::getDefaultThemeFileResourceMasks();
-        if (!empty($defaultModuleFileResourceMasks) || !empty($defaultThemeFileResourceMasks)) {
-            $customExtensionDiscovery = new CustomExtensionDiscovery($appRoot);
-            $customModules = array();
-            $customThemes = array();
-
-            if (!empty($defaultModuleFileResourceMasks)) {
-                $customModules = $customExtensionDiscovery->getCustomModules();
+        if ($canHaveBothExtensionTypeFileResourceMasks = self::canHaveBothExtensionTypeFileResourceMasks()) {
+            $childrenNodeBuilders = array();
+            foreach (array('module', 'theme') as $extensionType) {
+                $childrenNodeBuilders[] = $nodeBuilder
+                    ->arrayNode($extensionType)
+                        ->children();
             }
-
-            if (!empty($defaultThemeFileResourceMasks)) {
-                $customThemes = $customExtensionDiscovery->getCustomThemes();
-            }
-
-            $defaultResources = static::getDefaultResources($customModules, $customThemes);
         }
 
-        return new static(\sprintf('%s/%s', $defaultsConfiguration->getCacheDirectory(), static::getDefaultCacheFileName()), new ResourcesCollection($defaultResources));
+        /** @var NodeBuilder $childrenNodeBuilder */
+        foreach ($childrenNodeBuilders as $childrenNodeBuilder) {
+            $childrenNodeBuilder
+                ->booleanNode('include_defaults')
+                    ->defaultTrue()
+                ->end()
+                ->arrayNode('custom_file_resource_masks')
+                    ->scalarPrototype()
+                ->end();
+
+            if ($canHaveBothExtensionTypeFileResourceMasks) {
+                $childrenNodeBuilder->end();
+            }
+        }
+
+        self::addCacheDirectoryPathConfigurationNodeFromDefaultsConfiguration($nodeBuilder, $defaultsConfiguration);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getOptions(string $appRoot, ActionConfiguration $actionConfiguration): OptionsInterface
+    {
+        $processedConfiguration = $actionConfiguration->getProcessedConfiguration();
+
+        $resources = array();
+
+        $customExtensionDiscovery = new CustomExtensionDiscovery($appRoot);
+
+        if (static::canHaveModuleFileResourceMasks()) {
+            $includeDefaults = ($canHaveBothExtensionTypeFileResourceMasks = self::canHaveBothExtensionTypeFileResourceMasks()) ? $processedConfiguration['module']['include_defaults'] : $processedConfiguration['include_defaults'];
+            $customFileResourceMasks = $canHaveBothExtensionTypeFileResourceMasks ? $processedConfiguration['module']['custom_file_resource_masks'] : $processedConfiguration['custom_file_resource_masks'];
+
+            $resources = self::getModuleResources($customExtensionDiscovery->getCustomModules(), $includeDefaults, $customFileResourceMasks);
+        }
+
+        if (static::canHaveThemeFileResourceMasks()) {
+            $includeDefaults = ($canHaveBothExtensionTypeFileResourceMasks ?? ($canHaveBothExtensionTypeFileResourceMasks = self::canHaveBothExtensionTypeFileResourceMasks()) ? $processedConfiguration['theme']['include_defaults'] : $processedConfiguration['include_defaults']);
+            $customFileResourceMasks = $canHaveBothExtensionTypeFileResourceMasks ? $processedConfiguration['theme']['custom_file_resource_masks'] : $processedConfiguration['custom_file_resource_masks'];
+
+            $resources = \array_merge($resources, self::getThemeResources($customExtensionDiscovery->getCustomThemes(), $includeDefaults, $customFileResourceMasks));
+        }
+
+        return new static(
+            \sprintf('%s/%s', self::getConfiguredCacheDirectoryPath($actionConfiguration), static::getCacheFileName()),
+            new ResourcesCollection($resources)
+        );
+    }
+
+    protected static function canHaveModuleFileResourceMasks(): bool
+    {
+        return false;
     }
 
     /**
@@ -125,6 +174,11 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
         return array();
     }
 
+    protected static function canHaveThemeFileResourceMasks(): bool
+    {
+        return false;
+    }
+
     /**
      * @return string[]
      */
@@ -133,55 +187,88 @@ abstract class AbstractFileBackendDependantOptions implements OptionsInterface
         return array();
     }
 
-    /**
-     * @return string
-     */
-    protected static function getDefaultCacheFileName(): string
+    protected static function getCacheFileName(): string
     {
         return \rtrim((new \ReflectionClass(static::class))->getShortName(), 'Action');
     }
 
     /**
      * @param CustomModule[] $customModules
-     * @param CustomTheme[]  $customThemes
+     * @param bool           $includeDefaults
+     * @param string[]       $fileResourceMasks
      *
      * @return CustomExtensionFileResource[]
      */
-    private static function getDefaultResources(array $customModules, array $customThemes): array
+    private static function getModuleResources(array $customModules, bool $includeDefaults, array $fileResourceMasks): array
     {
-        $resources = array();
-
-        if (!empty($customModules)) {
-            /** @var CustomModule $customModule */
-            foreach ($customModules as $customModule) {
-                $replacePairs = array(
-                    '%machine_name%' => $customModule->getMachineName(),
-                    '%camel_case_machine_name%' => $customModule->getCamelCaseMachineName(),
-                );
-
-                foreach (static::getDefaultModuleFileResourceMasks() as $mask) {
-                    $filePath = \sprintf('%s/%s', $customModule->getRootPath(), \strtr($mask, $replacePairs));
-
-                    $resources[] = new CustomExtensionFileResource($filePath, $customModule);
-                }
-            }
+        if (empty($customModules) || (!$includeDefaults && empty($fileResourceMasks))) {
+            return array();
         }
 
-        if (!empty($customThemes)) {
-            /** @var CustomTheme $customTheme */
-            foreach ($customThemes as $customTheme) {
-                $replacePairs = array(
-                    '%machine_name%' => $customTheme->getMachineName(),
-                );
+        $resources = array();
 
-                foreach (static::getDefaultThemeFileResourceMasks() as $mask) {
-                    $filePath = \sprintf('%s/%s', $customTheme->getRootPath(), \strtr($mask, $replacePairs));
+        if ($includeDefaults) {
+            $fileResourceMasks = \array_merge($fileResourceMasks, static::getDefaultModuleFileResourceMasks());
+        }
 
-                    $resources[] = new CustomExtensionFileResource($filePath, $customTheme);
-                }
+        /** @var CustomModule $customModule */
+        foreach ($customModules as $customModule) {
+            $replacePairs = array(
+                '%machine_name%' => $customModule->getMachineName(),
+                '%camel_case_machine_name%' => $customModule->getCamelCaseMachineName(),
+            );
+
+            foreach ($fileResourceMasks as $fileResourceMask) {
+                $filePath = \sprintf('%s/%s', $customModule->getRootPath(), \strtr($fileResourceMask, $replacePairs));
+
+                $resources[] = new CustomExtensionFileResource($filePath, $customModule);
             }
         }
 
         return $resources;
+    }
+
+    /**
+     * @param CustomTheme[] $customThemes
+     * @param bool          $includeDefaults
+     * @param string[]      $fileResourceMasks
+     *
+     * @return CustomExtensionFileResource[]
+     */
+    private static function getThemeResources(array $customThemes, bool $includeDefaults, array $fileResourceMasks): array
+    {
+        if (empty($customThemes) || (!$includeDefaults && empty($fileResourceMasks))) {
+            return array();
+        }
+
+        $resources = array();
+
+        if ($includeDefaults) {
+            $fileResourceMasks = \array_merge($fileResourceMasks, static::getDefaultThemeFileResourceMasks());
+        }
+
+        /** @var CustomTheme $customTheme */
+        foreach ($customThemes as $customTheme) {
+            $replacePairs = array(
+                '%machine_name%' => $customTheme->getMachineName(),
+            );
+
+            foreach ($fileResourceMasks as $fileResourceMask) {
+                $filePath = \sprintf('%s/%s', $customTheme->getRootPath(), \strtr($fileResourceMask, $replacePairs));
+
+                $resources[] = new CustomExtensionFileResource($filePath, $customTheme);
+            }
+        }
+
+        return $resources;
+    }
+
+    private static function canHaveBothExtensionTypeFileResourceMasks(): bool
+    {
+        if (!\is_bool(self::$canHaveBothExtensionTypeFileResourceMasks)) {
+            self::$canHaveBothExtensionTypeFileResourceMasks = static::canHaveModuleFileResourceMasks() && static::canHaveThemeFileResourceMasks();
+        }
+
+        return self::$canHaveBothExtensionTypeFileResourceMasks;
     }
 }

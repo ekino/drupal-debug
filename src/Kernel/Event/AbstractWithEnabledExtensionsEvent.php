@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Kernel\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
-abstract class AbstractWithEnabledExtensionsEvent extends Event
+abstract class AbstractWithEnabledExtensionsEvent extends AbstractBaseEvent
 {
     /**
      * @var array
@@ -31,8 +29,10 @@ abstract class AbstractWithEnabledExtensionsEvent extends Event
      * @param array $enabledModules
      * @param array $enabledThemes
      */
-    public function __construct(array $enabledModules, array $enabledThemes)
+    public function __construct(bool $configurationChanged, array $enabledModules, array $enabledThemes)
     {
+        parent::__construct($configurationChanged);
+
         $this->enabledModules = $enabledModules;
         $this->enabledThemes = $enabledThemes;
     }

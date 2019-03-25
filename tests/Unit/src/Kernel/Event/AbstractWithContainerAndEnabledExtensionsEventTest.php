@@ -37,7 +37,7 @@ class AbstractWithContainerAndEnabledExtensionsEventTest extends TestCase
     {
         $this->container = $this->createMock(ContainerInterface::class);
 
-        $this->abstractWithContainerAndEnabledExtensionsEvent = new TestAbstractWithContainerAndEnabledExtensionsEvent($this->container, array(), array());
+        $this->abstractWithContainerAndEnabledExtensionsEvent = new TestAbstractWithContainerAndEnabledExtensionsEvent(false, $this->container, array(), array());
     }
 
     public function testGetContainer(): void

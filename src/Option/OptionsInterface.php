@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Option;
 
+use Ekino\Drupal\Debug\Configuration\Model\ActionConfiguration;
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 interface OptionsInterface
 {
-    /**
-     * @param string                $appRoot
-     * @param DefaultsConfiguration $defaultsConfiguration
-     *
-     * @return self
-     */
-    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): self;
+    public static function addConfiguration(NodeBuilder $nodeBuilder, DefaultsConfiguration $defaultsConfiguration): void;
+
+    public static function getOptions(string $appRoot, ActionConfiguration $actionConfiguration): self;
 }

@@ -20,6 +20,14 @@ class WatchContainerDefinitionsOptions extends AbstractFileBackendDependantOptio
     /**
      * {@inheritdoc}
      */
+    protected static function canHaveModuleFileResourceMasks(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array(
@@ -31,7 +39,7 @@ class WatchContainerDefinitionsOptions extends AbstractFileBackendDependantOptio
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultCacheFileName(): string
+    protected static function getCacheFileName(): string
     {
         return 'container_definition.php';
     }

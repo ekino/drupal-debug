@@ -28,7 +28,7 @@ class AbstractWithEnabledExtensionsEventTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->abstractWithEnabledExtensionsEvent = new TestAbstractWithEnabledExtensionsEvent(array('foo'), array('bar'));
+        $this->abstractWithEnabledExtensionsEvent = new TestAbstractWithEnabledExtensionsEvent(false, array('foo'), array('bar'));
     }
 
     public function testGetEnabledModules(): void

@@ -42,7 +42,7 @@ class DisplayDumpLocationAction implements EventSubscriberActionInterface
         $cloner = new VarCloner();
         $dumper = \in_array(\PHP_SAPI, array('cli', 'phpdbg'), true) ? new CliDumper() : new HtmlDumper();
 
-        VarDumper::setHandler(function ($var) use ($cloner, $dumper): void {
+        VarDumper::setHandler(static function ($var) use ($cloner, $dumper): void {
             (function (): void {
                 list('name' => $name, 'file' => $file, 'line' => $line) = (new SourceContextProvider())->getContext();
 

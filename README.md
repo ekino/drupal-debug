@@ -81,7 +81,7 @@ drupal-debug:
 
     # The defaults values are common values that are reused by different actions.
     defaults:
-        cache_directory: cache
+        cache_directory_path: cache
         logger:
             enabled: true
             channel: drupal-debug
@@ -95,8 +95,8 @@ drupal-debug:
         enabled: true
         composer_autoload_file_path: vendor/autoload.php
 
-        # If not specified, it fall backs to the default cache directory.
-        cache_directory: null
+        # If not specified, it fall backs to the default cache directory path.
+        cache_directory_path: null
 ```
 
 By default, the location of this configuration file is the root of the project (the parent directory of the Composer vendor directory).
@@ -104,7 +104,7 @@ But it can be defined with the `DRUPAL_DEBUG_CONFIGURATION_FILE_PATH` environmen
 
 For performance, the resolved configuration is cached.
 By default, the location of this cache is the system temporary directory.
-But it can be defined with the `DRUPAL_DEBUG_CONFIGURATION_CACHE_DIRECTORY` environment variable.
+But it can be defined with the `DRUPAL_DEBUG_CONFIGURATION_CACHE_DIRECTORY_PATH` environment variable.
 
 Here is the list of all the actions that have options :
 

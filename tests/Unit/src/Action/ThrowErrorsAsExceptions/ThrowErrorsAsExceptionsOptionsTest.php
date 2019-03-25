@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Unit\Action\ThrowErrorsAsExceptions;
 
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsOptions;
-use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -43,16 +42,5 @@ class ThrowErrorsAsExceptionsOptionsTest extends TestCase
             array(null),
             array($this->createMock(LoggerInterface::class)),
         );
-    }
-
-    public function testGetDefault(): void
-    {
-        $defaultsConfiguration = $this->createMock(DefaultsConfiguration::class);
-        $defaultsConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getLogger')
-            ->willReturn(null);
-
-        $this->assertEquals(new ThrowErrorsAsExceptionsOptions(E_ALL & ~E_WARNING & ~E_USER_WARNING, null), ThrowErrorsAsExceptionsOptions::getDefault('/foo', $defaultsConfiguration));
     }
 }

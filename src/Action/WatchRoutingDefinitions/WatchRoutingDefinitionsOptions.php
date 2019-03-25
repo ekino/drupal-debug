@@ -20,6 +20,14 @@ class WatchRoutingDefinitionsOptions extends AbstractFileBackendDependantOptions
     /**
      * {@inheritdoc}
      */
+    protected static function canHaveModuleFileResourceMasks(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected static function getDefaultModuleFileResourceMasks(): array
     {
         return array(
@@ -30,7 +38,7 @@ class WatchRoutingDefinitionsOptions extends AbstractFileBackendDependantOptions
     /**
      * {@inheritdoc}
      */
-    protected static function getDefaultCacheFileName(): string
+    protected static function getCacheFileName(): string
     {
         return 'routing.meta';
     }

@@ -163,7 +163,7 @@ class WatchRoutingDefinitionsActionTest extends TestCase
         }
 
         return array(
-            new AfterRequestPreHandleEvent($container, array('foo_1', 'custom_module'), array('themeee')),
+            new AfterRequestPreHandleEvent(false, $container, array('foo_1', 'custom_module'), array('themeee')),
             $routerBuilder,
         );
     }

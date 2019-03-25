@@ -238,6 +238,6 @@ class WatchModulesHooksImplementationsActionTest extends TestCase
         $moduleHandler = $kernelServiceInterfaceIsTheRightOne ? $this->createMock(DrupalKernelInterface::class) : new \stdClass();
         $container->set('kernel', $moduleHandler);
 
-        return new AfterAttachSyntheticEvent($container, array(), array());
+        return new AfterAttachSyntheticEvent(false, $container, array(), array());
     }
 }

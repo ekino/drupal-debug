@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Ekino\Drupal\Debug\Tests\Unit\Action\DisplayPrettyExceptions;
 
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsOptions;
-use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -72,24 +71,5 @@ class DisplayPrettyExceptionsOptionsTest extends TestCase
             array(null),
             array($this->createMock(LoggerInterface::class)),
         );
-    }
-
-    public function testGetDefault(): void
-    {
-        $defaultsConfiguration = $this->createMock(DefaultsConfiguration::class);
-        $defaultsConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getCharset')
-            ->willReturn('utf-8');
-        $defaultsConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getFileLinkFormat')
-            ->willReturn(null);
-        $defaultsConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getLogger')
-            ->willReturn(null);
-
-        $this->assertEquals(new DisplayPrettyExceptionsOptions('utf-8', null, null), DisplayPrettyExceptionsOptions::getDefault('/foo', $defaultsConfiguration));
     }
 }
