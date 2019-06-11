@@ -30,8 +30,14 @@ before_script:
 install:
     - if [[ $deps = 'low' ]]; then
           composer update --prefer-dist --no-progress --no-suggest --prefer-stable --prefer-lowest --ansi;
+          if [[ $TRAVIS_EVENT_TYPE = 'cron' ]]; then
+              composer require drupal/core:8.8.x-dev --update-with-all-dependencies --prefer-lowest --prefer-dist --no-progress --no-suggest --ansi;
+          fi
       else
           composer update --prefer-dist --no-progress --no-suggest --ansi;
+          if [[ $TRAVIS_EVENT_TYPE = 'cron' ]]; then
+              composer require drupal/core:8.8.x-dev --update-with-all-dependencies --prefer-dist --no-progress --no-suggest --ansi;
+          fi
       fi
 
 script:
