@@ -38,7 +38,6 @@ class DisplayPrettyExceptionsActionTest extends AbstractActionTestCase
     {
         $text = $client->request('GET', '/')->text();
 
-        $this->assertContains('Whoops, looks like something went wrong.', $text);
         $this->assertContains('This is an useless exception message.', $text);
         $this->assertThat($text, $this->logicalOr(
             $this->stringContains('in throw_uncaught_exception.module line 5', false),

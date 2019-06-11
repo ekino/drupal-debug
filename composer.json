@@ -58,7 +58,7 @@
         "phpunit/phpunit": "^7.5",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/finder": "^3.4 || ^4.0",
-        "symfony/panther": "1.0.x-dev",
+        "symfony/panther": "dev-master#f76f91e94c1f29117963d8625f47462a930a03e2",
         "symfony/process": "^3.4.2 || ^4.0.2"
     },
     "extra": {
