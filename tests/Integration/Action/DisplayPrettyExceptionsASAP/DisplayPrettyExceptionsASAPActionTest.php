@@ -83,7 +83,6 @@ class DisplayPrettyExceptionsASAPActionTest extends AbstractActionTestCase
     protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
         $text = $client->request('GET', '/')->text();
-        $this->assertContains('Whoops, looks like something went wrong.', $text);
         $this->assertContains('My custom exception message is great!', $text);
         $this->assertThat($text, $this->logicalOr(
             $this->stringContains('in throw_uncaught_exception.module line 5', false),
