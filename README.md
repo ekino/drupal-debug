@@ -1,5 +1,3 @@
-:warning: Work in progress :warning:
-
 # Drupal Debug
 
 [![Build Status](https://travis-ci.org/ekino/drupal-debug.svg?branch=master)](https://travis-ci.org/ekino/drupal-debug)
