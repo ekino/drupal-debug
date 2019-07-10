@@ -27,9 +27,9 @@ abstract class AbstractWithContainerAndEnabledExtensionsEvent extends AbstractWi
      * @param string[]           $enabledModules
      * @param string[]           $enabledThemes
      */
-    public function __construct(ContainerInterface $container, array $enabledModules, array $enabledThemes)
+    public function __construct(bool $configurationChanged, ContainerInterface $container, array $enabledModules, array $enabledThemes)
     {
-        parent::__construct($enabledModules, $enabledThemes);
+        parent::__construct($configurationChanged, $enabledModules, $enabledThemes);
 
         $this->container = $container;
     }

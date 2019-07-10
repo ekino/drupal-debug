@@ -55,7 +55,7 @@ class WatchContainerDefinitionsActionTest extends TestCase
             ->with(array('module_1'), array('theme_1'))
             ->willReturn($filteredResourcesCollection);
 
-        $afterSettingsInitializationEvent = new AfterSettingsInitializationEvent(array('module_1'), array('theme_1'));
+        $afterSettingsInitializationEvent = new AfterSettingsInitializationEvent(false, array('module_1'), array('theme_1'));
 
         (new WatchContainerDefinitionsAction($watchContainerDefinitionsOptions))->process($afterSettingsInitializationEvent);
 

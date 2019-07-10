@@ -83,18 +83,6 @@ class SetupListener implements TestListener
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function endTestSuite(TestSuite $suite): void
-    {
-        if (!$this->supports($suite)) {
-            return;
-        }
-
-        // TODO : cleanup
-    }
-
-    /**
      * @param TestSuite $suite
      *
      * @return bool

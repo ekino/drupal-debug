@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Tests\Unit\Action;
 
-use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Action\ActionRegistrar;
 use Ekino\Drupal\Debug\Action\DisableCSSAggregation\DisableCSSAggregationAction;
 use Ekino\Drupal\Debug\Action\DisableDynamicPageCache\DisableDynamicPageCacheAction;
 use Ekino\Drupal\Debug\Action\DisableInternalPageCache\DisableInternalPageCacheAction;
@@ -25,10 +25,12 @@ use Ekino\Drupal\Debug\Action\DisplayPrettyExceptions\DisplayPrettyExceptionsAct
 use Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP\DisplayPrettyExceptionsASAPAction;
 use Ekino\Drupal\Debug\Action\EnableDebugClassLoader\EnableDebugClassLoaderAction;
 use Ekino\Drupal\Debug\Action\EnableTwigDebug\EnableTwigDebugAction;
+use Ekino\Drupal\Debug\Action\EnableTwigStrictVariables\EnableTwigStrictVariablesAction;
 use Ekino\Drupal\Debug\Action\ThrowErrorsAsExceptions\ThrowErrorsAsExceptionsAction;
 use Ekino\Drupal\Debug\Action\WatchContainerDefinitions\WatchContainerDefinitionsAction;
 use Ekino\Drupal\Debug\Action\WatchModulesHooksImplementations\WatchModulesHooksImplementationsAction;
 use Ekino\Drupal\Debug\Action\WatchRoutingDefinitions\WatchRoutingDefinitionsAction;
+use Ekino\Drupal\Debug\ActionMetadata\ActionMetadataManager;
 use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Option\OptionsStack;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class ActionManagerTest extends TestCase
+final class ActionRegistrarTest extends TestCase
 {
     /**
      * @var string
@@ -55,9 +57,9 @@ class ActionManagerTest extends TestCase
     protected $runTestInSeparateProcess = true;
 
     /**
-     * @var ActionManager
+     * @var ActionRegistrar
      */
-    private $actionManager;
+    private $actionRegistrar;
 
     /**
      * {@inheritdoc}
@@ -69,15 +71,18 @@ class ActionManagerTest extends TestCase
         \putenv(\sprintf('%s=%s', ConfigurationManager::CONFIGURATION_CACHE_DIRECTORY_ENVIRONMENT_VARIABLE_NAME, self::CACHE_DIRECTORY_PATH));
         \putenv(\sprintf('%s=%s', ConfigurationManager::CONFIGURATION_FILE_PATH_ENVIRONMENT_VARIABLE_NAME, self::CONFIGURATION_FILE_PATH));
 
-        ConfigurationManager::initialize();
-
         $optionsStack = $this->createMock(OptionsStack::class);
         $optionsStack
             ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturn(null);
 
-        $this->actionManager = new ActionManager('/foo', $optionsStack);
+        $this->actionRegistrar = new ActionRegistrar(
+            '/foo',
+                ActionMetadataManager::getInstance(),
+                ConfigurationManager::getInstance(),
+                $optionsStack
+        );
     }
 
     /**
@@ -110,23 +115,24 @@ class ActionManagerTest extends TestCase
                 array($this->isInstanceOf(WatchRoutingDefinitionsAction::class))
             );
 
-        $this->actionManager->addEventSubscriberActionsToEventDispatcher($eventDispatcher);
+        $this->actionRegistrar->addEventSubscriberActionsToEventDispatcher($eventDispatcher);
     }
 
     public function testAddCompilerPassActionsToContainerBuilder(): void
     {
         $containerBuilder = $this->createMock(ContainerBuilder::class);
         $containerBuilder
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('addCompilerPass')
             ->withConsecutive(
                 array($this->isInstanceOf(DisableTwigCacheAction::class)),
                 array($this->isInstanceOf(DisplayPrettyExceptionsAction::class)),
                 array($this->isInstanceOf(EnableTwigDebugAction::class)),
+                array($this->isInstanceOf(EnableTwigStrictVariablesAction::class)),
                 array($this->isInstanceOf(WatchModulesHooksImplementationsAction::class))
             );
 
-        $this->actionManager->addCompilerPassActionsToContainerBuilder($containerBuilder);
+        $this->actionRegistrar->addCompilerPassActionsToContainerBuilder($containerBuilder);
     }
 
     private function clearCache(): void

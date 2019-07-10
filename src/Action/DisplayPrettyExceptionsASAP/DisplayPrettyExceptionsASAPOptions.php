@@ -13,11 +13,18 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Action\DisplayPrettyExceptionsASAP;
 
+use Ekino\Drupal\Debug\Configuration\CharsetConfigurationTrait;
+use Ekino\Drupal\Debug\Configuration\FileLinkFormatConfigurationTrait;
+use Ekino\Drupal\Debug\Configuration\Model\ActionConfiguration;
 use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration;
 use Ekino\Drupal\Debug\Option\OptionsInterface;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
 {
+    use CharsetConfigurationTrait;
+    use FileLinkFormatConfigurationTrait;
+
     /**
      * @var string|null
      */
@@ -54,14 +61,14 @@ class DisplayPrettyExceptionsASAPOptions implements OptionsInterface
         return $this->fileLinkFormat;
     }
 
-    /**
-     * @param string                $appRoot
-     * @param DefaultsConfiguration $defaultsConfiguration
-     *
-     * @return DisplayPrettyExceptionsASAPOptions
-     */
-    public static function getDefault(string $appRoot, DefaultsConfiguration $defaultsConfiguration): OptionsInterface
+    public static function addConfiguration(NodeBuilder $nodeBuilder, DefaultsConfiguration $defaultsConfiguration): void
     {
-        return new self($defaultsConfiguration->getCharset(), $defaultsConfiguration->getFileLinkFormat());
+        self::addCharsetConfigurationNodeFromDefaultsConfiguration($nodeBuilder, $defaultsConfiguration);
+        self::addFileLinkFormatConfigurationNodeFromDefaultsConfiguration($nodeBuilder, $defaultsConfiguration);
+    }
+
+    public static function getOptions(string $appRoot, ActionConfiguration $actionConfiguration): OptionsInterface
+    {
+        return new self(self::getConfiguredCharset($actionConfiguration), self::getConfiguredFileLinkFormat($actionConfiguration));
     }
 }

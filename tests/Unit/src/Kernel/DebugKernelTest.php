@@ -16,7 +16,9 @@ namespace Ekino\Drupal\Debug\Tests\Unit\Kernel;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\OriginalDrupalKernel;
-use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Action\ActionRegistrar;
+use Ekino\Drupal\Debug\ActionMetadata\ActionMetadataManager;
+use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Kernel\DebugKernel;
 use Ekino\Drupal\Debug\Kernel\Event\AfterAttachSyntheticEvent;
 use Ekino\Drupal\Debug\Kernel\Event\AfterContainerInitializationEvent;
@@ -38,17 +40,17 @@ class DebugKernelTest extends TestCase
     /**
      * @var string
      */
-    const TEST_ORIGINAL_DRUPAL_KERNEL_CLASS_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestOriginalDrupalKernel.php';
+    private const TEST_ORIGINAL_DRUPAL_KERNEL_CLASS_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestOriginalDrupalKernel.php';
 
     /**
      * @var string
      */
-    const TEST_DEBUG_KERNEL_INSTANTIATION_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestDebugKernelInstantiation.php';
+    private const TEST_DEBUG_KERNEL_INSTANTIATION_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestDebugKernelInstantiation.php';
 
     /**
      * @var string
      */
-    const TEST_DEBUG_KERNEL_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestDebugKernel.php';
+    private const TEST_DEBUG_KERNEL_FILE_PATH = __DIR__.'/test_classes/DebugKernelTest_TestDebugKernel.php';
 
     /**
      * @var bool
@@ -61,9 +63,9 @@ class DebugKernelTest extends TestCase
     private $eventDispatcher;
 
     /**
-     * @var ActionManager|MockObject
+     * @var ActionRegistrar|MockObject
      */
-    private $actionManager;
+    private $actionRegistrar;
 
     /**
      * @var TestDebugKernel
@@ -91,12 +93,14 @@ class DebugKernelTest extends TestCase
     /**
      * @dataProvider instantiationProvider
      */
-    public function testInstantiation(?string $appRoot, ?OptionsStack $optionsStack = null): void
+    public function testInstantiationSSS(?string $appRoot, ?OptionsStack $optionsStack = null): void
     {
         new TestDebugKernelInstantiation('test', $this->createMock(ClassLoader::class), true, $appRoot, $optionsStack);
 
         $this->assertEquals(array(
             \is_string($appRoot) ? $appRoot : '/foo',
+            ActionMetadataManager::getInstance(),
+            ConfigurationManager::getInstance(),
             $optionsStack instanceof OptionsStack ? $optionsStack : OptionsStack::create(),
             'addEventSubscriberActionsToEventDispatcher',
             'dispatch.ekino.drupal.debug.debug_kernel.on_kernel_instantiation',
@@ -139,7 +143,7 @@ class DebugKernelTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with('ekino.drupal.debug.debug_kernel.after_request_pre_handle', new AfterRequestPreHandleEvent(new Container(), array('foo'), array('bar')));
+            ->with('ekino.drupal.debug.debug_kernel.after_request_pre_handle', new AfterRequestPreHandleEvent(false, new Container(), array('foo'), array('bar')));
 
         $this->debugKernel->preHandle($this->createMock(Request::class));
     }
@@ -159,7 +163,7 @@ class DebugKernelTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with('ekino.drupal.debug.debug_kernel.after_container_initialization', new AfterContainerInitializationEvent(new Container(), array('foo'), array('bar')));
+            ->with('ekino.drupal.debug.debug_kernel.after_container_initialization', new AfterContainerInitializationEvent(false, new Container(), array('foo'), array('bar')));
 
         $this->callProtectedMethod('initializeContainer');
     }
@@ -187,7 +191,7 @@ class DebugKernelTest extends TestCase
         $this->eventDispatcher
           ->expects($this->atLeastOnce())
           ->method('dispatch')
-          ->with('ekino.drupal.debug.debug_kernel.after_attach_synthetic', new AfterAttachSyntheticEvent($container, array('foo'), array('bar')));
+          ->with('ekino.drupal.debug.debug_kernel.after_attach_synthetic', new AfterAttachSyntheticEvent(false, $container, array('foo'), array('bar')));
 
         $this->assertSame($container, $this->callProtectedMethod('attachSynthetic', array($container)));
     }
@@ -196,7 +200,7 @@ class DebugKernelTest extends TestCase
     {
         $containerBuilder = new ContainerBuilder();
 
-        $this->actionManager
+        $this->actionRegistrar
             ->expects($this->atLeastOnce())
             ->method('addCompilerPassActionsToContainerBuilder')
             ->with($containerBuilder);
@@ -213,7 +217,7 @@ class DebugKernelTest extends TestCase
 
         $propertiesToMock = array(
             'eventDispatcher' => $this->createMock(EventDispatcher::class),
-            'actionManager' => $this->createMock(ActionManager::class),
+            'actionRegistrar' => $this->createMock(ActionRegistrar::class),
         );
 
         foreach ($propertiesToMock as $property => $mock) {
@@ -263,7 +267,7 @@ class DebugKernelTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with('ekino.drupal.debug.debug_kernel.after_settings_initialization', new AfterSettingsInitializationEvent(array('fcy'), array('ccc')));
+            ->with('ekino.drupal.debug.debug_kernel.after_settings_initialization', new AfterSettingsInitializationEvent(false, array('fcy'), array('ccc')));
 
         \call_user_func_array(array($this, 'callProtectedMethod'), $arguments);
 

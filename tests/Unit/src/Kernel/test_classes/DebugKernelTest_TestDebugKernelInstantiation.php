@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Ekino\Drupal\Debug\Tests\Unit\Kernel\test_classes;
 
-use Ekino\Drupal\Debug\Action\ActionManager;
+use Ekino\Drupal\Debug\Action\ActionRegistrar;
+use Ekino\Drupal\Debug\ActionMetadata\ActionMetadataManager;
+use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
 use Ekino\Drupal\Debug\Kernel\DebugKernel;
 use Ekino\Drupal\Debug\Option\OptionsStack;
 use Symfony\Component\EventDispatcher\Event;
@@ -33,14 +35,16 @@ class TestDebugKernelInstantiationEventDispatcher extends EventDispatcher
     }
 }
 
-class TestDebugKernelInstantiationActionManager extends ActionManager
+class TestDebugKernelInstantiationActionRegistrar extends ActionRegistrar
 {
     /**
      * {@inheritdoc}
      */
-    public function __construct(string $appRoot, OptionsStack $optionsStack)
+    public function __construct(string $appRoot, ActionMetadataManager $actionMetadataManager, ConfigurationManager $configurationManager, OptionsStack $optionsStack)
     {
         TestDebugKernelInstantiation::$stack[] = $appRoot;
+        TestDebugKernelInstantiation::$stack[] = $actionMetadataManager;
+        TestDebugKernelInstantiation::$stack[] = $configurationManager;
         TestDebugKernelInstantiation::$stack[] = $optionsStack;
     }
 
@@ -71,9 +75,9 @@ class TestDebugKernelInstantiation extends DebugKernel
     /**
      * {@inheritdoc}
      */
-    protected function getActionManager(string $appRoot, OptionsStack $optionsStack): ActionManager
+    protected function getActionRegistrar(string $appRoot, ActionMetadataManager $actionMetadataManager, ConfigurationManager $configurationManager, OptionsStack $optionsStack): ActionRegistrar
     {
-        return new TestDebugKernelInstantiationActionManager($appRoot, $optionsStack);
+        return new TestDebugKernelInstantiationActionRegistrar($appRoot, $actionMetadataManager, $configurationManager, $optionsStack);
     }
 
     /**

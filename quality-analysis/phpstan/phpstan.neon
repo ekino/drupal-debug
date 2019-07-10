@@ -10,22 +10,48 @@ parameters:
         - tests/Unit/src/Cache/fixtures/invalid.php
     ignoreErrors:
         # Closures undefined properties of another scope
-        - '#^Access to an undefined property Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:\$line\.$#'
-        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:style\(\)\.$#'
-        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\:\:dumpLine\(\)\.$#'
-        - '#^Call to an undefined method Ekino\\Drupal\\Debug\\Extension\\Iterator\\RecursiveCustomExtensionFilterIterator\:\:isDir\(\)\.$#'
-        - '#^Access to an undefined property Ekino\\Drupal\\Debug\\Helper\\SettingsHelper\:\:\$storage\.$#'
-        # Closures instanceof always false of another scope
-        - '#^Instanceof between \$this\(Ekino\\Drupal\\Debug\\Action\\DisplayDumpLocation\\DisplayDumpLocationAction\) and Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper will always evaluate to false\.$#'
+        -
+            message: '#^Access to an undefined property Ekino\\Drupal\\Debug\\Helper\\SettingsHelper\:\:\$storage\.$#'
+            path: 'src/Helper/SettingsHelper.php'
         # Intentional errors
-        - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
-        - '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelInstantiationActionManager\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionManager\.$#'
+        -
+            message: '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelActionRegistrar\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionRegistrar\.$#'
+            path: 'tests/Unit/src/Kernel/test_classes/DebugKernelTest_TestDebugKernel.php'
+        -
+            message: '#^Ekino\\Drupal\\Debug\\Tests\\Unit\\Kernel\\test_classes\\TestDebugKernelInstantiationActionRegistrar\:\:__construct\(\) does not call parent constructor from Ekino\\Drupal\\Debug\\Action\\ActionRegistrar\.$#'
+            path: 'tests/Unit/src/Kernel/test_classes/DebugKernelTest_TestDebugKernelInstantiation.php'
         # Intentional ignores that are hard and useless to fix
-        - '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
-        - '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
-        - "#^Call to method PHPUnit\\\\Framework\\\\Assert::assertInstanceOf\\(\\) with 'Symfony\\\\\\\\Component…' and 'fcyccc' will always evaluate to false\\.$#"
+        -
+            message: '#^Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
+            path: 'src/Action/AbstractFileBackendDependantOptions.php'
+        -
+            message: '#^Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.$#'
+            paths:
+               - 'src/Configuration/LoggerConfigurationTrait.php'
+               - 'src/Configuration/SubstituteOriginalDrupalKernelConfiguration.php'
+        -
+            message: "#^Call to method PHPUnit\\\\Framework\\\\Assert::assertInstanceOf\\(\\) with 'Symfony\\\\\\\\Component…' and 'fcyccc' will always evaluate to false\\.$#"
+            path: 'tests/Unit/src/Action/WatchModulesHooksImplementations/WatchModulesHooksImplementationsActionTest.php'
+        -
+            message: '#Variable \$canHaveBothExtensionTypeFileResourceMasks might not be defined\.$#'
+            path: 'src/Action/AbstractFileBackendDependantOptions.php'
+        -
+            message: '#^Undefined variable: \$this$#'
+            path: 'src/Action/DisplayDumpLocation/DisplayDumpLocationAction.php'
+        -
+            message: '#^Method Ekino\\Drupal\\Debug\\Configuration\\DefaultsConfiguration::addCacheDirectoryPathConfigurationNode\(\) should return Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder but returns Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface|null\.$#'
+            path: 'src/Configuration/CacheDirectoryPathConfigurationTrait.php'
+        -
+            message: '#^Method Ekino\\Drupal\\Debug\\Action\\DisplayPrettyExceptionsASAP\\DisplayPrettyExceptionsASAPOptions::addCharsetConfigurationNode\(\) should return Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder but returns Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface|null\.$#'
+            path: 'src/Configuration/CharsetConfigurationTrait.php'
+        -
+            message: '#^Method Ekino\\Drupal\\Debug\\Action\\DisplayPrettyExceptionsASAP\\DisplayPrettyExceptionsASAPOptions::addFileLinkFormatConfigurationNode\(\) should return Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder but returns Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface|null\.$#'
+            path: 'src/Configuration/FileLinkFormatConfigurationTrait.php'
         # Undocumented arg type in xdebug functions
-        - '#^Parameter \#1 \$cleanup of function xdebug_stop_code_coverage expects bool, int given\.$#'
-        # Undocumented arg type in PHP core functions
-        - '#^Parameter \#1 \$error_handler of function set_error_handler expects callable, null given\.$#'
-        - '#^Parameter \#1 \$exception_handler of function set_exception_handler expects callable, null given\.$#'
+        -
+            message: '#^Parameter \#1 \$cleanup of function xdebug_stop_code_coverage expects bool, int given\.$#'
+            path: 'tests/Integration/Action/AbstractActionTestCase.php'
+        # Undocumented method
+        -
+            message: '#^Call to an undefined method Ekino\\Drupal\\Debug\\Extension\\Iterator\\RecursiveCustomExtensionFilterIterator::isDir\(\)\.$#'
+            path: 'src/Extension/Iterator/RecursiveCustomExtensionFilterIterator.php'

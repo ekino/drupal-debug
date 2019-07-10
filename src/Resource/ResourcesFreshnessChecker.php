@@ -148,7 +148,7 @@ class ResourcesFreshnessChecker
      */
     private function getResourcesUniqueRepresentation(ResourcesCollection $resourcesCollection): array
     {
-        return \array_map(function (SelfCheckingResourceInterface $resource) {
+        return \array_map(static function (SelfCheckingResourceInterface $resource): string {
             return \sprintf('%s:%s', \get_class($resource), $resource->__toString());
         }, $resourcesCollection->all());
     }

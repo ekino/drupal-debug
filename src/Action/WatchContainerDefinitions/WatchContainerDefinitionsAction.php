@@ -53,11 +53,15 @@ class WatchContainerDefinitionsAction implements EventSubscriberActionInterface,
                 'cache.container' => array(
                     'class' => FileBackend::class,
                     'arguments' => array(
-                        new FileCache($this->options->getCacheFilePath(), $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes())),
+                        $fileCache = new FileCache($this->options->getCacheFilePath(), $this->options->getFilteredResourcesCollection($event->getEnabledModules(), $event->getEnabledThemes())),
                     ),
                 ),
             ),
         ));
+
+        if ($event->doesConfigurationChanged()) {
+            $fileCache->invalidate();
+        }
     }
 
     /**

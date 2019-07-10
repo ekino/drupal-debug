@@ -31,6 +31,8 @@ class DisableCSSAggregationActionTest extends AbstractActionTestCase
      */
     protected function doTestTargetedBehaviorWithDebugKernel(Client $client): void
     {
+        $client->request('GET', '/');
+
         $this->assertGreaterThan(10, $this->countStylesheetLinks($client));
     }
 

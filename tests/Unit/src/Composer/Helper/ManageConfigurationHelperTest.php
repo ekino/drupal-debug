@@ -81,6 +81,8 @@ class ManageConfigurationHelperTest extends TestCase
 
     /**
      * @dataProvider dumpReferenceConfigurationFileProvider
+     *
+     * @runInSeparateProcess
      */
     public function testDumpReferenceConfigurationFile(bool $configurationFilePathExists, bool $configurationFileCanBeDumped, ?bool $overwriteExistingConfigurationFile = null): void
     {
@@ -146,6 +148,8 @@ EOF;
 
     /**
      * @dataProvider warnAboutPotentialConfigurationChangesProvider
+     *
+     * @runInSeparateProcess
      */
     public function testWarnAboutPotentialConfigurationChanges(bool $configurationFilePathExists): void
     {
@@ -184,6 +188,9 @@ EOF;
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testAskForConfigurationFileDeletionWhenTheConfigurationFilePathDoesNotExist(): void
     {
         $this->setUpConfigurationFilePath(self::NOT_EXISTING_AND_WRITEABLE_CONFIGURATION_FILE_PATH);
@@ -196,6 +203,8 @@ EOF;
 
     /**
      * @dataProvider askForConfigurationFileDeletionProvider
+     *
+     * @runInSeparateProcess
      */
     public function testAskForConfigurationFileDeletion(bool $deleteExistingConfigurationFile, ?bool $configurationFileCanBeDeleted = null): void
     {
@@ -203,7 +212,7 @@ EOF;
             if ($configurationFileCanBeDeleted) {
                 $configurationFilePath = self::NOT_EXISTING_AND_WRITEABLE_CONFIGURATION_FILE_PATH;
 
-                self::writeFile($configurationFilePath, '');
+                self::writeFile($configurationFilePath, 'foo:');
             } else {
                 $configurationFilePath = self::EXISTING_AND_NOT_WRITEABLE_CONFIGURATION_FILE_PATH;
             }
@@ -271,6 +280,8 @@ EOF;
 
     /**
      * @dataProvider toggleOriginalDrupalKernelSubstitutionWhenTheConfigurationFilePathDoesNotExistProvider
+     *
+     * @runInSeparateProcess
      */
     public function testToggleOriginalDrupalKernelSubstitutionWhenTheConfigurationFilePathDoesNotExist(bool $enabled, bool $configurationFileCanBeDumped): void
     {
@@ -291,6 +302,8 @@ EOF;
 
     /**
      * @dataProvider toggleOriginalDrupalKernelSubstitutionProvider
+     *
+     * @runInSeparateProcess
      */
     public function testToggleOriginalDrupalKernelSubstitution(bool $enabled, string $configurationTemplateFilePath, bool $configurationFileCanBeDumped): void
     {

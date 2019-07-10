@@ -15,9 +15,16 @@ namespace Ekino\Drupal\Debug\Composer\Helper;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
+use Ekino\Drupal\Debug\ActionMetadata\ActionMetadataManager;
 use Ekino\Drupal\Debug\Composer\Command\DumpReferenceConfigurationFileCommand;
-use Ekino\Drupal\Debug\Configuration\Configuration;
+use Ekino\Drupal\Debug\Configuration\ActionsConfiguration;
 use Ekino\Drupal\Debug\Configuration\ConfigurationManager;
+use Ekino\Drupal\Debug\Configuration\DefaultsConfiguration;
+use Ekino\Drupal\Debug\Configuration\Model\DefaultsConfiguration as DefaultsConfigurationModel;
+use Ekino\Drupal\Debug\Configuration\SubstituteOriginalDrupalKernelConfiguration;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -36,6 +43,8 @@ class ManageConfigurationHelper
      */
     private $IO;
 
+    private $configurationManager;
+
     /**
      * @param Composer    $composer
      * @param IOInterface $IO
@@ -44,12 +53,14 @@ class ManageConfigurationHelper
     {
         $this->composer = $composer;
         $this->IO = $IO;
+
+        $this->configurationManager = ConfigurationManager::getInstance();
     }
 
     public function dumpReferenceConfigurationFile(): bool
     {
-        list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
-        if ($configurationFilePathExists) {
+        $configurationFilePath = $this->configurationManager->getConfigurationFilePath();
+        if ($configurationFilePathExists = $this->configurationManager->doesConfigurationFilePathExists()) {
             $this->IO->write(array(
                 '<comment>An existing drupal-debug configuration file has been found at the following location:</comment>',
                 \sprintf('<comment>--> "%s"</comment>', \realpath($configurationFilePath)),
@@ -74,14 +85,13 @@ class ManageConfigurationHelper
     // TODO: a real configuration update path
     public function warnAboutPotentialConfigurationChanges(): bool
     {
-        list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
-        if (!$configurationFilePathExists) {
+        if (!$this->configurationManager->doesConfigurationFilePathExists()) {
             return true;
         }
 
         $this->IO->write(array(
             '<comment>A custom drupal-debug configuration file has been found at the following location:</comment>',
-            \sprintf('<comment>--> "%s"</comment>', \realpath($configurationFilePath)),
+            \sprintf('<comment>--> "%s"</comment>', \realpath($this->configurationManager->getConfigurationFilePath())),
             '',
             '<comment>The drupal-debug configuration might have change in the freshly updated code.</comment>',
             '',
@@ -95,8 +105,7 @@ class ManageConfigurationHelper
 
     public function askForConfigurationFileDeletion(): bool
     {
-        list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
-        if (!$configurationFilePathExists) {
+        if (!$this->configurationManager->doesConfigurationFilePathExists()) {
             return true;
         }
 
@@ -104,7 +113,7 @@ class ManageConfigurationHelper
             '<comment>The drupal-debug configuration file is going to be useless: it should be deleted.</comment>',
             '',
             '<info>It has been found at the following location:</info>',
-            \sprintf('<info>--> "%s"</info>', \realpath($configurationFilePath)),
+            \sprintf('<info>--> "%s"</info>', \realpath($configurationFilePath = $this->configurationManager->getConfigurationFilePath())),
             '',
         ));
 
@@ -135,8 +144,9 @@ class ManageConfigurationHelper
      */
     public function toggleOriginalDrupalKernelSubstitution(bool $enabled): bool
     {
-        list($configurationFilePath, $configurationFilePathExists) = ConfigurationManager::getConfigurationFilePathInfo();
-        if ($configurationFilePathExists) {
+        $configurationFilePath = $this->configurationManager->getConfigurationFilePath();
+
+        if ($this->configurationManager->doesConfigurationFilePathExists()) {
             $configurationFileContent = $this->getCurrentConfigurationContent($configurationFilePath);
             if (\is_array($configurationFileContent) && isset($configurationFileContent['drupal-debug'])) {
                 if (isset($configurationFileContent['drupal-debug']['substitute_original_drupal_kernel']) && \is_array($configurationFileContent['drupal-debug']['substitute_original_drupal_kernel'])) {
@@ -169,7 +179,32 @@ class ManageConfigurationHelper
      */
     private function getReferenceConfigurationContent(): array
     {
-        return (new Parser())->parse((new YamlReferenceDumper())->dump(new Configuration()));
+        return (new Parser())->parse((new YamlReferenceDumper())->dump(new class($this->configurationManager) implements ConfigurationInterface {
+            private $configurationManager;
+
+            public function __construct(ConfigurationManager $configurationManager)
+            {
+                $this->configurationManager = $configurationManager;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getConfigTreeBuilder(): TreeBuilder
+            {
+                $treeBuilder = new TreeBuilder();
+                /** @var ArrayNodeDefinition $rootNode */
+                $rootNode = $treeBuilder->root(ConfigurationManager::ROOT_KEY);
+                $rootNode
+                    ->children()
+                        ->append((new DefaultsConfiguration())->getArrayNodeDefinition(new TreeBuilder()))
+                        ->append((new ActionsConfiguration((new ActionMetadataManager())->all(), $defaultsConfiguration = new DefaultsConfigurationModel($this->configurationManager->getProcessedDefaultsConfiguration(array()))))->getArrayNodeDefinition(new TreeBuilder()))
+                        ->append((new SubstituteOriginalDrupalKernelConfiguration($defaultsConfiguration))->getArrayNodeDefinition(new TreeBuilder()))
+                    ->end();
+
+                return $treeBuilder;
+            }
+        }));
     }
 
     /**
@@ -190,7 +225,7 @@ class ManageConfigurationHelper
     private function dumpConfigurationFile(string $configurationFilePath, array $configurationFileContent, bool $displayLocation): bool
     {
         try {
-            (new Filesystem())->dumpFile($configurationFilePath, (new Dumper())->dump($configurationFileContent, 4));
+            (new Filesystem())->dumpFile($configurationFilePath, (new Dumper())->dump($configurationFileContent, 5));
         } catch (IOException $e) {
             $this->IO->writeError('<error>The drupal-debug configuration file could not be dumped.</error>');
 
