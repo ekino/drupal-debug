@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+
+  php-7.1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: 7.1-cli-alpine
+    volumes:
+      - .:/app:delegated
+
+  php-7.2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: 7.2-cli-alpine
+    volumes:
+      - .:/app:delegated
+
+  php-7.3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: 7.3-cli-alpine
+    volumes:
+      - .:/app:delegated

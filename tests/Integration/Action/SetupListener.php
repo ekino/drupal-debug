@@ -58,7 +58,7 @@ class SetupListener implements TestListener
 
         $drupalInstallationsCount = 0;
 
-        $process = new Process(\sprintf('%s %s/core/scripts/drupal install minimal', $phpBinary, $drupalDirectoryPath));
+        $process = new Process(\sprintf('%s %s/core/scripts/drupal install minimal', $phpBinary, $drupalDirectoryPath), null, null, null, null);
         $process->mustRun(function ($type, $output) use (&$drupalInstallationsCount): void {
             if (\is_int(\strpos($output, 'Congratulations, you installed Drupal!'))) {
                 ++$drupalInstallationsCount;
